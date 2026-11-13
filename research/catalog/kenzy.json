@@ -1,0 +1,150 @@
+{
+  "query": "顽童 小春",
+  "url": "https://itunes.apple.com/search?term=%E9%A1%BD%E7%AB%A5+%E5%B0%8F%E6%98%A5&entity=song&attribute=artistTerm&country=TW&limit=60",
+  "checkedAt": "2026-11-13",
+  "results": [
+    {
+      "artistName": "小春Kenzy",
+      "artistId": 1160672273,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E5%B0%8F%E6%98%A5kenzy/1160672273?uo=4",
+      "trackId": 1720904528,
+      "trackName": "不想醒來",
+      "trackViewUrl": "https://music.apple.com/tw/album/%E4%B8%8D%E6%83%B3%E9%86%92%E4%BE%86/1720904517?i=1720904528&uo=4",
+      "collectionName": "不想醒來 - Single",
+      "releaseDate": "2023-12-21T12:00:00Z",
+      "primaryGenreName": "嘻哈/饒舌"
+    },
+    {
+      "artistName": "瘦子E.SO, 歐陽靖, 李佳隆 & 小春Kenzy",
+      "artistId": 1476379003,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E7%98%A6%E5%AD%90e-so/1476379003?uo=4",
+      "trackId": 1692124270,
+      "trackName": "在Cypher裡 (現場)",
+      "trackViewUrl": "https://music.apple.com/tw/album/%E5%9C%A8cypher%E8%A3%A1-%E7%8F%BE%E5%A0%B4/1692124265?i=1692124270&uo=4",
+      "collectionName": "中國說唱巔峰對決2023 第六期",
+      "releaseDate": "2023-06-10T12:00:00Z",
+      "primaryGenreName": "嘻哈"
+    },
+    {
+      "artistName": "小春Kenzy",
+      "artistId": 1160672273,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E5%B0%8F%E6%98%A5kenzy/1160672273?uo=4",
+      "trackId": 1722263076,
+      "trackName": "不想醒來",
+      "trackViewUrl": "https://music.apple.com/tw/album/%E4%B8%8D%E6%83%B3%E9%86%92%E4%BE%86/1722262918?i=1722263076&uo=4",
+      "collectionName": "大丈夫",
+      "releaseDate": "2023-12-21T12:00:00Z",
+      "primaryGenreName": "嘻哈/饒舌"
+    },
+    {
+      "artistName": "小春Kenzy",
+      "artistId": 1160672273,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E5%B0%8F%E6%98%A5kenzy/1160672273?uo=4",
+      "trackId": 1722263067,
+      "trackName": "鬥陣的 (feat. 大淵MUTA) [電影《器子》原創電影歌曲 (feat. 大淵MUTA)]",
+      "trackViewUrl": "https://music.apple.com/tw/album/%E9%AC%A5%E9%99%A3%E7%9A%84-feat-%E5%A4%A7%E6%B7%B5muta-%E9%9B%BB%E5%BD%B1-%E5%99%A8%E5%AD%90-%E5%8E%9F%E5%89%B5%E9%9B%BB%E5%BD%B1%E6%AD%8C%E6%9B%B2-feat-%E5%A4%A7%E6%B7%B5muta/1722262918?i=1722263067&uo=4",
+      "collectionName": "大丈夫",
+      "releaseDate": "2023-12-27T12:00:00Z",
+      "primaryGenreName": "嘻哈/饒舌"
+    },
+    {
+      "artistName": "頑童MJ116",
+      "artistId": 891265611,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E9%A0%91%E7%AB%A5mj116/891265611?uo=4",
+      "trackId": 1312736619,
+      "trackName": "浪漫一下",
+      "trackViewUrl": "https://music.apple.com/tw/album/%E6%B5%AA%E6%BC%AB%E4%B8%80%E4%B8%8B/1312736597?i=1312736619&uo=4",
+      "collectionName": "幹大事",
+      "releaseDate": "2017-11-16T12:00:00Z",
+      "primaryGenreName": "華語嘻哈"
+    },
+    {
+      "artistName": "頑童MJ116",
+      "artistId": 891265611,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E9%A0%91%E7%AB%A5mj116/891265611?uo=4",
+      "trackId": 920345276,
+      "trackName": "雙手插口袋 (feat. 張震嶽)",
+      "trackViewUrl": "https://music.apple.com/tw/album/%E9%9B%99%E6%89%8B%E6%8F%92%E5%8F%A3%E8%A2%8B-feat-%E5%BC%B5%E9%9C%87%E5%B6%BD/920345229?i=920345276&uo=4",
+      "collectionName": "Fresh Game (Deluxe Version)",
+      "releaseDate": "2004-01-01T12:00:00Z",
+      "primaryGenreName": "華語嘻哈"
+    },
+    {
+      "artistName": "頑童MJ116",
+      "artistId": 891265611,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E9%A0%91%E7%AB%A5mj116/891265611?uo=4",
+      "trackId": 891265623,
+      "trackName": "雙手插口袋 (feat. 張震嶽)",
+      "trackViewUrl": "https://music.apple.com/tw/album/%E9%9B%99%E6%89%8B%E6%8F%92%E5%8F%A3%E8%A2%8B-feat-%E5%BC%B5%E9%9C%87%E5%B6%BD/891265536?i=891265623&uo=4",
+      "collectionName": "Fresh Game",
+      "releaseDate": "2004-01-01T12:00:00Z",
+      "primaryGenreName": "華語嘻哈"
+    },
+    {
+      "artistName": "頑童MJ116",
+      "artistId": 891265611,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E9%A0%91%E7%AB%A5mj116/891265611?uo=4",
+      "trackId": 891265616,
+      "trackName": "Intro",
+      "trackViewUrl": "https://music.apple.com/tw/album/intro/891265536?i=891265616&uo=4",
+      "collectionName": "Fresh Game",
+      "releaseDate": "2004-01-01T12:00:00Z",
+      "primaryGenreName": "華語嘻哈"
+    },
+    {
+      "artistName": "頑童MJ116",
+      "artistId": 891265611,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E9%A0%91%E7%AB%A5mj116/891265611?uo=4",
+      "trackId": 920345259,
+      "trackName": "Intro",
+      "trackViewUrl": "https://music.apple.com/tw/album/intro/920345229?i=920345259&uo=4",
+      "collectionName": "Fresh Game (Deluxe Version)",
+      "releaseDate": "2004-01-01T12:00:00Z",
+      "primaryGenreName": "華語嘻哈"
+    },
+    {
+      "artistName": "Ash",
+      "artistId": 931836106,
+      "artistViewUrl": "https://music.apple.com/tw/artist/ash/931836106?uo=4",
+      "trackId": 1588833408,
+      "trackName": "浪漫節 (feat. KENZY)",
+      "trackViewUrl": "https://music.apple.com/tw/album/%E6%B5%AA%E6%BC%AB%E7%AF%80-feat-kenzy/1588833406?i=1588833408&uo=4",
+      "collectionName": "浪漫節 (feat. KENZY) - Single",
+      "releaseDate": "2014-05-02T12:00:00Z",
+      "primaryGenreName": "華語流行樂"
+    },
+    {
+      "artistName": "Dough-Boy",
+      "artistId": 992926865,
+      "artistViewUrl": "https://music.apple.com/tw/artist/dough-boy/992926865?uo=4",
+      "trackId": 1810198145,
+      "trackName": "B哥正傳 Part 2",
+      "trackViewUrl": "https://music.apple.com/tw/album/b%E5%93%A5%E6%AD%A3%E5%82%B3-part-2/1810198144?i=1810198145&uo=4",
+      "collectionName": "B哥正傳 Part 2 - Single",
+      "releaseDate": "2025-04-28T12:00:00Z",
+      "primaryGenreName": "嘻哈/饒舌"
+    },
+    {
+      "artistName": "Dough-Boy",
+      "artistId": 992926865,
+      "artistViewUrl": "https://music.apple.com/tw/artist/dough-boy/992926865?uo=4",
+      "trackId": 1861702310,
+      "trackName": "B哥正傳 Part 2",
+      "trackViewUrl": "https://music.apple.com/tw/album/b%E5%93%A5%E6%AD%A3%E5%82%B3-part-2/1861702299?i=1861702310&uo=4",
+      "collectionName": "當你回頭發現人生只剩一半時(國語極品之選)",
+      "releaseDate": "2025-12-19T12:00:00Z",
+      "primaryGenreName": "嘻哈/饒舌"
+    },
+    {
+      "artistName": "麼春生",
+      "artistId": 1645527835,
+      "artistViewUrl": "https://music.apple.com/tw/artist/%E9%BA%BC%E6%98%A5%E7%94%9F/1645527835?uo=4",
+      "trackId": 1645591231,
+      "trackName": "老頑童和小頑童",
+      "trackViewUrl": "https://music.apple.com/tw/album/%E8%80%81%E9%A0%91%E7%AB%A5%E5%92%8C%E5%B0%8F%E9%A0%91%E7%AB%A5/1645589989?i=1645591231&uo=4",
+      "collectionName": "楊瑞慶詞曲作品集 (2)",
+      "releaseDate": "2000-01-01T12:00:00Z",
+      "primaryGenreName": "民謠搖滾"
+    }
+  ]
+}

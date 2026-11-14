@@ -7,3 +7,11 @@ dist/
 __pycache__/
 .DS_Store
 Thumbs.db
+# 审核密钥、投稿库、导入基线：绝不进仓库
+.data/
+server/generated/
+# 本地调试截图与临时产物
+screenshots/
+.shots/
+# 工作笔记（内部过程记录，不属于项目产物）
+.workbuddy/

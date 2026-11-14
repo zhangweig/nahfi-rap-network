@@ -1,0 +1,196 @@
+{
+  "generatedAt": "2026-11-14T06:31:49.689Z",
+  "source": "sheet",
+  "retired": [],
+  "records": [
+    {
+      "entityId": "jiang",
+      "kind": "artist",
+      "payload": {
+        "id": "jiang",
+        "name": "姜云升",
+        "aliases": [
+          "姜雲升"
+        ],
+        "kind": "artist",
+        "city": "云南",
+        "category": "说唱 / 音乐人",
+        "color": "#36c4bd",
+        "initials": "姜云",
+        "description": "作品档案收录《如果沒有你2020 (現場)》、《浪漫主義》等曲目。合作记录以具体版本署名为准。",
+        "catalogArtistIds": [
+          1483458980
+        ],
+        "sources": [
+          {
+            "title": "Apple Music：艺人目录",
+            "url": "https://music.apple.com/tw/artist/%E5%A7%9C%E9%9B%B2%E5%8D%87/1483458980?uo=4",
+            "note": ""
+          }
+        ],
+        "avatarUrl": ""
+      }
+    },
+    {
+      "entityId": "narchy",
+      "kind": "artist",
+      "payload": {
+        "id": "narchy",
+        "name": "那奇沃夫",
+        "aliases": [
+          "Narchy Wolf"
+        ],
+        "kind": "artist",
+        "city": "新疆",
+        "category": "说唱 / 音乐人",
+        "color": "#f1a85b",
+        "initials": "那奇",
+        "description": "作品档案收录《如果沒有你2020 (現場)》、《苦咖啡·唯一》等曲目。合作记录以具体版本署名为准。",
+        "catalogArtistIds": [
+          1548298768
+        ],
+        "sources": [
+          {
+            "title": "Apple Music：艺人目录",
+            "url": "https://music.apple.com/tw/artist/%E9%82%A3%E5%A5%87%E6%B2%83%E5%A4%AB/1548298768?uo=4",
+            "note": ""
+          }
+        ],
+        "avatarUrl": ""
+      }
+    },
+    {
+      "entityId": "yanghesu",
+      "kind": "artist",
+      "payload": {
+        "id": "yanghesu",
+        "name": "杨和苏",
+        "aliases": [
+          "KeyNG"
+        ],
+        "kind": "artist",
+        "city": "成都",
+        "category": "活死人",
+        "color": "#8be05e",
+        "initials": "杨",
+        "description": "报告记其 2019 年《中国新说唱》夺冠，列为活死人成员。",
+        "avatarUrl": "",
+        "sources": []
+      }
+    },
+    {
+      "entityId": "athree",
+      "kind": "artist",
+      "payload": {
+        "id": "athree",
+        "name": "AThree",
+        "aliases": [
+          "阿热斯兰",
+          "阿熱斯蘭"
+        ],
+        "kind": "artist",
+        "city": "新疆",
+        "category": "说唱 / 音乐人",
+        "color": "#ad83f5",
+        "initials": "AT",
+        "description": "作品档案收录《前目的地》、《麥西來甫 (現場)》等曲目。合作记录以具体版本署名为准。",
+        "catalogArtistIds": [
+          1446065195
+        ],
+        "sources": [
+          {
+            "title": "Apple Music：艺人目录",
+            "url": "https://music.apple.com/tw/artist/athree/1446065195?uo=4",
+            "note": ""
+          }
+        ],
+        "avatarUrl": ""
+      }
+    },
+    {
+      "entityId": "ice",
+      "kind": "artist",
+      "payload": {
+        "id": "ice",
+        "name": "ICE杨长青",
+        "aliases": [
+          "ICE楊長青",
+          "ICE",
+          "杨长青"
+        ],
+        "kind": "artist",
+        "city": "四川",
+        "category": "说唱 / 音乐人",
+        "color": "#c5d773",
+        "initials": "IC",
+        "description": "作品档案收录《隆裡電絲 (現場)》、《頂天立地 (Live)》等曲目。合作记录以具体版本署名为准。",
+        "catalogArtistIds": [
+          1449274790
+        ],
+        "sources": [
+          {
+            "title": "Apple Music：艺人目录",
+            "url": "https://music.apple.com/tw/artist/ice%E6%A5%8A%E9%95%B7%E9%9D%92/1449274790?uo=4",
+            "note": ""
+          }
+        ],
+        "avatarUrl": ""
+      }
+    },
+    {
+      "entityId": "jarstick",
+      "kind": "artist",
+      "payload": {
+        "id": "jarstick",
+        "name": "JarStick",
+        "kind": "artist",
+        "city": "四川",
+        "category": "活死人",
+        "color": "#ffc93c",
+        "initials": "JS",
+        "description": "报告列为活死人成员。",
+        "aliases": [],
+        "avatarUrl": "",
+        "sources": []
+      }
+    },
+    {
+      "entityId": "kenrobb",
+      "kind": "artist",
+      "payload": {
+        "id": "kenrobb",
+        "name": "kenrobb",
+        "kind": "artist",
+        "city": "成都",
+        "aliases": [
+          "刘已亮"
+        ],
+        "category": "说唱音乐人",
+        "color": "#7c93a8",
+        "initials": "KB",
+        "description": "地下说唱皇帝",
+        "avatarUrl": "",
+        "sources": []
+      }
+    },
+    {
+      "entityId": "zhangfangzhao",
+      "kind": "artist",
+      "payload": {
+        "id": "zhangfangzhao",
+        "name": "张方钊",
+        "kind": "artist",
+        "city": "河南",
+        "aliases": [
+          "河南说唱之神"
+        ],
+        "category": "说唱音乐人",
+        "color": "#7c93a8",
+        "initials": "河南",
+        "description": "",
+        "avatarUrl": "",
+        "sources": []
+      }
+    }
+  ]
+}

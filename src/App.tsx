@@ -1,74 +1,197 @@
-import {useCallback,useEffect,useMemo,useRef,useState} from 'react';
-import ForceGraph2D from 'react-force-graph-2d';
-import ForceGraph3D from 'react-force-graph-3d';
-import {Search,Network,Orbit,Layers,MapPin,ArrowRight,Download,RotateCcw,Maximize,Info,X,ExternalLink,Music2,GitBranch,Filter,ChevronDown} from 'lucide-react';
-import {nodes,relations,works,cities,trackCount,artistCount,datasetUpdatedAt,type ArtistNode,type RelationType} from './data/rap-data';
+import {useMemo, useState} from 'react';
+import {Download, Link2, MapPin, Plus, Route, Search, ShieldCheck, SlidersHorizontal, X} from 'lucide-react';
+import {useDataset} from './state/Dataset';
+import {RelationBoard} from './components/RelationBoard';
+import {ArtistPanel} from './components/ArtistPanel';
+import {Avatar} from './components/PixelAvatar';
+import {CatalogPanel} from './components/CatalogPanel';
+import {SubmissionEditor, ReviewPanel, Modal, type EditorTarget} from './components/Community';
+import {ALL_PROVINCES, UNKNOWN_PROVINCE, provinceLabel, provinceOf, provinceOptions} from './lib/province';
+import {artistMatches, workMatches} from './lib/catalog';
 import {shortestRoute} from './lib/network';
-import {makeRenderData,artistMatches,workMatches,worksByArtist} from './lib/catalog';
-import {CatalogPanel,WorkCard} from './components/CatalogPanel';
-import type {ForceGraphMethods} from 'react-force-graph-2d';
+import type {RelationType} from './data/types';
 
-type LayoutNode=ArtistNode&{x?:number;y?:number;z?:number;vx?:number;vy?:number;vz?:number;fx?:number;fy?:number};
-type LayoutLink={source:string|LayoutNode;target:string|LayoutNode;id:string;type:RelationType;label:string;curvature:number;count:number};
-const kinds:{id:RelationType;label:string;hue:string}[]=[{id:'member',label:'组合成员',hue:'#43c7c1'},{id:'collaboration',label:'歌曲合作',hue:'#f4b363'},{id:'production',label:'幕后制作',hue:'#e98ec4'},{id:'affiliation',label:'历史圈层',hue:'#ae8df3'}];
-const idOf=(v:string|LayoutNode)=>typeof v==='string'?v:v.id;
-const safeLabel=(value:string)=>value.replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]!));
-const fullName=(id:string)=>nodes.find(n=>n.id===id)?.name||id;
+type Section = 'map' | 'artists' | 'works';
 
-function GraphStage({view,data,selected,onSelect,path,focusSignal}:{view:'2d'|'3d';data:{nodes:LayoutNode[];links:LayoutLink[]};selected:string|null;onSelect:(id:string)=>void;path:string[]|null;focusSignal:number}){
- const area=useRef<HTMLDivElement>(null);const two=useRef<ForceGraphMethods<any,any>|undefined>(undefined);const three=useRef<any>(null);
- const [dimensions,setDimensions]=useState({width:800,height:600});
- useEffect(()=>{const el=area.current;if(!el)return;const obs=new ResizeObserver(([entry])=>setDimensions({width:Math.max(280,entry.contentRect.width),height:Math.max(350,entry.contentRect.height)}));obs.observe(el);return()=>obs.disconnect()},[]);
- const colorNode=useCallback((node:LayoutNode)=>node.color,[]);
- const didFit=useRef(false);
- useEffect(()=>{didFit.current=false;const graph=view==='2d'?two.current:three.current;graph?.d3Force('charge')?.strength(-160);graph?.d3Force('link')?.distance(65);graph?.d3ReheatSimulation()},[data,view]);
- const fitOnce=()=>{if(didFit.current)return;didFit.current=true;if(view==='2d')two.current?.zoomToFit(500,55);else three.current?.zoomToFit(500,65)};
- const highlight=useMemo(()=>new Set(path||[]),[path]);
- const drawNode=useCallback((node:LayoutNode,ctx:CanvasRenderingContext2D,scale:number)=>{
- const {x=0,y=0}=node;const focus=selected===node.id;const onRoute=highlight.size>0&&highlight.has(node.id);const radius=node.kind==='group'?11:7;
- ctx.beginPath();ctx.arc(x,y,radius+(focus?2.8:0),0,Math.PI*2);ctx.fillStyle=node.color;ctx.globalAlpha=selected&&!focus&&!onRoute?.6:1;ctx.fill();ctx.lineWidth=focus?3:1.7;ctx.strokeStyle=focus?'#fff':onRoute?'#fff':'#19212d';ctx.stroke();ctx.globalAlpha=1;
- if(node.kind==='group'||scale>1.05||focus||onRoute){ctx.font=`${focus?'700':'600'} ${node.kind==='group'?12:10}px system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';const name=node.name;const w=ctx.measureText(name).width+14;ctx.fillStyle='rgba(9,12,19,.84)';ctx.beginPath();ctx.roundRect(x-w/2,y+radius+6,w,20,6);ctx.fill();ctx.fillStyle='#e9eef9';ctx.fillText(name,x,y+radius+16)}
- },[selected,highlight]);
- useEffect(()=>{if(!selected)return;const node=data.nodes.find(n=>n.id===selected);if(!node)return;const t=setTimeout(()=>{if(view==='2d'&&node.x!=null&&node.y!=null)two.current?.centerAt(node.x,node.y,900);if(view==='3d'&&node.x!=null&&node.y!=null){const x=node.x,y=node.y,z=node.z||0;const ratio=1+145/Math.hypot(x,y,z||1);three.current?.cameraPosition({x:x*ratio,y:y*ratio,z:(z||20)*ratio+75},{x,y,z},1000)}},250);return()=>clearTimeout(t)},[selected,view,data,focusSignal]);
- const isPathEdge=(link:LayoutLink)=>{if(!path||path.length<2)return false;const a=idOf(link.source),b=idOf(link.target);return path.some((v,i)=>i<path.length-1&&((v===a&&path[i+1]===b)||(v===b&&path[i+1]===a)))};
- return <div className="stage" ref={area}>
-  <div className="stage-badge"><span className="live-dot"/> {view==='3d'?'3D SPACE':'2D NETWORK'} <span className="badge-divider">/</span> {data.nodes.length} 节点 <span className="badge-divider">/</span> {data.links.length} 组连线</div>
-  {view==='2d'?<ForceGraph2D ref={two as any} width={dimensions.width} height={dimensions.height} graphData={data} backgroundColor="#0a0d15" nodeCanvasObject={drawNode as any} nodePointerAreaPaint={(n:any,color:string,ctx:CanvasRenderingContext2D)=>{ctx.fillStyle=color;ctx.beginPath();ctx.arc(n.x,n.y,14,0,2*Math.PI);ctx.fill()}} nodeLabel={(n:any)=>safeLabel(n.name)} onNodeClick={(n:any)=>onSelect(n.id)} linkLabel={(l:any)=>safeLabel(l.label)} linkCurvature={(l:any)=>l.curvature} linkColor={(l:any)=>isPathEdge(l)?'#ffe19a':kinds.find(k=>k.id===l.type)?.hue||'#45536d'} linkWidth={(l:any)=>isPathEdge(l)?3:Math.min(2.8,.7+Math.log2(l.count+1)*.45)} linkDirectionalParticles={(l:any)=>isPathEdge(l)?2:0} linkDirectionalParticleWidth={2.8} linkDirectionalParticleSpeed={0.006} onEngineStop={fitOnce} cooldownTicks={130} d3VelocityDecay={0.35}/>
-  :<ForceGraph3D ref={three} width={dimensions.width} height={dimensions.height} graphData={data} backgroundColor="#0a0d15" showNavInfo={false} nodeLabel={(n:any)=>safeLabel(`${n.name} · ${n.city}`)} nodeColor={colorNode as any} nodeVal={(n:any)=>n.kind==='group'?12:selected===n.id?9:5} nodeOpacity={0.92} linkLabel={(l:any)=>safeLabel(l.label)} linkCurvature={(l:any)=>l.curvature} linkColor={(l:any)=>isPathEdge(l)?'#ffe19a':kinds.find(k=>k.id===l.type)?.hue||'#61708c'} linkWidth={(l:any)=>isPathEdge(l)?2.6:Math.min(1.8,.4+Math.log2(l.count+1)*.25)} linkOpacity={0.5} linkDirectionalParticles={(l:any)=>isPathEdge(l)?4:0} linkDirectionalParticleWidth={2.5} linkDirectionalParticleSpeed={0.005} onNodeClick={(n:any)=>onSelect(n.id)} onEngineStop={fitOnce} cooldownTicks={100}/>}
-  <div className="stage-actions"><button title="适配画布" onClick={()=>view==='2d'?two.current?.zoomToFit(700,75):three.current?.zoomToFit(700,80)}><Maximize size={17}/></button><button title="重置选择" onClick={()=>onSelect('')}><RotateCcw size={17}/></button></div>
-  <div className="map-watermark">NAHFI<span>®</span> / RAP CULTURE ARCHIVE</div>
- </div>
+const NAV: [Section, string][] = [['map', '地图'], ['artists', '人物'], ['works', '作品']];
+
+export default function App() {
+  const {data, online, checked} = useDataset();
+  const writable = online || !checked;
+  const {nodes, relations, works} = data;
+  const [section, setSection] = useState<Section>('map');
+  const [selected, setSelected] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
+  const [province, setProvince] = useState<string>(ALL_PROVINCES);
+  const [editor, setEditor] = useState<EditorTarget | null>(null);
+  const [review, setReview] = useState(false);
+  const [unlocated, setUnlocated] = useState(false);
+  const [filters, setFilters] = useState(false);
+  const [pathOpen, setPathOpen] = useState(false);
+  const [types, setTypes] = useState<RelationType[]>(['member', 'collaboration', 'production', 'affiliation']);
+  const [start, setStart] = useState('yitai');
+  const [end, setEnd] = useState('air');
+  const [path, setPath] = useState<string[] | null>(null);
+  const [pathChecked, setPathChecked] = useState(false);
+  const [focus, setFocus] = useState<{id: string; n: number} | null>(null);
+
+  const provinces = useMemo(() => provinceOptions(nodes), [nodes]);
+  const current = nodes.find(n => n.id === selected) || null;
+  const nodeById = useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
+  const pendingLocations = nodes.filter(n => provinceOf(n.city) === UNKNOWN_PROVINCE);
+  const matches = query.trim() ? nodes.filter(n => artistMatches(n, query)).slice(0, 7) : [];
+  const workResults = query.trim() ? works.filter(w => workMatches(w, query, nodeById)).slice(0, 3) : [];
+
+  const clearPath = () => {
+    setPath(null);
+    setPathChecked(false);
+  };
+
+  const pick = (id: string) => {
+    setSelected(id || null);
+    clearPath();
+    setUnlocated(false);
+    setQuery('');
+    const node = nodeById.get(id);
+    if (node && province !== ALL_PROVINCES && provinceOf(node.city) !== province) setProvince(ALL_PROVINCES);
+  };
+
+  /** Selecting from a list (search, catalogue, archive modal) also flies the board to that person. */
+  const flyPick = (id: string) => {
+    pick(id);
+    setFocus(old => ({id, n: (old?.n || 0) + 1}));
+  };
+
+  const closeDetail = () => {
+    setSelected(null);
+    clearPath();
+  };
+
+  function exportData() {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([JSON.stringify({version: '0.6', nodes, relations, works}, null, 2)], {type: 'application/json'}));
+    link.download = 'nahfi-approved-data.json';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  }
+
+  const openSection = (next: Section) => {
+    setSection(next);
+    setQuery('');
+  };
+
+  const toggleType = (type: RelationType) => {
+    setTypes(old => (old.includes(type) ? old.filter(item => item !== type) : [...old, type]));
+    clearPath();
+  };
+
+  return <div className={`app pixel-app neon-mode ${section === 'map' ? 'board-mode' : ''}`}>
+    <header className="site-header">
+      <a href="#" className="brand" onClick={e => { e.preventDefault(); openSection('map'); }}>
+        <span className="vinyl-logo" /><strong>NAHFI<span>®</span></strong>
+      </a>
+      <nav aria-label="主要导航">
+        {NAV.map(([key, label]) => <button key={key} className={section === key ? 'active' : ''} onClick={() => openSection(key)}>{label}</button>)}
+      </nav>
+      <div className="header-actions">
+        {writable && <>
+          <button className="hbtn is-primary" onClick={() => setEditor({kind: 'artist'})}><Plus size={15} />添加人物</button>
+          <button className="hbtn" onClick={() => setEditor({kind: 'relationship'})}><Link2 size={15} />添加关系</button>
+        </>}
+      </div>
+    </header>
+
+    <div className="workspace-toolbar">
+      <div className="search-area">
+        <Search size={17} />
+        <input aria-label="搜索人物、省份或作品" placeholder="搜索人物 / 作品 / 专辑" value={query} onChange={e => setQuery(e.target.value)} />
+        {query && <button aria-label="清除搜索" onClick={() => setQuery('')}><X size={15} /></button>}
+        {query.trim() && section === 'map' && <div className="search-results">
+          {matches.map(n => <button key={n.id} onClick={() => flyPick(n.id)}>
+            <Avatar node={n} /><span><strong>{n.name}</strong><small>{provinceLabel(provinceOf(n.city))}</small></span>
+          </button>)}
+          {workResults.map(w => <button key={w.id} onClick={() => { setSection('works'); setQuery(w.title); }}>
+            <span className="small-record">♫</span><span>{w.title}<small>{w.year} · {w.version}</small></span>
+          </button>)}
+          {!matches.length && !workResults.length && <p>没有找到相关人物或作品。</p>}
+        </div>}
+      </div>
+      <label className="city-filter">
+        <MapPin size={16} />
+        <select aria-label="省份聚落" value={province} onChange={e => { setProvince(e.target.value); clearPath(); }}>
+          {[ALL_PROVINCES, ...provinces].map(p => <option key={p} value={p}>{p === ALL_PROVINCES ? p : provinceLabel(p)}</option>)}
+        </select>
+      </label>
+      <button onClick={() => setFilters(!filters)} aria-expanded={filters}><SlidersHorizontal size={16} /><span>关系筛选</span></button>
+      <button onClick={() => setPathOpen(true)}><Route size={16} /><span>寻找路径</span></button>
+    </div>
+
+    {filters && <div className="filter-strip">
+      {Object.entries({member: '组合成员', collaboration: '歌曲合作', production: '幕后制作', affiliation: '历史关联'}).map(([key, label]) =>
+        <label key={key}>
+          <input type="checkbox" checked={types.includes(key as RelationType)} onChange={() => toggleType(key as RelationType)} />
+          {label}<small>{relations.filter(r => r.type === key).length}</small>
+        </label>)}
+    </div>}
+
+    <main className={`explorer ${section === 'map' ? 'is-board' : 'is-catalog'}`}>
+      <section className="explore-main">
+        {section === 'map'
+          ? <div className="map-room">
+            <RelationBoard selected={selected} onSelect={pick} onClear={closeDetail} types={types} province={province}
+              path={path} focus={focus} onToggleType={toggleType} onLocate={() => setUnlocated(true)}
+              onResetProvince={() => { setProvince(ALL_PROVINCES); clearPath(); }} />
+            {path && <div className="path-banner board-path">
+              找到 {path.length - 1} 步路径：{path.map((id, i) => <span key={id}>{i > 0 ? ' → ' : ''}<button onClick={() => setSelected(id)}>{nodeById.get(id)?.name}</button></span>)}
+              <button aria-label="清除路径" onClick={() => setPath(null)}>×</button>
+            </div>}
+            {current && <div className="board-drawer">
+              <ArtistPanel current={current} works={works} relations={relations} nodeById={nodeById} types={types}
+                canContribute={writable}
+                onPick={pick} onEdit={node => setEditor({kind: 'artist', record: node})}
+                onContribute={() => setEditor({kind: 'relationship', source: current.id})} onClose={closeDetail} />
+            </div>}
+          </div>
+          : <CatalogPanel mode={section} query={query} onQuery={setQuery}
+            onPick={id => { flyPick(id); setSection('map'); }} province={province} />}
+      </section>
+    </main>
+
+    <footer className="site-footer">
+      <span><i className={online ? 'online' : 'offline'} /> {online ? '投稿服务已连接' : '浏览模式 · 投稿服务未连接'} <span className="footer-divider">/</span> 像素头像为占位示意</span>
+      <div>
+        <button onClick={exportData}><Download size={13} />导出公开数据</button>
+        {writable && <button onClick={() => setReview(true)}><ShieldCheck size={14} />站长审核</button>}
+      </div>
+    </footer>
+
+    {editor && <SubmissionEditor target={editor} onClose={() => setEditor(null)} />}
+    {review && <ReviewPanel onClose={() => setReview(false)} />}
+    {unlocated && <Modal title="地域待考据" onClose={() => setUnlocated(false)}>
+      <p className="form-intro">这些人物已收录，但还没有可核验的省份来源。他们暂时停留在“待考据之岛”，补充有来源的地域信息后会自动归入对应聚落。</p>
+      <div className="unlocated-grid">{pendingLocations.map(n => <button key={n.id} onClick={() => flyPick(n.id)}>
+        <Avatar node={n} /><span><b>{n.name}</b><small>{n.city}</small></span>
+      </button>)}</div>
+    </Modal>}
+    {pathOpen && <Modal title="寻找人物之间的关系路径" onClose={() => setPathOpen(false)}>
+      <div className="path-form">
+        <p>按当前关系类型筛选，使用全部已公开记录查找路径。</p>
+        <label>起点人物<select value={start} onChange={e => { setStart(e.target.value); setPathChecked(false); }}>{nodes.map(n => <option key={n.id} value={n.id}>{n.name}</option>)}</select></label>
+        <label>终点人物<select value={end} onChange={e => { setEnd(e.target.value); setPathChecked(false); }}>{nodes.map(n => <option key={n.id} value={n.id}>{n.name}</option>)}</select></label>
+        <button className="primary" onClick={() => {
+          const result = shortestRoute(start, end, types, []);
+          setPath(result);
+          setPathChecked(true);
+          if (result) {
+            setSection('map');
+            setSelected(start);
+            setProvince(ALL_PROVINCES);
+            setPathOpen(false);
+          }
+        }}>查找关系路径 →</button>
+        {pathChecked && !path && <p role="status">当前资料与筛选条件下没有找到路径。</p>}
+        <p className="field-help">路径可能包含组合成员或历史关联，不代表双方直接合作。</p>
+      </div>
+    </Modal>}
+  </div>;
 }
-function App(){
- const [section,setSection]=useState<'graph'|'artists'|'works'>('graph');const [catalogQuery,setCatalogQuery]=useState('');const [detailTab,setDetailTab]=useState<'relations'|'works'>('works');
- const [view,setView]=useState<'2d'|'3d'>('2d');const [search,setSearch]=useState('');const [city,setCity]=useState('全部城市');const [types,setTypes]=useState<RelationType[]>(['member','collaboration','production','affiliation']);const [selected,setSelected]=useState<string|null>('ma');const [focusSignal,setFocusSignal]=useState(0);const [start,setStart]=useState('ma');const [end,setEnd]=useState('shengyu');const [path,setPath]=useState<string[]|null>(null);const [pathChecked,setPathChecked]=useState(false);const [showMobileFilters,setShowMobileFilters]=useState(false);
- const allowedCities=city==='全部城市'?[]:[city];
- const graphData=useMemo(()=>makeRenderData(types,city),[city,types]);
- const selectedNode=nodes.find(n=>n.id===selected);const relationships=relations.filter(r=>r.source===selected||r.target===selected).filter(r=>types.includes(r.type)&&graphData.nodes.some(n=>n.id===r.source)&&graphData.nodes.some(n=>n.id===r.target));
- const matches=useMemo(()=>nodes.filter(n=>artistMatches(n,search)).slice(0,6),[search]);
- const matchingWorks=useMemo(()=>works.filter(work=>workMatches(work,search)).slice(0,5),[search]);
- const selectedWorks=selected?worksByArtist.get(selected)||[]:[];
- const pick=(id:string)=>{setSelected(id||null);setFocusSignal(v=>v+1);setPath(null);setPathChecked(false);if(id){const n=nodes.find(n=>n.id===id);if(n&&city!=='全部城市'&&n.city!==city)setCity('全部城市')}};
- const toggleType=(t:RelationType)=>{setTypes(old=>old.includes(t)?old.filter(v=>v!==t):[...old,t]);setPath(null);setPathChecked(false)};
- const calculate=()=>{const route=shortestRoute(start,end,types,allowedCities);setPath(route);setPathChecked(true);if(route)pickRouteFirst(route)};
- const pickRouteFirst=(route:string[])=>{setSelected(route[0]);setFocusSignal(v=>v+1)};
- const exportJSON=()=>{const content=JSON.stringify({version:'alpha-0.4',updatedAt:datasetUpdatedAt,nodes,relations,works},null,2);const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([content],{type:'application/json'}));link.download='nahfi-rap-network.json';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000)};
- return <div className="app">
-  <aside className="sidebar"><div className="brand"><div className="brand-icon">N<span>✦</span></div><div><strong>NAHFI</strong><div className="brand-sub">RAP NETWORK <span> / 01</span></div></div></div>
-   <div className="sidebar-scroll"><div className="section-label">EXPLORE / 探索图谱</div><div className="search-wrap"><Search size={17}/><input placeholder="搜索 Rapper / 歌曲 / 专辑" value={search} onChange={e=>setSearch(e.target.value)}/>{search&&<button onClick={()=>setSearch('')} aria-label="清除搜索"><X size={15}/></button>}</div>
-   {search.trim()&&<div className="search-results" aria-label="搜索建议">{matches.map(n=><button key={n.id} onClick={()=>{pick(n.id);setSearch('');setSection('graph')}}><span className="avatar tiny" style={{background:n.color}}>{n.initials}</span><span>{n.name}<small>{n.city} · {n.kind==='group'?'团体':'Rapper'}</small></span><ArrowRight size={14}/></button>)}{matchingWorks.map(work=><button key={work.id} onClick={()=>{setSection('works');setCatalogQuery(work.title);setSearch('')}}><Music2 size={18}/><span>{work.title}<small>{work.year} · {work.artistIds.map(fullName).join(' / ')}</small></span><ArrowRight size={14}/></button>)}{matches.length===0&&matchingWorks.length===0&&<div className="empty-small">未找到相关人物或作品</div>}<button className="all-results" onClick={()=>{setCatalogQuery(search);setSection('works');setSearch('')}}>在作品库查看全部结果 <ArrowRight size={14}/></button></div>}
-   <button type="button" className="mobile-toggle" aria-expanded={showMobileFilters} onClick={()=>setShowMobileFilters(!showMobileFilters)}><Filter size={15}/> 条件筛选 <ChevronDown size={15}/></button><div className={`filters ${showMobileFilters?'expanded':''}`}><div className="filter-title">关联城市 <span>CITY</span></div><div className="chip-row">{['全部城市',...cities].map(c=><button key={c} className={`chip ${city===c?'active':''}`} onClick={()=>{setCity(c);setPath(null);setPathChecked(false)}}>{c}</button>)}</div>
-   <div className="filter-title top-gap">关系类型 <span>关系记录</span></div><div className="type-list">{kinds.map(k=><label key={k.id} className="check-row"><input type="checkbox" checked={types.includes(k.id)} onChange={()=>toggleType(k.id)}/><span className="type-dot" style={{background:k.hue}}/>{k.label}<span className="type-number">{relations.filter(r=>r.type===k.id).length}</span></label>)}</div></div>
-   <div className="sidebar-divider"/><div className="section-label">TOOLS / 关系检索</div><div className="tool-card"><div className="tool-head"><GitBranch size={17}/><strong>最短关系路径</strong></div><p>寻找两位人物通过当前关系数据连接的路径。</p><label htmlFor="route-start">起点人物</label><select id="route-start" value={start} onChange={e=>{setStart(e.target.value);setPath(null);setPathChecked(false)}}>{nodes.filter(n=>n.kind==='artist').map(n=><option key={n.id} value={n.id}>{n.name}</option>)}</select><label htmlFor="route-end">终点人物</label><select id="route-end" value={end} onChange={e=>{setEnd(e.target.value);setPath(null);setPathChecked(false)}}>{nodes.filter(n=>n.kind==='artist').map(n=><option key={n.id} value={n.id}>{n.name}</option>)}</select><button className="primary-btn" onClick={calculate}><Network size={16}/> 查找关系路径 <ArrowRight size={15}/></button>
-    {pathChecked&&<div className="path-result">{path?<><b>找到 {path.length-1} 步路径</b><div className="path-names">{path.map((v,i)=><span key={v}>{i>0&&<ArrowRight size={13}/>}<button onClick={()=>{setSelected(v);setFocusSignal(x=>x+1)}}>{fullName(v)}</button></span>)}</div><small>路径可包含团体成员或历史圈层关系，不等于歌曲合作。</small></>:<><b>当前没有连接路径</b><small>不是两位音乐人现实中没有合作；只是目前的数据未收录可证明的路径。</small></>}</div>}
-   </div></div><div className="sidebar-footer"><div className="footer-hash">BUILD 0.4.0 · 2026</div><button onClick={exportJSON}><Download size={15}/> 导出数据</button></div>
-  </aside>
-  <main className="main"><header className="topbar"><div className="bread">ARCHIVE <span>/</span> NETWORK EXPLORER <span>/</span> <strong>中文说唱</strong></div><div className="header-right"><span className="alpha">ALPHA 0.4</span><span className="top-avatar">NF</span></div></header><section className="content-heading"><div><div className="eyebrow">THE CULTURE IS CONNECTED <span>✳</span></div><h1>CHINESE RAP <em>NETWORK.</em></h1><p>探索中文 Hip-Hop 的人物、团体与文化连接。每一条线，都应该有迹可循。</p></div><div className="stat-strip"><div><b>{artistCount}</b><span>RAPPER</span></div><div><b>{relations.length.toString().padStart(2,'0')}</b><span>关系记录</span></div><div><b>{trackCount}</b><span>作品版本</span></div></div></section>
-  <nav className="archive-tabs" aria-label="档案视图"><button className={section==='graph'?'active':''} onClick={()=>setSection('graph')}><Network size={16}/>关系网络</button><button className={section==='artists'?'active':''} onClick={()=>{setSection('artists');setCatalogQuery('')}}><Search size={16}/>Rapper 名录 <span>{artistCount}</span></button><button className={section==='works'?'active':''} onClick={()=>{setSection('works');setCatalogQuery('')}}><Music2 size={16}/>作品库 <span>{trackCount}</span></button></nav>
-  {section==='graph'?<><div className="graph-toolbar"><div className="graph-title"><Orbit size={18}/> 关系网络 <span>NETWORK VIEW</span></div><div className="view-switch"><button className={view==='2d'?'current':''} onClick={()=>setView('2d')}><Layers size={15}/> 2D</button><button className={view==='3d'?'current':''} onClick={()=>setView('3d')}><Orbit size={15}/> 3D</button></div></div>
-  <div className="canvas-container"><GraphStage key={view} view={view} data={graphData} selected={selected} onSelect={pick} path={path} focusSignal={focusSignal}/></div></>:<CatalogPanel key={section} mode={section} query={catalogQuery} onQuery={setCatalogQuery} city={city} onPick={id=>{pick(id);setSection('graph')}}/>}<div className="data-note"><Info size={15}/> 资料核对至 {datasetUpdatedAt} · 收录 {trackCount} 个作品版本。同曲多人署名会产生多条关系；图中合并重复连线。成员身份以来源年份为准。</div>
-  </main>
-  <aside className="details"><div className="details-header"><span>艺人档案</span><Info size={17}/></div>{selectedNode?<><div className="details-body"><div className="hero-avatar" style={{background:`linear-gradient(135deg,${selectedNode.color}66,#141923)`}}><span>{selectedNode.initials}</span><div className="hero-orbit"/></div><div className="person-type">{selectedNode.kind==='group'?'GROUP / 音乐团体':'ARTIST / 说唱歌手'}</div><h2>{selectedNode.name}</h2><div className="alias">{selectedNode.aliases?.join(' / ')||'CHINESE HIP-HOP'}</div><div className="meta-pills"><span><MapPin size={13}/>{selectedNode.city}</span><span><Music2 size={13}/>{selectedNode.category}</span></div><p className="bio">{selectedNode.description}</p>{selectedNode.sources&&<details className="profile-sources"><summary>艺人资料来源</summary>{selectedNode.sources.map((source,i)=><a key={i} href={source.url} title={source.note} target="_blank" rel="noopener noreferrer">{source.title}<ExternalLink size={12}/></a>)}</details>}<div className="detail-separator"/><div className="detail-tabs"><button className={detailTab==='works'?'active':''} onClick={()=>setDetailTab('works')}>作品 {selectedWorks.length}</button><button className={detailTab==='relations'?'active':''} onClick={()=>setDetailTab('relations')}>关系 {relationships.length}</button></div>{detailTab==='works'?<div className="artist-works">{selectedWorks.length?selectedWorks.map(work=><WorkCard key={work.id} work={work} onPick={pick} compact/>):<div className="empty-small">该团体暂无以团体名义收录的作品，成员个人作品请进入对应人物查看。</div>}</div>:<><h3>关联记录 <small>{relationships.length} RECORDS</small></h3><div className="relations">{relationships.length?relationships.map(r=>{const other=nodes.find(n=>n.id===(r.source===selected?r.target:r.source))!;return <div className="relation-card" key={r.id}><div className="relation-first"><span className="avatar" style={{background:other.color}}>{other.initials}</span><div><strong>{other.name}</strong><small>{r.label}</small></div><button onClick={()=>pick(other.id)} title="查看人物"><ArrowRight size={16}/></button></div><div className="relation-meta">{r.track?`${r.track.year} · ${r.track.version}`:r.observedYear?`资料年份：${r.observedYear}（非入团年份）`:null}</div><div className="relation-evidence"><span>{r.status==='verified'?'来源已核对':'初始参考 · 待复核'}</span>{r.evidence.map((e,i)=><a key={i} href={e.url} title={e.note} target="_blank" rel="noopener noreferrer">{e.title} <ExternalLink size={12}/></a>)}</div><details className="evidence-notes"><summary>查看证据说明</summary>{r.evidence.map((e,i)=><p key={i}>{e.note}</p>)}</details></div>}):<div className="empty-small">当前没有符合筛选条件的关联记录。</div>}</div></>}</div></>:<div className="detail-placeholder"><Orbit size={44}/><h3>选择一个节点</h3><p>点击图谱中的歌手或团体，查看关联信息和来源线索。</p></div>}<div className="detail-bottom">NAHFI / CHINESE RAP CULTURE RESEARCH</div></aside>
- </div>
-}
-export default App;

@@ -5,6 +5,7 @@ export interface ArtistNode {
   id:string; name:string; aliases?:string[]; kind:Kind; city:string;
   category:string; color:string; initials:string; description:string;
   catalogArtistIds?:number[]; sources?:Evidence[];
+  avatarUrl?:string;
 }
 export type WorkVersion = '录音室版' | '现场版' | '混音版' | '发行版';
 export interface TrackReference { id:string; title:string; year:number; version:WorkVersion; }

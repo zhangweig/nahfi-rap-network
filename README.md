@@ -1,19 +1,57 @@
-# NAHFI RAP NETWORK · React Alpha 0.4
+# NAHFI RAP NETWORK · 像素地图 Alpha 0.5
 
-中文说唱人物、作品与关系档案。使用 **react-force-graph** 渲染 2D / 3D 图谱，使用 **Graphology** 计算关系路径。
+中文说唱人物、作品与关系档案。34 个省级行政区聚落组成的自绘 SVG 关系网，**Graphology** 负责关系路径计算。
+
+在线浏览：**https://zhangweig.github.io/nahfi-rap-network/** —— GitHub Pages 静态托管，只读展示（地图 / 人物 / 作品 / 路径查找）。投稿与站长审核需要本地或自建服务器运行 Node 服务端，静态站会自动隐藏相关入口。
 
 ## 本地运行
 
-需要 Node.js 20.19+ 或 22.12+。
+需要 Node.js 24+（服务端使用内置 SQLite）。
 
 ```bash
 npm ci
 npm run dev
 npm run check:data
+npm run test:server
 npm run build
 ```
 
-打开 Vite 输出的本地地址。图谱与作品数据均随项目提供，浏览不需要 API Key，也不需要实时调用外部音乐服务。
+打开 Vite 输出的本地地址（通常为 http://localhost:5173）。`npm run dev` 同时启动前端和 8787 端口的数据服务。图谱与作品基础数据随项目提供，浏览不需要 API Key。开发时修改基础数据后需重启完整开发服务。
+
+构建后可用 `npm start` 在 http://localhost:8787 同时预览页面与审核 API。仅运行 `npm run dev:web` 或静态部署只能浏览基础资料；没有服务端就不能提交或审核。
+
+
+## 像素地图与投稿审核
+
+- 地图、人物占位头像、导航、作品卡、表单与审核台采用统一像素风。地图人物位置固定，沿用 react-force-graph 渲染；Graphology 继续负责路径计算，没有自定义节点物理引擎。
+- 已知城市人物以城市坐标固定排列；移动端选中人物后放大定位。未知城市或没有坐标的城市保留在“城市待补充”。组合档案在人物名录与关系网络中保留，地图展示个人音乐人。
+- 顶部“添加人物”、工具栏“添加关系”、档案铅笔和关系铅笔均进入投稿流程。游客可新增或编辑人物、补充或编辑关系；所有投稿默认 `pending`。
+- 页脚“站长审核”通过密钥登录。可查看来源、编辑前后差异、批准或填写原因退回。只有批准的内容进入公共 API、搜索、名录、地图、作品库和导出；访客每 30 秒或重新聚焦页面同步公开资料。
+- 第一次本地启动自动生成 `.data/owner-key.txt`。打开文件、复制密钥、在审核台登录。密钥不会写进前端，队列和审核操作都由服务端鉴权；退出、过期或重启后需重新登录。
+- 待审、批准、退回与审核日志存放在 `.data/community.sqlite`；经审核的记录覆盖基础数据，不改写原始 `seed.ts` / `catalog.json`。编辑版本冲突和重复审核会被拒绝，防止旧投稿覆盖新内容。
+- 输入必须包含具体 HTTPS 资料页和证据说明；歌曲合作和幕后制作需具体作品名称、版本和年份。审核者需核对证据，系统不自动判断来源事实真假。
+
+### 自己替换头像
+
+把头像放入 `public/avatars/`，例如 `public/avatars/yitai.png`。在人物编辑表单里将“像素头像地址”填为 `/avatars/yitai.png`，提交并批准即可。建议 64×64 / 128×128 透明 PNG；同一地址同步用于地图、人物名录和详情，也支持 HTTPS 图片地址。留空或加载失败使用占位图。详见 [头像说明](public/avatars/README.md)。
+
+### 数据备份与本地边界
+
+运行 `npm run backup` 使用 SQLite 在线备份 API，把完整数据库快照保存到 `.data/backups/`。恢复时先停服务，将选定快照复制为 `community.sqlite`，移走旧库对应的 `-wal` / `-shm` 后再启动。先保留旧数据备份；头像文件也应单独备份。`.data/` 与 `.env` 均已加入 Git 忽略规则。
+
+当前按要求完成本地版，尚未部署到公网。以后上线需要持久化磁盘、HTTPS 反向代理、`NODE_ENV=production`、准确的 `PUBLIC_ORIGIN` 和独立 `ADMIN_PASSWORD`（至少 16 字符）；参考 `.env.example`。生产配置缺失时服务拒绝启动。当前是单进程 SQLite 方案，多个实例不能各自使用独立数据文件。运行时不需要第三方数据库服务。
+
+内置同源 POST 检查、HttpOnly / SameSite 会话、生产 Secure cookie、输入和体积限制、投稿与登录频率限制。开发环境限速按直连 IP；反向代理上线时应配置边缘限流。审核列表展示最近 500 条，日志展示最近 100 条，完整历史保留在 SQLite；大规模运营时需扩展分页、账号与反滥用机制。
+
+### 技术与许可
+
+本次没有新增 npm 依赖。现有 React、react-force-graph 与 Graphology 已满足界面和图算法需求；服务端使用 Node.js 内置 HTTP / Crypto / SQLite（Node 24 中 SQLite 仍有实验性提示）。未引入 Express、外部 ORM 或第三方鉴权库。[Node SQLite 文档](https://nodejs.org/docs/latest-v24.x/api/sqlite.html)。
+
+地图陆地几何取自 [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/) 公共领域数据，许可允许复用；像素植被、山地、水系与建筑为装饰示意，不是测绘数据。处理说明见 [地图说明](public/map/README.md)。
+
+## 本次验证
+
+`npm run check:data` 检查原有资料、图谱和作品；`npm run test:server` 覆盖待审隔离、批准/退回、持久化、权限、CSRF、会话撤销、无效资料、重复审核和冲突。`npm run build` 执行类型检查、前端构建及服务端基础数据生成。3D 页面按需加载，较大的 3D 分块仍有 Vite 体积提示。
 
 ## 当前内容与功能
 
@@ -54,7 +92,7 @@ npm run build
 
 `npm run check:data` 验证唯一 ID、作品端点、艺人身份白名单、原始曲名与日期、同曲关系数量、城市/类型路径约束、简繁体搜索与画布聚合。
 
-`npm run build` 执行 TypeScript 检查及生产构建。当前仍有单个产物超过 500 kB 的 Vite 提示，主要来自 3D 渲染依赖；构建可以完成。
+`npm run build` 执行 TypeScript 检查及生产构建。3D 已独立为按需加载分块；作品元数据主包和 3D 分块仍可能出现超过 500 kB 的 Vite 提示，构建可以完成。
 
 本次未新增运行时依赖；目录采集使用 Python 标准库，简体检索别名使用 Windows 内置中文映射。继续沿用现有图谱与算法库：
 

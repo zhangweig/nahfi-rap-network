@@ -118,6 +118,7 @@ function LocalEditor({target,onClose}:{target:EditorTarget;onClose:()=>void}){
       <p className="form-intro">{target.kind==='artist'?'填名字、省份和一句简介就够了，其余交给站长补。'
         :prefilled?<>起点已填好 <b>{data.nodes.find(node=>node.id===seedSource)?.name||'当前人物'}</b>，选另一个人、说清关系即可。</>
         :'选两个人、说清关系，作品和年份能把关系连得更准。'}</p>
+      <p className="form-hint">只收可查证的事实：请把来源链接写在简介或关系说明的末尾。没有来源的评价、传闻和私生活内容会被退回。</p>
       {!online&&<p role="alert" className="notice error">投稿服务未连接。请启动完整开发服务后重试，填写内容不会被清空。</p>}
       <div className="form-grid">
         {target.kind==='artist'?<>

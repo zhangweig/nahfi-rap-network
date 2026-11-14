@@ -13,8 +13,42 @@ import {snapshot,createSubmission,listSubmissions,decideSubmission} from './stor
  */
 
 const BASE = baseData;
-const SESSION_TTL = 8 * 3600_000;
+// 单人审核台，没必要 8 小时就逼着重新输密钥。真正的风险是本机浏览器被他人使用，
+// 不是有效期长短；密钥本身是 48 位随机串，改密码后记得清 sessions 表踢掉旧设备。
+const SESSION_TTL = 30 * 24 * 3600_000;
 const MAX_BODY = 24_000;
+
+/**
+ * 公开数据缓存。
+ *
+ * 首页每 30 秒轮询一次 /api/data，不缓存的话几百个访客就能把 Workers 免费额度
+ * （10 万请求/天）打满，届时全站投稿入口会消失。这里用 Cache API 而不是只设
+ * `Cache-Control` 响应头——Worker 自己产生的响应默认不进 Cloudflare 边缘缓存，
+ * 光写头没有任何作用。
+ *
+ * 缓存放的是「裸响应」：CORS 头由 withCors 在返回时按当前请求的 Origin 补上，
+ * 避免把某一个来源的 Access-Control-Allow-Origin 缓存下来串给其他来源。
+ * cache key 用请求自身的 origin 拼：Cache API 不接受与自己不同 host 的 key。
+ */
+const DATA_TTL = 60;
+
+/** 缓存不可用时退化为直读 D1，功能不受影响，只是额度保护失效。 */
+function dataCache() {
+  try {
+    return typeof caches !== 'undefined' ? caches.default : null;
+  } catch {
+    return null;
+  }
+}
+
+async function purgeData(origin) {
+  // 审核通过后必须清掉，否则站长点完「通过」刷新 60 秒内还是旧数据。
+  try {
+    await dataCache()?.delete(new Request(new URL('/api/data', origin)));
+  } catch {
+    // 本地运行时缓存可能未启用，忽略即可，不影响正确性。
+  }
+}
 const encoder = new TextEncoder();
 
 const hex = buffer => [...new Uint8Array(buffer)].map(byte => byte.toString(16).padStart(2, '0')).join('');
@@ -114,13 +148,34 @@ async function route(request, env, url) {
   if (!env.DB) throw new InputError('数据库未绑定，请检查 wrangler 的 d1_databases 配置', 500);
 
   if (pathname === '/api/data' && method === 'GET') {
+    if (request.method === 'HEAD') return new Response(null, {status: 200, headers: baseHeaders});
+    const cache = dataCache();
+    const cacheKey = new Request(new URL('/api/data', url.origin));
+    const hit = cache ? await cache.match(cacheKey) : null;
+    if (hit) return hit;
     const data = await snapshot(env.DB, BASE);
     const body = {
       ...data,
       revisions: Object.fromEntries([...data.nodes, ...data.relations].map(item => [item.id, fingerprint(item)]))
     };
-    if (request.method === 'HEAD') return new Response(null, {status: 200, headers: baseHeaders});
-    return json(body);
+    // max-age=0 让浏览器每次都回边缘取，边缘按 s-maxage 缓存 60 秒。
+    // 这样审核后 purgeData() 一清，所有访客立刻看到新数据，不会卡在浏览器本地缓存。
+    const response = new Response(JSON.stringify(body), {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': `public, max-age=0, s-maxage=${DATA_TTL}`,
+        'X-Content-Type-Options': 'nosniff'
+      }
+    });
+    if (cache) {
+      try {
+        await cache.put(cacheKey, response.clone());
+      } catch (error) {
+        // 缓存写入失败不能影响正常响应，退回直读即可。
+        console.error('cache.put failed', error);
+      }
+    }
+    return response;
   }
 
   if (pathname === '/api/session' && method === 'GET') return json({owner: await isOwner(request, env)});
@@ -165,7 +220,10 @@ async function route(request, env, url) {
   if (decision && method === 'POST') {
     await requireOwner(request, env);
     const {action, note = ''} = await readJson(request);
-    return json(await decideSubmission(env.DB, BASE, decision[1], action, note));
+    const result = await decideSubmission(env.DB, BASE, decision[1], action, note);
+    // 审核结果要立刻对外可见，不能等缓存自然过期。
+    if (action === 'approve') await purgeData(url.origin);
+    return json(result);
   }
 
   throw new InputError('接口不存在', 404);

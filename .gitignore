@@ -17,3 +17,5 @@ screenshots/
 .shots/
 # 工作笔记（内部过程记录，不属于项目产物）
 .workbuddy/
+# Excel / WPS 打开文件时生成的临时锁文件
+~$*

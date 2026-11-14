@@ -2,7 +2,7 @@
 
 中文说唱人物、作品与关系档案。34 个省级行政区聚落组成的自绘 SVG 关系网，**Graphology** 负责关系路径计算。
 
-在线浏览：**https://zhangweig.github.io/nahfi-rap-network/** —— GitHub Pages 静态托管，只读展示（地图 / 人物 / 作品 / 路径查找）。投稿与站长审核需要本地或自建服务器运行 Node 服务端，静态站会自动隐藏相关入口。
+在线浏览：**https://zhangweig.github.io/nahfi-rap-network/** —— GitHub Pages 静态托管。地图 / 人物 / 作品 / 路径查找不需要后端；投稿与站长审核依赖独立 API，配置 `VITE_API_BASE` 后自动启用，未配置时页面退回只读浏览并隐藏相关入口。部署步骤见 [投稿 API 部署](docs/api-deploy.md)。
 
 ## 本地运行
 
@@ -39,13 +39,13 @@ npm run build
 
 运行 `npm run backup` 使用 SQLite 在线备份 API，把完整数据库快照保存到 `.data/backups/`。恢复时先停服务，将选定快照复制为 `community.sqlite`，移走旧库对应的 `-wal` / `-shm` 后再启动。先保留旧数据备份；头像文件也应单独备份。`.data/` 与 `.env` 均已加入 Git 忽略规则。
 
-当前按要求完成本地版，尚未部署到公网。以后上线需要持久化磁盘、HTTPS 反向代理、`NODE_ENV=production`、准确的 `PUBLIC_ORIGIN` 和独立 `ADMIN_PASSWORD`（至少 16 字符）；参考 `.env.example`。生产配置缺失时服务拒绝启动。当前是单进程 SQLite 方案，多个实例不能各自使用独立数据文件。运行时不需要第三方数据库服务。
+线上后端有两种形态：跑 `server/` 的 Node 服务，或部署 `worker/` 到 Cloudflare Workers + D1（见 [投稿 API 部署](docs/api-deploy.md)）。两者共用 `server/domain.mjs` 的校验规则，前端只需把 `VITE_API_BASE` 指过去。Node 方案需要持久化磁盘、HTTPS 反向代理、`NODE_ENV=production`、准确的 `PUBLIC_ORIGIN` 和独立 `ADMIN_PASSWORD`（至少 16 字符），参考 `.env.example`；是单进程 SQLite，多个实例不能各自使用独立数据文件。Workers 方案把存储换成 D1、鉴权换成 8 小时有效的 Bearer token（跨站请求带不住 SameSite cookie），其余行为一致。
 
 内置同源 POST 检查、HttpOnly / SameSite 会话、生产 Secure cookie、输入和体积限制、投稿与登录频率限制。开发环境限速按直连 IP；反向代理上线时应配置边缘限流。审核列表展示最近 500 条，日志展示最近 100 条，完整历史保留在 SQLite；大规模运营时需扩展分页、账号与反滥用机制。
 
 ### 技术与许可
 
-本次没有新增 npm 依赖。现有 React、react-force-graph 与 Graphology 已满足界面和图算法需求；服务端使用 Node.js 内置 HTTP / Crypto / SQLite（Node 24 中 SQLite 仍有实验性提示）。未引入 Express、外部 ORM 或第三方鉴权库。[Node SQLite 文档](https://nodejs.org/docs/latest-v24.x/api/sqlite.html)。
+运行时没有新增依赖。现有 React、react-force-graph 与 Graphology 已满足界面和图算法需求；服务端使用 Node.js 内置 HTTP / Crypto / SQLite（Node 24 中 SQLite 仍有实验性提示）；Workers 版复用同一套 `node:crypto` 兼容接口。开发依赖里新增 `wrangler`，只用于部署 `worker/`。未引入 Express、外部 ORM 或第三方鉴权库。[Node SQLite 文档](https://nodejs.org/docs/latest-v24.x/api/sqlite.html)。
 
 地图陆地几何取自 [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/) 公共领域数据，许可允许复用；像素植被、山地、水系与建筑为装饰示意，不是测绘数据。处理说明见 [地图说明](public/map/README.md)。
 
@@ -85,6 +85,8 @@ npm run build
 - `src/data/rap-data.ts`：整合数据并生成同曲署名关系。
 - `src/lib/catalog.ts`：搜索与画布连线聚合。
 - `src/lib/network.ts`：Graphology 多重图与路径计算。
+- `server/`：本地投稿审核服务（Node HTTP + SQLite），`domain.mjs` 是两端共用的校验与合成规则。
+- `worker/`：Cloudflare Workers 版 API（D1 存储 + Bearer token），供线上页面调用。
 - `scripts/check-network.mjs`：身份、作品来源、关系、搜索与路径检查。
 - `research/`：只读来源缓存、曲目清单与核对说明。
 

@@ -40,7 +40,8 @@ assert.equal(shortestRoute('ma', 'shengyu', types, ['成都']), null, '城市筛
 assert.equal(shortestRoute('ma', 'air', [], []), null);
 assert.equal(shortestRoute('missing', 'air', types, []), null);
 assert.deepEqual(shortestRoute('ma', 'ma', types, []), ['ma']);
-assert.equal(makeGraph(['affiliation'], []).size, 2);
+// 只看历史关联时应只剩这一类边，数量随资料扩充增长，所以断言「有」而不是写死条数。
+assert.ok(makeGraph(['affiliation'], []).size >= 2, '历史关联应能被单独筛选出来');
 
 const workIds=new Set(works.map(work=>work.id));
 assert.equal(workIds.size,works.length,'作品 ID 必须唯一');

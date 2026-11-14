@@ -25,9 +25,11 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       # Project site lives under /<repo>/ — the Node server keeps serving from the root.
+      # VITE_API_BASE 来自仓库变量；留空时退回同源 /api（页面仍是只读浏览版）。
       - run: npm run build
         env:
           VITE_BASE: /nahfi-rap-network/
+          VITE_API_BASE: ${{ vars.VITE_API_BASE }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -1,0 +1,25 @@
+# Cloudflare Workers 部署配置。
+# 完整步骤见 docs/api-deploy.md。核心三步：
+#   1. npx wrangler d1 create nahfi-rap-network   然后把返回的 database_id 填到下面
+#   2. npx wrangler d1 execute nahfi-rap-network --remote --file=worker/schema.sql
+#   3. npx wrangler secret put ADMIN_PASSWORD     再 npx wrangler deploy
+
+name = "nahfi-rap-network-api"
+main = "worker/index.mjs"
+compatibility_date = "2025-09-01"
+# server/domain.mjs 用到 node:crypto 的同步 createHash，需要这个 flag
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+[vars]
+# 允许跨域写入的页面来源。换域名时改这里。
+PUBLIC_ORIGIN = "https://zhangweig.github.io"
+# 本地开发时 Vite 的地址，逗号分隔
+DEV_ORIGINS = "http://localhost:5288,http://127.0.0.1:5288,http://localhost:5173,http://127.0.0.1:5173"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nahfi-rap-network"
+database_id = "1bcd8b3c-7a26-49ba-9a1a-1a90f1fbc912"

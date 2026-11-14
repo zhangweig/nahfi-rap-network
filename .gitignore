@@ -10,6 +10,8 @@ Thumbs.db
 # 审核密钥、投稿库、导入基线：绝不进仓库
 .data/
 server/generated/
+.dev.vars
+.wrangler/
 # 本地调试截图与临时产物
 screenshots/
 .shots/

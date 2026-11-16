@@ -39,6 +39,10 @@ npx wrangler d1 execute nahfi-rap-network --remote --file=worker/schema.sql
 npx wrangler d1 execute nahfi-rap-network --local --file=worker/schema.sql
 ```
 
+> `schema.sql` 全部是 `CREATE TABLE IF NOT EXISTS`，**已有部署升级时也要重跑一次**，
+> 否则新增的表（如勘误队列 `reports`）不会建出来，`/api/reports` 会直接 500。
+> 重跑不会清空已有数据。
+
 ## 3. 设置审核密钥
 
 ```bash

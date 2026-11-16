@@ -61,6 +61,43 @@ export function validateSubmission(input, data) {
   return {kind,targetId,baseRevision:original?fingerprint(original):null,payload:result,contributor:text(input.contributor||'匿名乐迷','投稿昵称',60),message:text(input.message||'','补充说明',1500,false)};
 }
 
+const REPORT_ISSUES = {
+  artist: ['info', 'missing', 'source', 'other'],
+  avatar: ['wrong-person', 'low-quality', 'missing', 'other'],
+  relation: ['not-true', 'wrong-person', 'wrong-type', 'missing', 'other'],
+  work: ['info', 'missing', 'source', 'other'],
+};
+
+/**
+ * 勘误只入队，不改数据。
+ *
+ * 和 validateSubmission 的根本区别：勘误不需要给出「正确的值」，只需要指出哪里可疑。
+ * 所以这里只校验「对象真实存在 + 说明具体 + 来源可选但必须站得住」，剩下的交给站长判断。
+ */
+export function validateReport(input, data) {
+  if (!input || typeof input !== 'object') throw new InputError('勘误格式错误');
+  if (input.website) throw new InputError('无法提交');
+  const targetType = String(input.targetType || '');
+  const allowed = REPORT_ISSUES[targetType];
+  if (!allowed) throw new InputError('不支持的勘误类型');
+  const targetId = text(input.targetId, '勘误对象', 120);
+  const collection = targetType === 'work' ? data.works : targetType === 'relation' ? data.relations : data.nodes;
+  if (!collection.some(item => item.id === targetId)) throw new InputError('找不到要勘误的记录', 404);
+  const message = text(input.message, '勘误说明', 800);
+  if (message.length < 6) throw new InputError('请把问题写具体一点（至少 6 个字）');
+  const rawSource = String(input.sourceUrl || '').trim();
+  const sourceUrl = rawSource ? url(rawSource, '来源链接') : '';
+  if (sourceUrl && new URL(sourceUrl).pathname === '/') throw new InputError('请提供具体资料页面，不要填写网站首页');
+  return {
+    targetType,
+    targetId,
+    issue: allowed.includes(input.issue) ? input.issue : 'other',
+    message,
+    sourceUrl,
+    contact: text(input.contact || '', '昵称', 60, false),
+  };
+}
+
 export function compose(base, records) {
   const nodes=new Map(base.nodes.map(x=>[x.id,x]));
   const relations=new Map(base.relations.map(x=>[x.id,x]));

@@ -1,0 +1,461 @@
+{
+  "ma": {
+    "source": "wikipedia",
+    "name": "马思唯",
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Higher_Brothers_Icebox_2019.jpg/500px-Higher_Brothers_Icebox_2019.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "pageUrl": "https://zh.wikipedia.org/wiki/%E9%A9%AC%E6%80%9D%E5%94%AF",
+    "note": "zh.wikipedia 页面缩略图",
+    "file": "src/assets/avatars/ma.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "返回的是 ICEBOX 店铺合影，不是单人宣传照"
+  },
+  "knowknow": {
+    "source": "deezer",
+    "name": "KnowKnow",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/9b108483ee377da750d28e4048eb4c01/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/80609162",
+    "note": "Deezer 艺人页，专辑比对命中《LONG TIME KNOW SEE》",
+    "file": "src/assets/avatars/knowknow.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "psyp": {
+    "source": "deezer",
+    "name": "PSY.P",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/1e343e3cd0a505fc020f4adf9de16728/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/53872622",
+    "note": "Deezer 艺人页，专辑比对命中《CHENGDU HOT》",
+    "file": "src/assets/avatars/psyp.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "kungfu": {
+    "source": "deezer",
+    "name": "功夫胖",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/a284cd0411d81c2461edbd307e0c41e6/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/63646192",
+    "note": "Deezer 艺人页，专辑比对命中《G-BLOCK Mixtape》",
+    "file": "src/assets/avatars/kungfu.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "返回的是暗调人影，无法确认是本人"
+  },
+  "yitai": {
+    "source": "deezer",
+    "name": "王以太",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/65019c9f8a031fc428d20131059cb0c8/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/52155102",
+    "note": "Deezer 艺人页，专辑比对命中《Feel & Sight》",
+    "file": "src/assets/avatars/yitai.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "返回的是卡通插画，不是照片"
+  },
+  "air": {
+    "source": "deezer",
+    "name": "艾热",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/95706f16fbc463d7cdfdeb1f4d2bf92d/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/56298792",
+    "note": "Deezer 艺人页，专辑比对命中《AIR·艾熱》",
+    "file": "src/assets/avatars/air.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "asen": {
+    "source": "deezer",
+    "name": "艾志恒Asen",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/563d0737ba1cfb50a6fbd4572a55e32b/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/162845447",
+    "note": "Deezer 艺人页，专辑比对命中《Life After Small Town》",
+    "file": "src/assets/avatars/asen.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "gai": {
+    "source": "deezer",
+    "name": "Gai",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/d0cc44cba8824aa393c6b92f87540735/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/5244672",
+    "note": "Deezer 艺人页，专辑比对命中《虎山行》",
+    "file": "src/assets/avatars/gai.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "返回的是 DMG 唱片 Logo 拼图，不是本人照片"
+  },
+  "pharaoh": {
+    "source": "deezer",
+    "name": "法老",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/246a60e57dfb46eb84fcf14970fb1c67/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/73911602",
+    "note": "Deezer 艺人页，专辑比对命中《退潮》",
+    "file": "src/assets/avatars/pharaoh.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "返回的是插画封面，不是照片"
+  },
+  "vinida": {
+    "source": "deezer",
+    "name": "万妮达",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/983154c656375939630e764d52f43aa6/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/50534732",
+    "note": "Deezer 艺人页，专辑比对命中《路人歌》",
+    "file": "src/assets/avatars/vinida.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "capper": {
+    "source": "deezer",
+    "name": "Capper",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/aa3999084c97572eeb3995e7f376cb20/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/506778",
+    "note": "Deezer 艺人页，专辑比对命中《槍火天使 Gun-fire Angel》",
+    "file": "src/assets/avatars/capper.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "只有背影，无法确认是本人"
+  },
+  "jonyj": {
+    "source": "deezer",
+    "name": "Jony J",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/63d0051be4bbdb7b735d739aa107f217/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/13241569",
+    "note": "Deezer 艺人页，专辑比对命中《24時·演唱会新编自选辑》",
+    "file": "src/assets/avatars/jonyj.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "tizzyt": {
+    "source": "deezer",
+    "name": "TizzyT",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/b9a3b51598fd5d3b0317a0410a45aa41/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/77667102",
+    "note": "Deezer 艺人页，专辑比对命中《99》",
+    "file": "src/assets/avatars/tizzyt.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "hotdog": {
+    "source": "wikipedia",
+    "name": "MC HotDog",
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/MC_HotDog_with_Adidas_microphone_20120504.jpg/500px-MC_HotDog_with_Adidas_microphone_20120504.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "pageUrl": "https://en.wikipedia.org/wiki/MC_HotDog",
+    "note": "en.wikipedia 页面缩略图",
+    "file": "src/assets/avatars/hotdog.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "mcjin": {
+    "source": "wikipedia",
+    "name": "MC Jin",
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Jin_the_MC_%28cropped%29.jpg/500px-Jin_the_MC_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "pageUrl": "https://en.wikipedia.org/wiki/MC_Jin",
+    "note": "en.wikipedia 页面缩略图",
+    "file": "src/assets/avatars/mcjin.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "ty": {
+    "source": "deezer",
+    "name": "Ty.",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/8358b7e37fff55523b07e63b3c725dfd/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/11956425",
+    "note": "Deezer 艺人页，专辑比对命中《20 feat. 王心凌》",
+    "file": "src/assets/avatars/ty.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "捂脸黑白照，无法确认是本人"
+  },
+  "wudu": {
+    "source": "deezer",
+    "name": "雾都L4wudu",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/65f5642a33429dd0f547db45ede76023/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/164943817",
+    "note": "Deezer 艺人页，专辑比对命中《I'M AWAKE》",
+    "file": "src/assets/avatars/wudu.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "返回的是专辑封面，不是照片"
+  },
+  "guangguang": {
+    "source": "deezer",
+    "name": "MC光光",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/ac010fb623371c6213dcbbb96a090820/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/10266422",
+    "note": "Deezer 艺人页，专辑比对命中《有生之年》",
+    "file": "src/assets/avatars/guangguang.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "zaoan": {
+    "source": "deezer",
+    "name": "早安",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/51fc5a71be7997c9373a2b4c79d2be24/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/151213912",
+    "note": "Deezer 艺人页，专辑比对命中《四眼仔》",
+    "file": "src/assets/avatars/zaoan.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "返回的是空白占位图"
+  },
+  "icepaper": {
+    "source": "deezer",
+    "name": "Ice Paper",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/2c04057d6fa0d91febe6a4d3ceb2ea28/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/66055002",
+    "note": "Deezer 艺人页，专辑比对命中《人》",
+    "file": "src/assets/avatars/icepaper.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "pact": {
+    "source": "deezer",
+    "name": "派克特",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/e25632ac3dc4cb8ce2bac69c1294cd72/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/52911212",
+    "note": "Deezer 艺人页，专辑比对命中《W.O.T.W.T MixTape Vol.2》",
+    "file": "src/assets/avatars/pact.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "creamd": {
+    "source": "deezer",
+    "name": "Cream D",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/4c71960e97923cee02536c60d3158f87/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/13284945",
+    "note": "Deezer 艺人页，专辑比对命中《LIFE AFTER LIFE》",
+    "file": "src/assets/avatars/creamd.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "返回的是插画封面，不是照片"
+  },
+  "gali": {
+    "source": "deezer",
+    "name": "GALI",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/b2f56b4df085753abe8245257e383d7a/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/1162310",
+    "note": "Deezer 艺人页，专辑比对命中《70%》",
+    "file": "src/assets/avatars/gali.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "narchy": {
+    "source": "deezer",
+    "name": "那奇沃夫",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/367eedace7624103ce6fb016ffd069ba/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/119544112",
+    "note": "Deezer 艺人页，专辑比对命中《number one boy》",
+    "file": "src/assets/avatars/narchy.jpg",
+    "fetchedAt": "2026-11-16",
+    "review": "rejected",
+    "reviewNote": "返回的是歌词/封面图，不是人像"
+  },
+  "athree": {
+    "source": "deezer",
+    "name": "AThree",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/d060a94bea5d763ddfe6edaa5fdfff4e/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/13193479",
+    "note": "Deezer 艺人页，专辑比对命中《生而有翼》",
+    "file": "src/assets/avatars/athree.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "ice": {
+    "source": "deezer",
+    "name": "ICE杨长青",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/2988a35610901809161a5602785ec30f/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/171280827",
+    "note": "Deezer 艺人页，专辑比对命中《SURE》",
+    "file": "src/assets/avatars/ice.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "nineone": {
+    "source": "wikipedia",
+    "name": "乃万",
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/%E5%8C%97%E4%BA%ACM_DSK%E9%9F%B3%E4%B9%90%E8%8A%82_%E4%B9%83%E4%B8%87_02.jpg/500px-%E5%8C%97%E4%BA%ACM_DSK%E9%9F%B3%E4%B9%90%E8%8A%82_%E4%B9%83%E4%B8%87_02.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "pageUrl": "https://zh.wikipedia.org/wiki/%E4%B9%83%E4%B8%87",
+    "note": "zh.wikipedia 页面缩略图",
+    "file": "src/assets/avatars/nineone.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "eso": {
+    "source": "wikipedia",
+    "name": "瘦子E.SO",
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/%E7%98%A6%E5%AD%90E.SO.png/500px-%E7%98%A6%E5%AD%90E.SO.png?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "pageUrl": "https://zh.wikipedia.org/wiki/%E7%98%A6%E5%AD%90E.SO",
+    "note": "zh.wikipedia 页面缩略图",
+    "file": "src/assets/avatars/eso.png",
+    "fetchedAt": "2026-11-16"
+  },
+  "kenzy": {
+    "source": "wikipedia",
+    "name": "小春",
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/2021%E5%B9%B412%E6%9C%8825%E6%97%A5_%E5%91%A8%E6%96%87%E5%82%91_%E6%A1%83%E5%9C%92%E5%B8%82%E6%94%BF%E5%BA%9C.jpg/500px-2021%E5%B9%B412%E6%9C%8825%E6%97%A5_%E5%91%A8%E6%96%87%E5%82%91_%E6%A1%83%E5%9C%92%E5%B8%82%E6%94%BF%E5%BA%9C.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "pageUrl": "https://zh.wikipedia.org/wiki/%E5%B0%8F%E6%98%A5",
+    "note": "zh.wikipedia 页面缩略图",
+    "file": "src/assets/avatars/kenzy.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "lexie": {
+    "source": "wikipedia",
+    "name": "Lexie Liu",
+    "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/%E5%88%98%E6%9F%8F%E8%BE%9BLexie_Liu_8_%28cropped%29.jpg/500px-%E5%88%98%E6%9F%8F%E8%BE%9BLexie_Liu_8_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "pageUrl": "https://en.wikipedia.org/wiki/Lexie_Liu",
+    "note": "en.wikipedia 页面缩略图",
+    "file": "src/assets/avatars/lexie.jpg",
+    "fetchedAt": "2026-11-16"
+  },
+  "elfin": {
+    "source": "deezer",
+    "name": "小精灵",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/9636f077bd8dcd7f9178dec6cec6ee38/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/52672242",
+    "note": "Deezer 艺人页，5 粉丝；同库无专辑交集，需人工确认",
+    "file": "src/assets/avatars/elfin.jpg",
+    "review": "manually-approved",
+    "reviewNote": "首轮专辑交叉验证未通过，人工看图确认是人像后采用（2026-11-16）",
+    "fetchedAt": "2026-11-16"
+  },
+  "keyng": {
+    "source": "deezer",
+    "name": "杨和苏KeyNG",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/7ca1ced67c047ce3c2beadc3ad0b2859/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/14915247",
+    "note": "Deezer 艺人页，26 粉丝；同库无专辑交集，需人工确认",
+    "file": "src/assets/avatars/keyng.jpg",
+    "review": "manually-approved",
+    "reviewNote": "首轮专辑交叉验证未通过，人工看图确认是人像后采用（2026-11-16）",
+    "fetchedAt": "2026-11-16"
+  },
+  "vava": {
+    "source": "deezer",
+    "name": "Vava",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/cf12bdf3ef68b706d2c371c5393894aa/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/167626",
+    "note": "Deezer 艺人页，4183 粉丝；同库无专辑交集，需人工确认",
+    "file": "src/assets/avatars/vava.jpg",
+    "review": "manually-approved",
+    "reviewNote": "首轮专辑交叉验证未通过，人工看图确认是人像后采用（2026-11-16）",
+    "fetchedAt": "2026-11-16"
+  },
+  "wangqiming": {
+    "source": "deezer",
+    "name": "王齐铭WatchMe",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/574da6a02baab9691054294ebc1dce4a/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/171344767",
+    "note": "Deezer 艺人页，42 粉丝；同库无专辑交集，需人工确认",
+    "file": "src/assets/avatars/wangqiming.jpg",
+    "review": "manually-approved",
+    "reviewNote": "首轮专辑交叉验证未通过，人工看图确认是人像后采用（2026-11-16）",
+    "fetchedAt": "2026-11-16"
+  },
+  "softlipa": {
+    "source": "deezer",
+    "name": "Soft Lipa",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/fcbcffed0669e5744d96143976943ea9/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/5564498",
+    "note": "Deezer 艺人页，325 粉丝；同库无专辑交集，需人工确认",
+    "file": "src/assets/avatars/softlipa.jpg",
+    "review": "manually-approved",
+    "reviewNote": "首轮专辑交叉验证未通过，人工看图确认是人像后采用（2026-11-16）",
+    "fetchedAt": "2026-11-16"
+  },
+  "melo": {
+    "review": "rejected",
+    "reviewNote": "返回的是眼睛特写专辑封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/b5f951babdda146502d5158b340461d6/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/278878131",
+    "source": "deezer"
+  },
+  "shengyu": {
+    "review": "rejected",
+    "reviewNote": "暗调人影，无法确认",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/a284cd0411d81c2461edbd307e0c41e6/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/215320925",
+    "source": "deezer"
+  },
+  "keyl": {
+    "review": "rejected",
+    "reviewNote": "返回的是《山西姑娘》民歌封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/b7d280fa640c7c7222bd4c5107d123df/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/54543002",
+    "source": "deezer"
+  },
+  "bridge": {
+    "review": "rejected",
+    "reviewNote": "返回的是专辑封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/0eb0c076557394a929c95e36833fc268/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/244385802",
+    "source": "deezer"
+  },
+  "gem": {
+    "review": "rejected",
+    "reviewNote": "返回的是节目 Logo",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/c8325f54dfcce320f16b88a8426d4ff7/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/91232482",
+    "source": "deezer"
+  },
+  "xiedi": {
+    "review": "rejected",
+    "reviewNote": "返回的是专辑封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/8ee97e7cf7692c99377ec4ffcc696f39/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/9348614",
+    "source": "deezer"
+  },
+  "ddg": {
+    "review": "rejected",
+    "reviewNote": "返回的是舞台视觉/封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/08a20931ed3e220dab13480d785fdde7/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/148888502",
+    "source": "deezer"
+  },
+  "lianma": {
+    "review": "rejected",
+    "reviewNote": "多人场景照，非单人宣传照",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/a6ab3f565d436d43db703ab303ad5e76/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/120918782",
+    "source": "deezer"
+  },
+  "gaotianzuo": {
+    "review": "rejected",
+    "reviewNote": "返回的是专辑封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/5bb44eaaefd8f358fdbf222f2db31539/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/125459102",
+    "source": "deezer"
+  },
+  "danko": {
+    "review": "rejected",
+    "reviewNote": "返回的是专辑封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/1cbd2f2b94c5408f9ac0eb6598730675/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/141794722",
+    "source": "deezer"
+  },
+  "nawukere": {
+    "review": "rejected",
+    "reviewNote": "返回的是双人专辑封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/a9f1c0407cc78e9b2c015029b3e5d436/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/63646202",
+    "source": "deezer"
+  },
+  "huangxu": {
+    "review": "rejected",
+    "reviewNote": "返回的是空白占位图",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/e036fb0b77cc38ca11925c1ce9d396ec/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/14699313",
+    "source": "deezer"
+  },
+  "jiang": {
+    "review": "rejected",
+    "reviewNote": "返回的是专辑封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/8a5bebfc7c509c9ca036a181b4bad9bc/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/76131822",
+    "source": "deezer"
+  },
+  "shayiting": {
+    "review": "rejected",
+    "reviewNote": "返回的是专辑封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/dd27f950a5256277f8969f0482d2e407/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/147931972",
+    "source": "deezer"
+  },
+  "muta": {
+    "review": "rejected",
+    "reviewNote": "返回的是空白占位图",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist//500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/269485002",
+    "source": "deezer"
+  },
+  "kumachan": {
+    "review": "rejected",
+    "reviewNote": "返回的是专辑封面",
+    "imageUrl": "https://cdn-images.dzcdn.net/images/artist/8f8f7674f491940acbebcdae9260f0f3/500x500-000000-80-0-0.jpg",
+    "pageUrl": "https://www.deezer.com/artist/13299957",
+    "source": "deezer"
+  }
+}

@@ -38,3 +38,21 @@ CREATE TABLE IF NOT EXISTS sessions(
 );
 
 CREATE INDEX IF NOT EXISTS idx_submissions_status ON submissions(status, created_at DESC);
+
+-- 勘误队列。和 submissions 分开存，因为勘误不携带「正确的值」，不能被批准成公开数据；
+-- 站长处理完只标记状态，需要改数据时再走正式投稿流程。
+CREATE TABLE IF NOT EXISTS reports(
+  id TEXT PRIMARY KEY,
+  target_type TEXT NOT NULL,
+  target_id TEXT NOT NULL,
+  issue TEXT NOT NULL,
+  message TEXT NOT NULL,
+  source_url TEXT,
+  contact TEXT,
+  status TEXT NOT NULL DEFAULT 'open',
+  created_at TEXT NOT NULL,
+  resolved_at TEXT,
+  note TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_reports_status ON reports(status, created_at DESC);

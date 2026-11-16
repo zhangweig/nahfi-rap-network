@@ -108,3 +108,27 @@ test('关系投稿不再强制要求来源，证据为空也能通过',async t=>
   assert.deepEqual(rel.evidence,[]);
   assert.equal(rel.type,'member');
 });
+
+test('勘误只入队，不改公开数据，只有站长能处理',async t=>{
+  const {request,login}=await setup(t);
+  const report={targetType:'avatar',targetId:'one',issue:'wrong-person',message:'这张头像不是本人，是另一位歌手',contact:'路过的乐迷'};
+  const created=await request('/reports',report);assert.equal(created.status,201);
+  // 勘误绝不改动公开数据
+  assert.equal((await request('/data')).data.nodes.length,2);
+  assert.equal((await request('/reports')).status,401);
+  const cookie=await login();
+  const queue=await request('/reports',undefined,cookie);
+  assert.equal(queue.data.items.length,1);assert.equal(queue.data.items[0].status,'open');
+  assert.equal(queue.data.items[0].contact,'路过的乐迷');
+  assert.equal((await request(`/reports/${created.data.id}`,{action:'resolve',note:'已换成官方宣传照'},cookie)).status,200);
+  assert.equal((await request(`/reports/${created.data.id}`,{action:'resolve'},cookie)).status,409);
+  assert.equal((await request('/reports',undefined,cookie)).data.items[0].status,'resolved');
+});
+test('勘误的对象必须真实存在，说明要具体，蜜罐拦机器人',async t=>{
+  const {request}=await setup(t);
+  assert.equal((await request('/reports',{targetType:'avatar',targetId:'nobody',message:'这条记录根本不存在'})).status,404);
+  assert.equal((await request('/reports',{targetType:'avatar',targetId:'one',message:'错的'})).status,400);
+  assert.equal((await request('/reports',{targetType:'unknown',targetId:'one',message:'类型不在白名单里'})).status,400);
+  assert.equal((await request('/reports',{targetType:'artist',targetId:'one',message:'机器人填了蜜罐字段',website:'http://spam'})).status,400);
+  assert.equal((await request('/reports',{targetType:'artist',targetId:'one',issue:'info',message:'简介里的城市写错了，应为重庆',sourceUrl:'https://example.com/profile'})).status,201);
+});

@@ -1,6 +1,6 @@
 import baseData from '../server/generated/base-data.json';
-import {validateSubmission,fingerprint,InputError} from '../server/domain.mjs';
-import {snapshot,createSubmission,listSubmissions,decideSubmission} from './store.mjs';
+import {validateSubmission,validateReport,fingerprint,InputError} from '../server/domain.mjs';
+import {snapshot,createSubmission,listSubmissions,decideSubmission,createReport,listReports,decideReport} from './store.mjs';
 
 /**
  * Cloudflare Workers 版投稿 / 审核 API。
@@ -214,6 +214,25 @@ async function route(request, env, url) {
   if (pathname === '/api/review' && method === 'GET') {
     await requireOwner(request, env);
     return json(await listSubmissions(env.DB, BASE));
+  }
+
+  // 勘误：游客提交，站长处理。不写 approved 表，所以永远不会污染公开数据。
+  if (pathname === '/api/reports' && method === 'POST') {
+    limit(request, 'report', 15);
+    const value = validateReport(await readJson(request), await snapshot(env.DB, BASE));
+    return json({id: await createReport(env.DB, value), status: 'open'}, 201);
+  }
+
+  if (pathname === '/api/reports' && method === 'GET') {
+    await requireOwner(request, env);
+    return json(await listReports(env.DB));
+  }
+
+  const reportDecision = pathname.match(/^\/api\/reports\/([a-zA-Z0-9-]+)$/);
+  if (reportDecision && method === 'POST') {
+    await requireOwner(request, env);
+    const {action, note = ''} = await readJson(request);
+    return json(await decideReport(env.DB, reportDecision[1], action, note));
   }
 
   const decision = pathname.match(/^\/api\/review\/([a-zA-Z0-9-]+)$/);

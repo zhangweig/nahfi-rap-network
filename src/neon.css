@@ -52,24 +52,28 @@
 .bn{position:absolute;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;padding:0;
   color:#d8eefc;transform:translateX(-50%);cursor:pointer;transition:opacity .18s}
 .bn:hover{background:none}
-.bn-pic{position:relative;display:block;width:var(--s);height:var(--s);border:2px solid color-mix(in srgb,var(--c) 80%,#fff 0%);
-  border-radius:6px;background:#070d15;
-  box-shadow:0 0 12px color-mix(in srgb,var(--c) 45%,transparent),inset 0 0 12px #000000b3}
-.bn-pic>.pixel-avatar{display:block;width:100%;height:100%;border-radius:4px;overflow:hidden;background:transparent!important}
+/* 头像本身不加任何边框：框线、内描边、底板全部去掉，只留一层柔光把人和背景分开。
+   以前这里是「3px 彩色边 + 1px 白色内描边 + .pixel-avatar 2px 深色边」三层套框，
+   叠在深色画布上像相框套相框，已全部移除。 */
+.bn-pic{position:relative;display:block;width:var(--s);height:var(--s);
+  border:0;background:transparent;border-radius:0;
+  box-shadow:0 0 12px color-mix(in srgb,var(--c) 40%,transparent)}
+.bn-pic>.pixel-avatar{display:block;width:100%;height:100%;border:0;border-radius:4px;overflow:hidden;box-shadow:none;background:transparent!important}
 .bn-pic>.pixel-avatar svg,.bn-pic>.pixel-avatar img{display:block;width:100%;height:100%;object-fit:cover}
-.bn:hover .bn-pic{box-shadow:0 0 18px var(--c),inset 0 0 12px #000000b3}
+.bn:hover .bn-pic{box-shadow:0 0 18px color-mix(in srgb,var(--c) 70%,transparent)}
 .bn-name{max-width:120px;padding:1px 6px;border:1px solid color-mix(in srgb,var(--c) 38%,transparent);border-radius:3px;
   background:#050a11e8;color:#dff3ff;font-size:11px;font-weight:700;letter-spacing:.3px;line-height:1.6;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bn.mini .bn-name{position:absolute;left:50%;top:calc(var(--s) + 1px);transform:translateX(-50%);opacity:0;pointer-events:none;
   transition:opacity .14s;font-size:9px;padding:0 4px;max-width:96px;border-color:#ffffff26;z-index:3}
 .bn.mini:hover .bn-name,.bn.mini.is-active .bn-name{opacity:1}
-.bn.is-group .bn-pic{border-radius:50%}
+.bn.is-group .bn-pic>.pixel-avatar{border-radius:50%}
 .bn-flag{position:absolute;top:-7px;right:-9px;font-size:6.5px;letter-spacing:.8px;color:#04070d;background:var(--c);
   padding:0 3px;border-radius:2px;font-weight:800;line-height:1.5}
 .bn.is-dim{opacity:.32}
 .bn.is-active{z-index:5}
-.bn.is-active .bn-pic{border-color:#fff;box-shadow:0 0 0 2px var(--c),0 0 30px var(--c)}
+.bn.is-active .bn-pic{box-shadow:0 0 34px color-mix(in srgb,var(--c) 75%,transparent);
+  filter:drop-shadow(0 10px 26px #000000b3)}
 .bn.is-active .bn-name{background:var(--c);color:#04070d;border-color:var(--c);font-weight:800}
 
 /* chrome */
@@ -134,8 +138,10 @@
   height:min(880px,calc(100vh - 190px));min-height:600px;max-height:none;overflow:hidden}
 .artist-panel.game-card .gc-head{display:flex;gap:11px;align-items:flex-start;position:relative;padding-bottom:10px;border-bottom:1px solid #14283a}
 .gc-avatar{position:relative;flex:none;width:62px;height:62px;border:2px solid var(--c);border-radius:8px;background:#05090f;padding:0;
-  box-shadow:0 0 16px color-mix(in srgb,var(--c) 55%,transparent),inset 0 0 14px #000a}
-.gc-avatar .pixel-avatar{width:100%;height:100%;display:block;background:transparent!important}
+  box-shadow:0 0 16px color-mix(in srgb,var(--c) 55%,transparent)}
+/* 面板里只保留外圈这一道色框；内层 pixel-avatar 自带的 2px 深色边和米色贴纸投影
+   （style.css 里 .pixel-avatar.large 的 3px 3px #c3b793）都去掉，避免套框。 */
+.gc-avatar .pixel-avatar{width:100%;height:100%;display:block;border:0;border-radius:6px;overflow:hidden;box-shadow:none;background:transparent!important}
 .gc-avatar .pixel-avatar svg,.gc-avatar .pixel-avatar img{width:100%;height:100%;display:block;object-fit:cover}
 .gc-level{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:7px;letter-spacing:.6px;
   background:#05090f;border:1px solid var(--c);color:var(--c);padding:0 4px;border-radius:2px;white-space:nowrap}
@@ -280,10 +286,9 @@
   background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--c) 20%,transparent),color-mix(in srgb,var(--c) 5%,transparent) 72%);
   box-shadow:inset 0 0 50px color-mix(in srgb,var(--c) 12%,transparent),0 0 26px color-mix(in srgb,var(--c) 16%,transparent)}
 .bz::before{border-color:color-mix(in srgb,var(--c) 32%,transparent)}
-.bn-pic{border-width:2px;border-color:color-mix(in srgb,var(--c) 92%,#fff 8%);
-  box-shadow:0 0 14px color-mix(in srgb,var(--c) 55%,transparent),inset 0 0 0 1px #ffffff1f,inset 0 -8px 14px #00000066}
+.bn-pic{box-shadow:0 0 14px color-mix(in srgb,var(--c) 50%,transparent)}
 .bn-name{font-size:12px;padding:1px 7px;background:#04080ee8;border-color:color-mix(in srgb,var(--c) 46%,transparent);color:#eaf9ff}
-.bn.mini .bn-pic{border-color:#ffffff45;box-shadow:0 0 10px #7fd8ff40,inset 0 0 12px #00000088}
+.bn.mini .bn-pic{box-shadow:0 0 10px #7fd8ff40}
 .bz-tag{background:#04070d;box-shadow:0 0 12px color-mix(in srgb,var(--c) 30%,transparent)}
 .board-edges{opacity:.95}
 
@@ -298,7 +303,6 @@
 .map-room{height:calc(100vh - 300px);min-height:600px}
 .artist-panel.game-card{height:calc(100vh - 300px);min-height:600px}
 .bz{border-width:2px;box-shadow:inset 0 0 60px color-mix(in srgb,var(--c) 14%,transparent),0 0 26px color-mix(in srgb,var(--c) 20%,transparent)}
-.bn-pic{border-width:3px}
 .bn-name{font-size:11.5px;max-width:112px}
 .board-title h2{font-size:18px}
 @media(max-height:900px){.map-room,.artist-panel.game-card{height:calc(100vh - 270px);min-height:540px}}
@@ -413,6 +417,10 @@
 
 /* ── free-canvas editing: drag a province anywhere, edges stay wired ───── */
 .bz{cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none}
+/* An avatar must never start a native image drag — that cancels the canvas drag. */
+.bn-pic img,.pixel-avatar img{-webkit-user-drag:none;user-drag:none;pointer-events:none}
+/* Avatars double as drag handles for their province card, so they must not select text. */
+.bn{user-select:none;-webkit-user-select:none;touch-action:none}
 .bz:active{cursor:grabbing}
 .bz.is-dragging{cursor:grabbing;border-color:color-mix(in srgb,var(--c) 96%,#fff 14%);
   box-shadow:inset 0 0 60px color-mix(in srgb,var(--c) 24%,transparent),0 0 38px color-mix(in srgb,var(--c) 55%,transparent)}
@@ -444,7 +452,8 @@
   text-align:left;color:#cfe6f4;justify-content:flex-start;font-weight:400}
 .roster-list button:hover{background:#102434}
 .roster-list button.on{background:#12354a;box-shadow:inset 0 0 0 1px #2b7799}
-.roster-list .pixel-avatar{width:20px;height:20px;flex:none;border-radius:3px;border-width:1px}
+.roster-list .pixel-avatar{width:20px;height:20px;flex:none;border-radius:3px;border:0;box-shadow:none}
+.gc-row .pixel-avatar{border:0;box-shadow:none}
 .roster-list span{min-width:0;flex:1}
 .roster-list b{display:block;font-size:10.5px;font-weight:600;color:#e6f6ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .roster-list small{display:block;font-size:8px;color:#5f8ba3;letter-spacing:.2px}
@@ -775,3 +784,182 @@ body{background:#04070d}
   filter:drop-shadow(0 0 4px var(--c))}
 @keyframes edgeFlow{from{stroke-dashoffset:0}to{stroke-dashoffset:-90}}
 @media(prefers-reduced-motion:reduce){.board-edges .edge-flow{animation:none;stroke-dasharray:none}}
+
+/* ══ 画布氛围层：极光、扫描雷达、信号线与浮尘 ══════════════════════════
+   全部走 transform / opacity 动画（合成层），不触发重排。
+   视差用 --px/--py 由 React 按平移量算出，背景比节点移动得慢，形成纵深。 */
+.board-bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  opacity:.9;transition:opacity .55s ease}
+/* The backdrop must never eat a drag: not the layer, not any of its children. */
+.board-bg,.board-bg *{pointer-events:none}
+/* The node stage always paints above the backdrop. */
+.board-stage{z-index:1}
+/* 选中人物时压暗环境，把注意力交还给关系线 */
+.board-bg.is-soft{opacity:.42}
+.board-bg i{display:block;position:absolute}
+.bg-par{position:absolute;inset:-9%;transform:translate3d(var(--px,0),var(--py,0),0);will-change:transform}
+
+/* 1. 极光色斑：三团低频呼吸的光晕 */
+.bg-aurora{position:absolute;inset:0}
+.bg-aurora i{width:66%;height:80%;border-radius:50%;opacity:.55}
+.bg-aurora i:nth-child(1){left:-10%;top:-26%;
+  background:radial-gradient(closest-side,#1d6f9e2e,transparent 72%);
+  animation:bgDriftA 34s ease-in-out infinite alternate}
+.bg-aurora i:nth-child(2){right:-16%;top:2%;width:58%;height:70%;
+  background:radial-gradient(closest-side,#6a2ea82b,transparent 72%);
+  animation:bgDriftB 42s ease-in-out infinite alternate}
+.bg-aurora i:nth-child(3){left:24%;bottom:-30%;width:56%;height:64%;
+  background:radial-gradient(closest-side,#127f7424,transparent 72%);
+  animation:bgDriftC 50s ease-in-out infinite alternate}
+@keyframes bgDriftA{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(7%,9%,0) scale(1.14)}}
+@keyframes bgDriftB{from{transform:translate3d(0,0,0) scale(1.08)}to{transform:translate3d(-9%,6%,0) scale(.96)}}
+@keyframes bgDriftC{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(5%,-8%,0) scale(1.12)}}
+
+/* 2. 斜向线场：整片线条极慢漂移，是背景里最容易被察觉的一层 */
+.bg-lines{position:absolute;inset:-24%;transform:rotate(-18deg);
+  mask-image:radial-gradient(58% 54% at 52% 48%,#000 8%,#0000 86%);
+  -webkit-mask-image:radial-gradient(58% 54% at 52% 48%,#000 8%,#0000 86%)}
+.bg-lines i{position:absolute;inset:0;
+  background-image:repeating-linear-gradient(180deg,#5fc8ff14 0 1px,transparent 1px 46px);
+  animation:bgLines 46s linear infinite}
+@keyframes bgLines{from{transform:translate3d(0,-46px,0)}to{transform:translate3d(0,0,0)}}
+
+/* 3. 水平信号线：细长光带横穿画布，像数据在流动 */
+.bg-traces{position:absolute;inset:0}
+.bg-traces i{height:1px;width:34%;left:0;
+  background:linear-gradient(90deg,transparent,#4fd8ff00 6%,#8ff0ff44 50%,#4fd8ff00 94%,transparent);
+  animation:bgTrace 17s linear infinite}
+.bg-traces i:nth-child(1){top:17%;animation-duration:19s;animation-delay:-4s}
+.bg-traces i:nth-child(2){top:31%;width:26%;animation-duration:24s;animation-delay:-13s;opacity:.7}
+.bg-traces i:nth-child(3){top:52%;width:42%;animation-duration:15s;animation-delay:-8s;opacity:.5}
+.bg-traces i:nth-child(4){top:68%;width:30%;animation-duration:21s;animation-delay:-17s;opacity:.8}
+.bg-traces i:nth-child(5){top:84%;width:22%;animation-duration:27s;animation-delay:-2s;opacity:.45}
+@keyframes bgTrace{from{transform:translate3d(-110%,0,0)}to{transform:translate3d(400%,0,0)}}
+
+/* 4. 扫描雷达：唱片纹路 + 缓慢转向的光扇 */
+.bg-radar{right:-16%;bottom:-34%;width:640px;height:640px;border-radius:50%;opacity:.5;
+  background:
+    radial-gradient(closest-side,transparent 22%,#8ff0ff10 23%,transparent 24%),
+    conic-gradient(from 0deg,transparent 0 74%,#4fd8ff12 86%,#a9f0ff2e 97%,transparent 100%);
+  mask-image:radial-gradient(closest-side,#000 18%,#000 58%,transparent 86%);
+  animation:bgSpin 26s linear infinite;will-change:transform}
+.bg-radar.alt{right:auto;left:-22%;top:-30%;bottom:auto;width:470px;height:470px;opacity:.38;
+  background:conic-gradient(from 180deg,transparent 0 78%,#a06bff1a 90%,#d9b8ff2b 98%,transparent 100%);
+  animation-duration:38s;animation-direction:reverse}
+@keyframes bgSpin{to{transform:rotate(360deg)}}
+
+/* 5. 竖向扫描：一道极淡的光幕自上而下推移 */
+.bg-sweep{position:absolute;left:-10%;right:-10%;top:0;height:180px;opacity:.75;
+  background:linear-gradient(180deg,transparent,#4fd8ff00 30%,#8ff0ff14 50%,#4fd8ff00 70%,transparent);
+  animation:bgSweep 16s cubic-bezier(.45,.05,.55,.95) infinite}
+@keyframes bgSweep{from{transform:translate3d(0,-220px,0)}to{transform:translate3d(0,1100px,0)}}
+
+/* 6. 浮尘：缓慢上浮的小光点，给静止画面一点呼吸 */
+.bg-sparks{position:absolute;inset:0}
+.bg-sparks i{border-radius:50%;background:#c9f6ff;box-shadow:0 0 7px #4fd8ffcc;opacity:0;
+  animation:bgSpark 14s linear infinite}
+@keyframes bgSpark{
+  0%{opacity:0;transform:translate3d(0,26px,0) scale(.7)}
+  14%{opacity:.85;transform:translate3d(2px,0,0) scale(1)}
+  76%{opacity:.45}
+  100%{opacity:0;transform:translate3d(18px,-150px,0) scale(.6)}}
+
+/* ══ 选中人物的放大反馈 ══════════════════════════════════════════════
+   点中某人 = 头像放到 3 倍，不再有描边或扩散光环（框已经全部去掉，
+   放大本身就是「点中了」的反馈）。原点是底边中点，所以只向上、向两侧长，
+   名字牌留在原位不会被盖住。 */
+.bn-pic{transform-origin:50% 100%;
+  transition:transform .42s cubic-bezier(.2,1.08,.3,1),box-shadow .3s ease}
+.bn:hover .bn-pic{transform:scale(1.06);will-change:transform}
+.bn:active .bn-pic{transform:scale(.95)}
+.bn.is-active .bn-pic{transform:scale(3);will-change:transform;
+  box-shadow:0 0 40px color-mix(in srgb,var(--c) 62%,transparent)}
+
+/* CREW 角标也会被 3 倍一起放大，反向缩回去并补偿位移，保持原尺寸原位置 */
+.bn-flag{transition:transform .42s cubic-bezier(.2,1.08,.3,1),top .42s,right .42s}
+.bn.is-active .bn-flag{transform:scale(.3333);transform-origin:100% 0;top:-2.33px;right:-3px}
+
+/* 名字牌跟着轻轻一弹；用独立的 scale 属性，不去碰 mini 牌子的 translateX(-50%) */
+.bn.is-active .bn-name{animation:bnNamePop .34s .06s cubic-bezier(.22,1.2,.36,1) both}
+@keyframes bnNamePop{
+  from{scale:.94}
+  to{scale:1}}
+
+/* 面板换人时头像弹进来，和画布上同一个手感 */
+.gc-avatar{animation:gcAvatarPop .5s cubic-bezier(.24,1.22,.36,1) both}
+@keyframes gcAvatarPop{
+  0%{transform:scale(.76);opacity:0}
+  56%{transform:scale(1.05);opacity:1}
+  78%{transform:scale(.985)}
+  100%{transform:scale(1)}}
+
+@media(prefers-reduced-motion:reduce){
+  .board-bg,.bg-par,.bg-aurora i,.bg-lines i,.bg-traces i,.bg-radar,.bg-sweep,.bg-sparks i{animation:none!important}
+  .bg-sparks i{opacity:.5}
+  .bn-pic,.bn:hover .bn-pic,.bn:active .bn-pic{transition:none;transform:none}
+  .bn.is-active .bn-pic{transform:scale(3)}
+  .bn.is-active .bn-flag{transform:scale(.3333)}
+  .bn.is-active .bn-name{animation:none}
+  .gc-avatar{animation:none}
+}
+
+/* ══ 分享海报 / 勘误入口 ═══════════════════════════════════════════════
+   面板头部已经挤了「编辑 + 收起」两个角标按钮，分享排第三个，
+   所以三者按 right:0 / 32 / 64 依次让位，不要改成 flex，
+   .gc-id 是 flex:1 占满剩余宽度，改布局会把长名字的省略号弄坏。 */
+.artist-panel.game-card{position:relative}
+.gc-share{position:absolute;right:64px;top:0;padding:3px;border:1px solid #1d3a52;background:#0a1421;
+  color:#5f92ab;border-radius:4px;display:flex;cursor:pointer}
+.gc-share:hover,.gc-share[aria-expanded="true"]{color:#8ff0ff;background:#102434;border-color:#2a7f9c}
+
+.gc-share-menu{position:absolute;right:8px;top:44px;z-index:12;display:flex;flex-direction:column;gap:2px;
+  min-width:172px;padding:5px;border:1px solid #1d4a63;border-radius:7px;background:#050c14;
+  box-shadow:0 18px 40px #000000cc;animation:gcMenu .16s ease-out both}
+@keyframes gcMenu{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.gc-share-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 9px;border:0;border-radius:4px;
+  background:none;color:#a8d8ea;font-size:11px;text-align:left;cursor:pointer}
+.gc-share-menu button:hover{background:#102434;color:#e6fbff}
+.gc-share-menu button:disabled{opacity:.55;cursor:default}
+.gc-share-menu small{padding:5px 9px 3px;color:#4d7d92;font-size:9px;line-height:1.5}
+
+.gc-toast{position:absolute;left:50%;bottom:16px;z-index:14;pointer-events:none;white-space:nowrap;
+  transform:translateX(-50%);padding:7px 13px;border-radius:20px;font-size:11px;
+  border:1px solid #2a6b86;background:#0d2436e8;color:#bdf0ff;box-shadow:0 8px 22px #0008;
+  animation:gcToast .22s ease-out both}
+@keyframes gcToast{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* 头像右下角的「!」——只在悬停时明显，避免每张卡都挂个感叹号 */
+.gc-avatar-report{position:absolute;right:-7px;bottom:-7px;width:17px;height:17px;padding:0;display:grid;
+  place-items:center;border-radius:50%;border:1px solid #7a4a2b;background:#1a0f08;color:#ffb27a;
+  font-size:10px;font-weight:800;line-height:1;opacity:0;transition:opacity .18s ease}
+.gc-avatar:hover .gc-avatar-report,.gc-avatar-report:focus-visible{opacity:1}
+.gc-avatar-report:hover{background:#2a170c;border-color:#ff9d5c;color:#ffd7b0}
+
+.gc-row-report{position:absolute;right:0;top:2px;padding:1px 5px;border:1px solid #1d3a52;border-radius:3px;
+  background:#0a1421;color:#4e7f99;font-size:9px;opacity:0;transition:opacity .16s ease}
+.gc-row:hover .gc-row-report,.gc-row-report:focus-visible{opacity:1}
+.gc-row-report:hover{color:#ffb27a;border-color:#7a4a2b;background:#1a0f08}
+.gc-row{position:relative}
+
+.gc-actions{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.gc-actions .gc-contribute{margin-top:0}
+.gc-report-link{display:flex;align-items:center;justify-content:center;gap:5px;padding:6px;font-size:9.5px;
+  border:1px dashed #1d3a52;border-radius:5px;background:none;color:#4e7f99;letter-spacing:.4px}
+.gc-report-link:hover{color:#ffb27a;border-color:#7a4a2b;background:#150d08}
+
+/* ── 勘误表单 ──────────────────────────────────────────────────────── */
+.report-form{padding:0 18px 18px;display:flex;flex-direction:column;gap:14px}
+.report-form .form-intro{padding:16px 0 0;margin:0}
+.report-form .form-intro small{display:block;margin-top:4px;font-size:10px;opacity:.75}
+.report-form label{display:flex;flex-direction:column;gap:7px;font-size:11px;font-weight:700;letter-spacing:.4px}
+.report-form label small{font-weight:400;line-height:1.6;opacity:.72}
+.report-form textarea{resize:vertical;min-height:74px;font-family:inherit}
+.review-toolbar .segmented{flex-wrap:wrap}
+.report-filter{margin:0 0 10px;flex-wrap:wrap;gap:0}
+.report-filter button{font-size:10px;padding:5px 9px}
+
+/* 真实头像≠像素画：全局 image-rendering:pixelated 是为占位图准备的，
+   套到照片上会让缩略图出现硬锯齿。这里单独恢复平滑，并补一点亮度——
+   很多宣传照是暗调棚拍，缩到 20px 只剩一团黑。 */
+.bn-pic>.pixel-avatar img,.gc-avatar .pixel-avatar img,.gc-row .pixel-avatar img{
+  image-rendering:auto;filter:brightness(1.1) contrast(1.04) saturate(1.06)}

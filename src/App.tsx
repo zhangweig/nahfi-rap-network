@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {Download, Link2, MapPin, Plus, Route, Search, ShieldCheck, SlidersHorizontal, X} from 'lucide-react';
 import {useDataset} from './state/Dataset';
 import {RelationBoard} from './components/RelationBoard';
@@ -6,6 +6,7 @@ import {ArtistPanel} from './components/ArtistPanel';
 import {Avatar} from './components/PixelAvatar';
 import {CatalogPanel} from './components/CatalogPanel';
 import {SubmissionEditor, ReviewPanel, Modal, type EditorTarget} from './components/Community';
+import {ReportDialog, type ReportTarget} from './components/ReportDialog';
 import {ALL_PROVINCES, UNKNOWN_PROVINCE, provinceLabel, provinceOf, provinceOptions} from './lib/province';
 import {artistMatches, workMatches} from './lib/catalog';
 import {shortestRoute} from './lib/network';
@@ -15,15 +16,25 @@ type Section = 'map' | 'artists' | 'works';
 
 const NAV: [Section, string][] = [['map', '地图'], ['artists', '人物'], ['works', '作品']];
 
+/**
+ * 人物深链：`?p=<id>`。
+ *
+ * 用查询参数而不是路径，是因为站点托管在 GitHub Pages 的子路径下，
+ * `/artist/xxx` 这类路径刷新会直接 404，得额外配 404.html 兜底；
+ * 查询参数始终落在同一个 index.html，任何静态托管都能用。
+ */
+const personInUrl = () => new URLSearchParams(window.location.search).get('p');
+
 export default function App() {
   const {data, online, checked} = useDataset();
   const writable = online || !checked;
   const {nodes, relations, works} = data;
   const [section, setSection] = useState<Section>('map');
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(personInUrl);
   const [query, setQuery] = useState('');
   const [province, setProvince] = useState<string>(ALL_PROVINCES);
   const [editor, setEditor] = useState<EditorTarget | null>(null);
+  const [report, setReport] = useState<ReportTarget | null>(null);
   const [review, setReview] = useState(false);
   const [unlocated, setUnlocated] = useState(false);
   const [filters, setFilters] = useState(false);
@@ -41,6 +52,43 @@ export default function App() {
   const pendingLocations = nodes.filter(n => provinceOf(n.city) === UNKNOWN_PROVINCE);
   const matches = query.trim() ? nodes.filter(n => artistMatches(n, query)).slice(0, 7) : [];
   const workResults = query.trim() ? works.filter(w => workMatches(w, query, nodeById)).slice(0, 3) : [];
+
+  // 选中谁就把谁写进地址栏。用 replaceState 而不是 pushState：浏览人物不该
+  // 在历史里堆一层层「后退」，否则从别人分享的链接进来后一按后退就困在图里。
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (selected) url.searchParams.set('p', selected);
+    else url.searchParams.delete('p');
+    if (url.href !== window.location.href) window.history.replaceState(null, '', url);
+  }, [selected]);
+
+  useEffect(() => {
+    const onPop = () => {
+      const id = personInUrl();
+      setSelected(id);
+      if (id) {
+        setSection('map');
+        setFocus(old => ({id, n: (old?.n || 0) + 1}));
+      }
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  // 首屏带 ?p= 时把画布飞过去。投稿新增的人物要等接口数据回来才在 nodes 里，
+  // 所以这里等 nodeById 更新而不是一次性跑完。
+  const deepLinked = useRef(false);
+  useEffect(() => {
+    if (deepLinked.current) return;
+    const id = personInUrl();
+    if (!id) {
+      deepLinked.current = true;
+      return;
+    }
+    if (!nodeById.has(id)) return;
+    deepLinked.current = true;
+    setFocus({id, n: 1});
+  }, [nodeById]);
 
   const clearPath = () => {
     setPath(null);
@@ -149,6 +197,7 @@ export default function App() {
               <ArtistPanel current={current} works={works} relations={relations} nodeById={nodeById} types={types}
                 canContribute={writable}
                 onPick={pick} onEdit={node => setEditor({kind: 'artist', record: node})}
+                onReport={setReport}
                 onContribute={() => setEditor({kind: 'relationship', source: current.id})} onClose={closeDetail} />
             </div>}
           </div>
@@ -166,6 +215,7 @@ export default function App() {
     </footer>
 
     {editor && <SubmissionEditor target={editor} onClose={() => setEditor(null)} />}
+    {report && <ReportDialog target={report} onClose={() => setReport(null)} />}
     {review && <ReviewPanel onClose={() => setReview(false)} />}
     {unlocated && <Modal title="地域待考据" onClose={() => setUnlocated(false)}>
       <p className="form-intro">这些人物已收录，但还没有可核验的省份来源。他们暂时停留在“待考据之岛”，补充有来源的地域信息后会自动归入对应聚落。</p>

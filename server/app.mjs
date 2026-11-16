@@ -3,7 +3,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {randomBytes,randomUUID,scryptSync,timingSafeEqual,createHash} from 'node:crypto';
 import {readFile,stat} from 'node:fs/promises';
 import {resolve,sep,extname} from 'node:path';
-import {validateSubmission,compose,fingerprint,InputError} from './domain.mjs';
+import {validateSubmission,validateReport,compose,fingerprint,InputError} from './domain.mjs';
 
 /**
  * `base` may be a plain snapshot or a getter. The getter form lets the dev server pick up
@@ -17,7 +17,8 @@ export function createApplication({base,dbPath,adminPassword,publicOrigin='',sta
     CREATE TABLE IF NOT EXISTS submissions(id TEXT PRIMARY KEY,kind TEXT NOT NULL,target_id TEXT,base_revision TEXT,payload TEXT NOT NULL,contributor TEXT NOT NULL,message TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'pending',created_at TEXT NOT NULL,reviewed_at TEXT,review_note TEXT);
     CREATE TABLE IF NOT EXISTS approved(entity_id TEXT PRIMARY KEY,kind TEXT NOT NULL,payload TEXT NOT NULL,submission_id TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY,submission_id TEXT NOT NULL,action TEXT NOT NULL,note TEXT NOT NULL,created_at TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS sessions(hash TEXT PRIMARY KEY,expires INTEGER NOT NULL);`);
+    CREATE TABLE IF NOT EXISTS sessions(hash TEXT PRIMARY KEY,expires INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS reports(id TEXT PRIMARY KEY,target_type TEXT NOT NULL,target_id TEXT NOT NULL,issue TEXT NOT NULL,message TEXT NOT NULL,source_url TEXT,contact TEXT,status TEXT NOT NULL DEFAULT 'open',created_at TEXT NOT NULL,resolved_at TEXT,note TEXT);`);
   // Restart / password rotation revokes old owner sessions.
   db.exec('DELETE FROM sessions');
   const salt=randomBytes(32), passwordHash=scryptSync(adminPassword,salt,64);
@@ -99,6 +100,25 @@ export function createApplication({base,dbPath,adminPassword,publicOrigin='',sta
           const now=new Date().toISOString();db.prepare('UPDATE submissions SET status=?,reviewed_at=?,review_note=? WHERE id=?').run(action==='approve'?'approved':'rejected',now,note.trim(),row.id);
           db.prepare('INSERT INTO audit(submission_id,action,note,created_at) VALUES(?,?,?,?)').run(row.id,action,note.trim(),now);db.exec('COMMIT');
         }catch(error){db.exec('ROLLBACK');throw error;}
+        return send(res,200,{ok:true});
+      }
+      if(pathname==='/api/reports'&&method==='POST'){
+        limit(req,'report',15);const value=validateReport(await body(req),snapshot()),id=randomUUID();
+        db.prepare('INSERT INTO reports(id,target_type,target_id,issue,message,source_url,contact,created_at) VALUES(?,?,?,?,?,?,?,?)').run(id,value.targetType,value.targetId,value.issue,value.message,value.sourceUrl,value.contact,new Date().toISOString());
+        return send(res,201,{id,status:'open'});
+      }
+      if(pathname==='/api/reports'&&method==='GET'){
+        requireOwner(req);
+        return send(res,200,{items:db.prepare("SELECT * FROM reports ORDER BY CASE status WHEN 'open' THEN 0 ELSE 1 END, created_at DESC LIMIT 300").all()});
+      }
+      const reportDecision=pathname.match(/^\/api\/reports\/([a-zA-Z0-9-]+)$/);
+      if(reportDecision&&method==='POST'){
+        requireOwner(req);const {action,note=''}=await body(req);
+        if(!['resolve','dismiss'].includes(action)||typeof note!=='string'||note.length>1000)throw new InputError('处理操作无效');
+        const row=db.prepare('SELECT status FROM reports WHERE id=?').get(reportDecision[1]);
+        if(!row)throw new InputError('勘误不存在',404);
+        if(row.status!=='open')throw new InputError('这条勘误已经处理过了',409);
+        db.prepare("UPDATE reports SET status=?,resolved_at=?,note=? WHERE id=? AND status='open'").run(action==='resolve'?'resolved':'dismissed',new Date().toISOString(),note.trim(),reportDecision[1]);
         return send(res,200,{ok:true});
       }
       if(pathname.startsWith('/api/'))throw new InputError('接口不存在',404);

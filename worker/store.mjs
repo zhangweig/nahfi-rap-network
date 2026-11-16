@@ -1,5 +1,4 @@
 import {compose,fingerprint,InputError} from '../server/domain.mjs';
-
 /**
  * D1 数据访问层。对应 server/app.mjs 里 node:sqlite 的那部分逻辑，
  * 区别是 D1 的 API 全为异步，并且没有长事务，所以审核用「先抢占状态再批量写入」的方式保证幂等。
@@ -101,5 +100,39 @@ export async function decideSubmission(db, base, id, action, note) {
     await db.prepare("UPDATE submissions SET status='pending',reviewed_at=NULL,review_note=NULL WHERE id=?").bind(id).run().catch(() => {});
     throw error;
   }
+  return {ok: true};
+}
+
+/* ── 勘误 ──────────────────────────────────────────────────────────────
+   与投稿完全隔离：reports 表只被站长读取，不参与 compose()，
+   所以无论队列里堆多少条，公开数据一个字节都不会变。 */
+
+export async function createReport(db, value) {
+  const id = crypto.randomUUID();
+  await db.prepare(
+    'INSERT INTO reports(id,target_type,target_id,issue,message,source_url,contact,created_at) VALUES(?,?,?,?,?,?,?,?)'
+  ).bind(id, value.targetType, value.targetId, value.issue, value.message,
+    value.sourceUrl, value.contact, new Date().toISOString()).run();
+  return id;
+}
+
+export async function listReports(db) {
+  const {results} = await db.prepare(
+    'SELECT * FROM reports ORDER BY CASE status WHEN \'open\' THEN 0 ELSE 1 END, created_at DESC LIMIT 300'
+  ).all();
+  return {items: results || []};
+}
+
+export async function decideReport(db, id, action, note) {
+  if (!['resolve', 'dismiss'].includes(action) || typeof note !== 'string' || note.length > 1000) {
+    throw new InputError('处理操作无效');
+  }
+  const row = await db.prepare('SELECT status FROM reports WHERE id=?').bind(id).first();
+  if (!row) throw new InputError('勘误不存在', 404);
+  if (row.status !== 'open') throw new InputError('这条勘误已经处理过了', 409);
+  const claim = await db.prepare(
+    "UPDATE reports SET status=?,resolved_at=?,note=? WHERE id=? AND status='open'"
+  ).bind(action === 'resolve' ? 'resolved' : 'dismissed', new Date().toISOString(), note.trim(), id).run();
+  if (!claim.meta || claim.meta.changes === 0) throw new InputError('这条勘误已经处理过了', 409);
   return {ok: true};
 }

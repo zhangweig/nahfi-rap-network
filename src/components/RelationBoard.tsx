@@ -14,6 +14,15 @@ const OFFSET_KEY = 'nahfi.board.offsets.v2';
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 3;
 
+/** Ambient dust for the canvas backdrop. Deterministic so renders never reshuffle it. */
+const SPARKS = Array.from({length: 18}, (_, index) => ({
+  x: (index * 37 + 11) % 100,
+  y: (index * 61 + 17) % 100,
+  delay: -((index * 1.9) % 15),
+  duration: 12 + (index % 6) * 2.4,
+  size: index % 4 === 0 ? 2.5 : 1.6,
+}));
+
 const loadOffsets = (): Record<string, Offset> => {
   try {
     const raw = localStorage.getItem(OFFSET_KEY);
@@ -247,9 +256,14 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   };
 
   /* ── province cards are draggable, PureRef style ─────────────────────── */
-  const zoneDrag = useRef<{province: string; sx: number; sy: number; ox: number; oy: number; moved: boolean} | null>(null);
+  const zoneDrag = useRef<{
+    province: string; sx: number; sy: number; ox: number; oy: number; moved: boolean; el: HTMLElement;
+  } | null>(null);
   const pendingDrag = useRef<{province: string; dx: number; dy: number} | null>(null);
   const dragFrame = useRef<number | null>(null);
+  const dragFromTag = useRef(false);
+  // A drag that started on an avatar must not also count as a click on that avatar.
+  const suppressClick = useRef(false);
 
   const flushDrag = () => {
     dragFrame.current = null;
@@ -283,48 +297,68 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     });
   };
 
-  const startZoneDrag = (event: React.PointerEvent<HTMLDivElement>, zoneProvince: string) => {
+  const startZoneDrag = (event: React.PointerEvent<HTMLElement>, zoneProvince: string) => {
     // Both the canvas pan and the zone drag listen for pointerdown — the zone wins.
     event.stopPropagation();
     if ((event.target as HTMLElement).closest('.roster-open')) return;
     const offset = offsets[zoneProvince] || {dx: 0, dy: 0};
+    const el = event.currentTarget;
     zoneDrag.current = {
       province: zoneProvince, sx: event.clientX, sy: event.clientY,
-      ox: offset.dx, oy: offset.dy, moved: false,
+      ox: offset.dx, oy: offset.dy, moved: false, el,
     };
+    dragFromTag.current = !!(event.target as HTMLElement).closest('.bz-tag');
     setRoster(null);
     setDragProvince(zoneProvince);
-    event.currentTarget.setPointerCapture(event.pointerId);
+    // Capture keeps the drag alive once the pointer leaves the card; the window listeners
+    // in the effect below are the safety net when the browser drops that capture.
+    try { el.setPointerCapture(event.pointerId); } catch { /* older engines */ }
   };
 
-  const moveZoneDrag = (event: React.PointerEvent<HTMLDivElement>) => {
-    const state = zoneDrag.current;
-    if (!state) return;
-    event.stopPropagation();
-    if (!state.moved && Math.hypot(event.clientX - state.sx, event.clientY - state.sy) > 3) state.moved = true;
-    pendingDrag.current = {
-      province: state.province,
-      dx: state.ox + (event.clientX - state.sx) / view.scale,
-      dy: state.oy + (event.clientY - state.sy) / view.scale,
+  // The move/up phase listens on the window instead of the card itself: no backdrop layer,
+  // pointer-capture edge case or fast exit past the canvas edge can strand a card mid-drag
+  // (which feels like "省份框拖不动了"). The canvas itself stays free — a card may be parked
+  // outside the designed grid; TIDY brings everything home.
+  useEffect(() => {
+    if (!dragProvince) return;
+    const onMove = (event: PointerEvent) => {
+      const state = zoneDrag.current;
+      if (!state) return;
+      if (!state.moved && Math.hypot(event.clientX - state.sx, event.clientY - state.sy) > 3) state.moved = true;
+      pendingDrag.current = {
+        province: state.province,
+        dx: state.ox + (event.clientX - state.sx) / view.scale,
+        dy: state.oy + (event.clientY - state.sy) / view.scale,
+      };
+      if (dragFrame.current === null) dragFrame.current = requestAnimationFrame(flushDrag);
     };
-    if (dragFrame.current === null) dragFrame.current = requestAnimationFrame(flushDrag);
-  };
-
-  const endZoneDrag = (event: React.PointerEvent<HTMLDivElement>) => {
-    const state = zoneDrag.current;
-    zoneDrag.current = null;
-    setDragProvince(null);
-    if (!state) return;
-    if (dragFrame.current !== null) {
-      cancelAnimationFrame(dragFrame.current);
-      dragFrame.current = null;
-      flushDrag();
-    }
-    // A tap on the name tag (not a drag) opens the roster for that province.
-    if (!state.moved && (event.target as HTMLElement).closest('.bz-tag')) {
-      openRoster(state.province, event.currentTarget);
-    }
-  };
+    const finish = () => {
+      const state = zoneDrag.current;
+      zoneDrag.current = null;
+      setDragProvince(null);
+      if (!state) return;
+      if (dragFrame.current !== null) {
+        cancelAnimationFrame(dragFrame.current);
+        dragFrame.current = null;
+        flushDrag();
+      }
+      // A tap on the name tag (not a drag) opens the roster for that province.
+      if (!state.moved && dragFromTag.current) openRoster(state.province, state.el);
+      // Swallow the click the browser fires right after a real drag (avatars included).
+      if (state.moved) {
+        suppressClick.current = true;
+        setTimeout(() => { suppressClick.current = false; }, 0);
+      }
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', finish);
+    window.addEventListener('pointercancel', finish);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', finish);
+      window.removeEventListener('pointercancel', finish);
+    };
+  }, [dragProvince, view.scale]);
 
   const resetArrangement = () => {
     setOffsets({});
@@ -436,14 +470,30 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   return <div className="board">
     <div className={`board-viewport ${dragging ? 'dragging' : ''} ${dragProvince ? 'zone-dragging' : ''}`} ref={viewport}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
+      {/* Ambient backdrop: drifts slower than the board so the canvas gets depth. */}
+      <div className={`board-bg ${selected ? 'is-soft' : ''}`} aria-hidden="true"
+        style={{['--px' as string]: `${(view.x * 0.08).toFixed(1)}px`, ['--py' as string]: `${(view.y * 0.08).toFixed(1)}px`}}>
+        <div className="bg-par">
+          <div className="bg-aurora"><i /><i /><i /></div>
+          <div className="bg-lines"><i /></div>
+          <div className="bg-traces"><i /><i /><i /><i /><i /></div>
+          <div className="bg-radar" />
+          <div className="bg-radar alt" />
+          <div className="bg-sweep" />
+          <div className="bg-sparks">
+            {SPARKS.map((spark, index) => <i key={index}
+              style={{left: `${spark.x}%`, top: `${spark.y}%`, width: spark.size, height: spark.size,
+                animationDelay: `${spark.delay}s`, animationDuration: `${spark.duration}s`}} />)}
+          </div>
+        </div>
+      </div>
       <div className="board-stage" style={{transform: `translate3d(${view.x}px,${view.y}px,0)`}}>
         <div className={`board-world ${zoomed ? 'is-zoomed' : ''}`}
           style={{width: world.width, height: world.height, zoom: view.scale}}>
           {zones.map(zone => <div key={zone.def.province}
             className={`bz ${zone.def.mini ? 'mini' : ''} ${zone.def.empty ? 'empty' : ''} ${zone.def.tiny ? 'tiny' : ''} ${dragProvince === zone.def.province ? 'is-dragging' : ''}`}
             style={{left: zone.def.x, top: zone.def.y, width: zone.def.w, height: zone.def.h, borderRadius: zone.def.radius ?? 10, ['--c' as string]: zone.def.color, zIndex: dragProvince === zone.def.province ? 4 : undefined}}
-            onPointerDown={event => startZoneDrag(event, zone.def.province)}
-            onPointerMove={moveZoneDrag} onPointerUp={endZoneDrag} onPointerCancel={endZoneDrag}>
+            onPointerDown={event => startZoneDrag(event, zone.def.province)}>
             <div className="bz-tag" title="拖动移动这个省份框 · 单击展开名单">
               {zone.def.tiny && !zone.def.mini
                 ? <em className="only-name">{provinceLabel(zone.def.province)}</em>
@@ -512,7 +562,11 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
             const labelFocus = node.id === hover || active;
             return <button key={node.id} className={`bn ${place.mini ? 'mini' : ''} ${place.tight ? 'tight' : ''} ${active ? 'is-active' : ''} ${dim ? 'is-dim' : ''} ${featured ? 'is-group' : ''}`}
               style={{left: place.x - place.size / 2, top: place.y - place.size / 2, ['--c' as string]: place.color, ['--s' as string]: `${place.size}px`, zIndex: raised ? 3 : undefined}}
-              onClick={() => onSelect(node.id)} onMouseEnter={() => setHover(node.id)} onMouseLeave={() => setHover(null)}
+              onClick={() => { if (suppressClick.current) return; onSelect(node.id); }}
+              // An avatar works as a handle for its whole province card: dragging any face
+              // moves the card, a plain click still selects the person.
+              onPointerDown={event => startZoneDrag(event, place.province)}
+              onMouseEnter={() => setHover(node.id)} onMouseLeave={() => setHover(null)}
               title={`${node.name} · ${provinceLabel(provinceOf(node.city))}`}>
               <span className="bn-pic"><Avatar node={node} />
                 {featured && <span className="bn-flag">CREW</span>}
@@ -566,7 +620,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       </div>
       <div className="rail-group">
         <button onClick={onLocate} title="地域待考据名单"><Search size={15} /><span>?</span></button>
-        <button onClick={resetArrangement} title="恢复自动排版"><LayoutGrid size={15} /><span>TIDY</span></button>
+        <button onClick={resetArrangement} title="恢复自动排版（拖远、找不到的省份框也会回到原位）"><LayoutGrid size={15} /><span>TIDY</span></button>
         <button onClick={fit} title="复位视图"><RotateCcw size={15} /><span>FIT</span></button>
       </div>
       <div className="rail-meter">

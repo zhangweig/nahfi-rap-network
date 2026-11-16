@@ -1,0 +1,370 @@
+{
+  "groups": [
+    {
+      "id": "crew-dongfeng",
+      "name": "东风档案",
+      "city": "四川"
+    },
+    {
+      "id": "crew-atm",
+      "name": "ATM",
+      "city": "四川"
+    },
+    {
+      "id": "crew-tianfushibian",
+      "name": "天府事变",
+      "city": "四川"
+    },
+    {
+      "id": "crew-panthepack",
+      "name": "PANTHEPACK",
+      "city": "四川"
+    },
+    {
+      "id": "crew-supmusic",
+      "name": "SUP MUSIC",
+      "city": "湖南"
+    },
+    {
+      "id": "crew-danzhen",
+      "name": "丹镇北京",
+      "city": "北京"
+    },
+    {
+      "id": "crew-guangshun",
+      "name": "广顺社团",
+      "city": "北京"
+    },
+    {
+      "id": "crew-jingshen",
+      "name": "精气神",
+      "city": "广东"
+    },
+    {
+      "id": "crew-shuangchi",
+      "name": "双赤组合",
+      "city": "广东"
+    },
+    {
+      "id": "crew-tianshan",
+      "name": "天山四子",
+      "city": "新疆"
+    },
+    {
+      "id": "crew-shamo",
+      "name": "沙漠兄弟",
+      "city": "新疆"
+    },
+    {
+      "id": "crew-oho",
+      "name": "OHO",
+      "city": "新疆"
+    },
+    {
+      "id": "crew-wuren",
+      "name": "吾人文化",
+      "city": "吉林"
+    },
+    {
+      "id": "crew-wurenzu",
+      "name": "吾人族",
+      "city": "吉林"
+    },
+    {
+      "id": "crew-luanzhan",
+      "name": "乱战门",
+      "city": "山西"
+    },
+    {
+      "id": "crew-disiyinyue",
+      "name": "第四音乐",
+      "city": "安徽"
+    },
+    {
+      "id": "crew-yanshe",
+      "name": "颜社",
+      "city": "台湾"
+    },
+    {
+      "id": "crew-lmf",
+      "name": "LMF",
+      "city": "香港"
+    },
+    {
+      "id": "crew-sanjiaodu",
+      "name": "三角度",
+      "city": "香港"
+    }
+  ],
+  "relationCount": 55,
+  "member": 50,
+  "affiliation": 5,
+  "skipped": [
+    {
+      "no": 1,
+      "name": "谢帝 / Fat Shady",
+      "crew": "CDC 成都集团",
+      "part": "CDC 成都集团",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 2,
+      "name": "王以太 / 王闪火",
+      "crew": "CDC",
+      "part": "CDC",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 3,
+      "name": "马思唯 MaSiWei",
+      "crew": "Higher Brothers / CDC",
+      "part": "Higher Brothers",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 4,
+      "name": "Psy.P",
+      "crew": "Higher Brothers",
+      "part": "Higher Brothers",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 5,
+      "name": "Melo",
+      "crew": "Higher Brothers",
+      "part": "Higher Brothers",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 9,
+      "name": "GAI",
+      "crew": "GOSH",
+      "part": "GOSH",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 10,
+      "name": "Ty.",
+      "crew": "CDC",
+      "part": "CDC",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 11,
+      "name": "李尔新",
+      "crew": "CDC / 东风档案",
+      "part": "CDC",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 17,
+      "name": "JarStick",
+      "crew": "活死人",
+      "part": "活死人",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 20,
+      "name": "谢可寅 Shaking Chloe",
+      "crew": "THE9（跨界）",
+      "part": "THE9（跨界）",
+      "why": "跨界组合，非说唱厂牌"
+    },
+    {
+      "no": 22,
+      "name": "布瑞吉 Bridge",
+      "crew": "GOSH",
+      "part": "GOSH",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 23,
+      "name": "王齐铭 WatchMe",
+      "crew": "GOSH",
+      "part": "GOSH",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 24,
+      "name": "L4WUDU / 雾都",
+      "crew": "GOSH",
+      "part": "GOSH",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 30,
+      "name": "张颜齐",
+      "crew": "R1SE（跨界）",
+      "part": "R1SE（跨界）",
+      "why": "跨界组合，非说唱厂牌"
+    },
+    {
+      "no": 31,
+      "name": "盛宇 / 大傻 D-SHINE",
+      "crew": "C-Block / CSC / SUP",
+      "part": "C-Block",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 31,
+      "name": "盛宇 / 大傻 D-SHINE",
+      "crew": "C-Block / CSC / SUP",
+      "part": "CSC",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 32,
+      "name": "功夫胖 KungFu-Pen",
+      "crew": "C-Block / CSC",
+      "part": "C-Block",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 32,
+      "name": "功夫胖 KungFu-Pen",
+      "crew": "C-Block / CSC",
+      "part": "CSC",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 33,
+      "name": "刘聪 KEY.L",
+      "crew": "C-Block / CSC",
+      "part": "C-Block",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 33,
+      "name": "刘聪 KEY.L",
+      "crew": "C-Block / CSC",
+      "part": "CSC",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 42,
+      "name": "派克特 PACT",
+      "crew": "NOUS Underground",
+      "part": "NOUS Underground",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 45,
+      "name": "隐藏（王波）",
+      "crew": "隐藏",
+      "part": "隐藏",
+      "why": "团体条目自身，避免自环"
+    },
+    {
+      "no": 46,
+      "name": "龙井说唱",
+      "crew": "龙井说唱",
+      "part": "龙井说唱",
+      "why": "团体条目自身，避免自环"
+    },
+    {
+      "no": 47,
+      "name": "阴三儿 In3",
+      "crew": "阴三儿",
+      "part": "阴三儿",
+      "why": "团体条目自身，避免自环"
+    },
+    {
+      "no": 48,
+      "name": "龙胆紫",
+      "crew": "龙胆紫",
+      "part": "龙胆紫",
+      "why": "团体条目自身，避免自环"
+    },
+    {
+      "no": 62,
+      "name": "弹壳 Danko",
+      "crew": "红花会创始人",
+      "part": "红花会创始人",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 73,
+      "name": "KnowKnow / DZKnow",
+      "crew": "Higher Brothers",
+      "part": "Higher Brothers",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 75,
+      "name": "法老 Pharaoh",
+      "crew": "活死人 主理人",
+      "part": "活死人 主理人",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 76,
+      "name": "小精灵",
+      "crew": "活死人",
+      "part": "活死人",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 97,
+      "name": "PG One",
+      "crew": "原红花会",
+      "part": "原红花会",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 103,
+      "name": "丁飞 F.Killa",
+      "crew": "原红花会",
+      "part": "原红花会",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 108,
+      "name": "早安",
+      "crew": "种梦音乐",
+      "part": "种梦音乐",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 109,
+      "name": "艾志恒 Asen",
+      "crew": "DIGI GHETTO",
+      "part": "DIGI GHETTO",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 115,
+      "name": "沙一汀 EL",
+      "crew": "W8VES",
+      "part": "W8VES",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 116,
+      "name": "童宇",
+      "crew": "旅行新蜜蜂（跨界）",
+      "part": "旅行新蜜蜂（跨界）",
+      "why": "跨界组合，非说唱厂牌"
+    },
+    {
+      "no": 117,
+      "name": "贝贝",
+      "crew": "原红花会",
+      "part": "原红花会",
+      "why": "库中已有该关系"
+    },
+    {
+      "no": 136,
+      "name": "陆永（农夫 FAMA）",
+      "crew": "农夫 FAMA",
+      "part": "农夫 FAMA",
+      "why": "团体条目自身，避免自环"
+    },
+    {
+      "no": 137,
+      "name": "C君（农夫 FAMA）",
+      "crew": "农夫 FAMA",
+      "part": "农夫 FAMA",
+      "why": "团体条目自身，避免自环"
+    }
+  ]
+}

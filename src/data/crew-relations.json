@@ -1,0 +1,1047 @@
+{
+  "generatedFrom": "research/xlsx-roster-raw.json",
+  "groups": [
+    {
+      "id": "crew-dongfeng",
+      "name": "东风档案",
+      "aliases": [],
+      "kind": "group",
+      "city": "四川",
+      "category": "厂牌 / 团体",
+      "color": "#7fc7d9",
+      "initials": "东风",
+      "description": "东风档案：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-atm",
+      "name": "ATM",
+      "aliases": [],
+      "kind": "group",
+      "city": "四川",
+      "category": "厂牌 / 团体",
+      "color": "#e2a06a",
+      "initials": "AT",
+      "description": "ATM：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-tianfushibian",
+      "name": "天府事变",
+      "aliases": [],
+      "kind": "group",
+      "city": "四川",
+      "category": "厂牌 / 团体",
+      "color": "#b79af0",
+      "initials": "天府",
+      "description": "天府事变：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-panthepack",
+      "name": "PANTHEPACK",
+      "aliases": [
+        "熊猫工厂"
+      ],
+      "kind": "group",
+      "city": "四川",
+      "category": "厂牌 / 团体",
+      "color": "#8fc9a8",
+      "initials": "PA",
+      "description": "PANTHEPACK：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-supmusic",
+      "name": "SUP MUSIC",
+      "aliases": [
+        "SUP"
+      ],
+      "kind": "group",
+      "city": "湖南",
+      "category": "厂牌 / 团体",
+      "color": "#e58fb8",
+      "initials": "SU",
+      "description": "SUP MUSIC：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-danzhen",
+      "name": "丹镇北京",
+      "aliases": [],
+      "kind": "group",
+      "city": "北京",
+      "category": "厂牌 / 团体",
+      "color": "#92a9e8",
+      "initials": "丹镇",
+      "description": "丹镇北京：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-guangshun",
+      "name": "广顺社团",
+      "aliases": [],
+      "kind": "group",
+      "city": "北京",
+      "category": "厂牌 / 团体",
+      "color": "#7fc7d9",
+      "initials": "广顺",
+      "description": "广顺社团：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-jingshen",
+      "name": "精气神",
+      "aliases": [],
+      "kind": "group",
+      "city": "广东",
+      "category": "厂牌 / 团体",
+      "color": "#e2a06a",
+      "initials": "精气",
+      "description": "精气神：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-shuangchi",
+      "name": "双赤组合",
+      "aliases": [],
+      "kind": "group",
+      "city": "广东",
+      "category": "厂牌 / 团体",
+      "color": "#b79af0",
+      "initials": "双赤",
+      "description": "双赤组合：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-tianshan",
+      "name": "天山四子",
+      "aliases": [],
+      "kind": "group",
+      "city": "新疆",
+      "category": "厂牌 / 团体",
+      "color": "#8fc9a8",
+      "initials": "天山",
+      "description": "天山四子：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-shamo",
+      "name": "沙漠兄弟",
+      "aliases": [],
+      "kind": "group",
+      "city": "新疆",
+      "category": "厂牌 / 团体",
+      "color": "#e58fb8",
+      "initials": "沙漠",
+      "description": "沙漠兄弟：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-oho",
+      "name": "OHO",
+      "aliases": [],
+      "kind": "group",
+      "city": "新疆",
+      "category": "厂牌 / 团体",
+      "color": "#92a9e8",
+      "initials": "OH",
+      "description": "OHO：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-wuren",
+      "name": "吾人文化",
+      "aliases": [],
+      "kind": "group",
+      "city": "吉林",
+      "category": "厂牌 / 团体",
+      "color": "#7fc7d9",
+      "initials": "吾人",
+      "description": "吾人文化：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-wurenzu",
+      "name": "吾人族",
+      "aliases": [],
+      "kind": "group",
+      "city": "吉林",
+      "category": "厂牌 / 团体",
+      "color": "#e2a06a",
+      "initials": "吾人",
+      "description": "吾人族：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-luanzhan",
+      "name": "乱战门",
+      "aliases": [],
+      "kind": "group",
+      "city": "山西",
+      "category": "厂牌 / 团体",
+      "color": "#b79af0",
+      "initials": "乱战",
+      "description": "乱战门：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-disiyinyue",
+      "name": "第四音乐",
+      "aliases": [],
+      "kind": "group",
+      "city": "安徽",
+      "category": "厂牌 / 团体",
+      "color": "#8fc9a8",
+      "initials": "第四",
+      "description": "第四音乐：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-yanshe",
+      "name": "颜社",
+      "aliases": [],
+      "kind": "group",
+      "city": "台湾",
+      "category": "厂牌 / 团体",
+      "color": "#e58fb8",
+      "initials": "颜社",
+      "description": "颜社：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-lmf",
+      "name": "LMF",
+      "aliases": [
+        "大懒堂"
+      ],
+      "kind": "group",
+      "city": "香港",
+      "category": "厂牌 / 团体",
+      "color": "#92a9e8",
+      "initials": "LM",
+      "description": "LMF：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    },
+    {
+      "id": "crew-sanjiaodu",
+      "name": "三角度",
+      "aliases": [],
+      "kind": "group",
+      "city": "香港",
+      "category": "厂牌 / 团体",
+      "color": "#7fc7d9",
+      "initials": "三角",
+      "description": "三角度：由用户提供的按省份名单中的「厂牌」字段收录，成员/关联关系均来自该名单，地域按名单归属推定。"
+    }
+  ],
+  "relations": [
+    {
+      "id": "crew-ma-cdc",
+      "source": "cdc",
+      "target": "ma",
+      "type": "member",
+      "label": "CDC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 3 行「马思唯 MaSiWei」，厂牌字段原文：CDC；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-keyng-huosiren",
+      "source": "huosiren",
+      "target": "keyng",
+      "type": "member",
+      "label": "活死人 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 6 行「杨和苏 KeyNG」，厂牌字段原文：活死人；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-lijialong-dmg",
+      "source": "dmg",
+      "target": "lijialong",
+      "type": "member",
+      "label": "种梦音乐 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 7 行「李佳隆 JelloRio」，厂牌字段原文：种梦音乐；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-lierxin-crew-dongfeng",
+      "source": "crew-dongfeng",
+      "target": "lierxin",
+      "type": "member",
+      "label": "东风档案 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 11 行「李尔新」，厂牌字段原文：东风档案；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-160-cdc",
+      "source": "cdc",
+      "target": "pending-160",
+      "type": "member",
+      "label": "CDC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 12 行「孟子 Mengzi」，厂牌字段原文：CDC；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-160-crew-atm",
+      "source": "crew-atm",
+      "target": "pending-160",
+      "type": "member",
+      "label": "ATM · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 12 行「孟子 Mengzi」，厂牌字段原文：ATM；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-014-cdc",
+      "source": "cdc",
+      "target": "pending-014",
+      "type": "member",
+      "label": "CDC 成都集团 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 13 行「AnsrJ」，厂牌字段原文：CDC 成都集团；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-161-cdc",
+      "source": "cdc",
+      "target": "pending-161",
+      "type": "member",
+      "label": "CDC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 15 行「猫儿师 Sleepy Cat」，厂牌字段原文：CDC；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-004-cdc",
+      "source": "cdc",
+      "target": "pending-004",
+      "type": "affiliation",
+      "label": "CDC 早期关联 · 早期关联",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 16 行「Kafe.Hu」，厂牌字段原文：CDC 早期关联；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-013-crew-tianfushibian",
+      "source": "crew-tianfushibian",
+      "target": "pending-013",
+      "type": "member",
+      "label": "天府事变 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 18 行「李毅杰 Pissy」，厂牌字段原文：天府事变；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-013-huosiren",
+      "source": "huosiren",
+      "target": "pending-013",
+      "type": "member",
+      "label": "活死人 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 18 行「李毅杰 Pissy」，厂牌字段原文：活死人；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-162-digi",
+      "source": "digi",
+      "target": "pending-162",
+      "type": "affiliation",
+      "label": "DIGI GHETTO 关联 · 关联",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 19 行「夏之禹」，厂牌字段原文：DIGI GHETTO 关联；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-ice-crew-panthepack",
+      "source": "crew-panthepack",
+      "target": "ice",
+      "type": "member",
+      "label": "PANTHEPACK · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 21 行「ICE 杨长青」，厂牌字段原文：PANTHEPACK；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-017-gosh",
+      "source": "gosh",
+      "target": "pending-017",
+      "type": "member",
+      "label": "GOSH · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 25 行「威尔 Will.T」，厂牌字段原文：GOSH；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-163-gosh",
+      "source": "gosh",
+      "target": "pending-163",
+      "type": "member",
+      "label": "GOSH · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 26 行「王嗣尧 Turbo」，厂牌字段原文：GOSH；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-164-gosh",
+      "source": "gosh",
+      "target": "pending-164",
+      "type": "member",
+      "label": "GOSH · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 27 行「艾昊 Tory」，厂牌字段原文：GOSH；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-165-gosh",
+      "source": "gosh",
+      "target": "pending-165",
+      "type": "member",
+      "label": "GOSH · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 28 行「K ELEVEN / K11」，厂牌字段原文：GOSH；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-shengyu-crew-supmusic",
+      "source": "crew-supmusic",
+      "target": "shengyu",
+      "type": "member",
+      "label": "SUP MUSIC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 31 行「盛宇 / 大傻 D-SHINE」，厂牌字段原文：SUP；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-012-crew-supmusic",
+      "source": "crew-supmusic",
+      "target": "pending-012",
+      "type": "member",
+      "label": "SUP MUSIC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 34 行「西奥 Sio」，厂牌字段原文：SUP MUSIC；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-012-cblock",
+      "source": "cblock",
+      "target": "pending-012",
+      "type": "member",
+      "label": "CSC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 34 行「西奥 Sio」，厂牌字段原文：CSC；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-019-crew-supmusic",
+      "source": "crew-supmusic",
+      "target": "pending-019",
+      "type": "member",
+      "label": "SUP MUSIC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 35 行「于意 Yee」，厂牌字段原文：SUP MUSIC；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-166-cblock",
+      "source": "cblock",
+      "target": "pending-166",
+      "type": "member",
+      "label": "CSC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 36 行「Ranzer」，厂牌字段原文：CSC；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-167-cblock",
+      "source": "cblock",
+      "target": "pending-167",
+      "type": "member",
+      "label": "CSC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 37 行「东别」，厂牌字段原文：CSC；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-168-cblock",
+      "source": "cblock",
+      "target": "pending-168",
+      "type": "member",
+      "label": "CSC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 38 行「老道」，厂牌字段原文：CSC；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-169-cblock",
+      "source": "cblock",
+      "target": "pending-169",
+      "type": "member",
+      "label": "CSC · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 39 行「王奕」，厂牌字段原文：CSC；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-002-hhh",
+      "source": "hhh",
+      "target": "pending-002",
+      "type": "affiliation",
+      "label": "原红花会 · 历史成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 41 行「白景屹 / BrAnTB 小白」，厂牌字段原文：原红花会；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-116-crew-danzhen",
+      "source": "crew-danzhen",
+      "target": "pending-116",
+      "type": "member",
+      "label": "丹镇北京 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 49 行「黄硕（丹镇北京）」，厂牌字段原文：丹镇北京；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-117-crew-danzhen",
+      "source": "crew-danzhen",
+      "target": "pending-117",
+      "type": "member",
+      "label": "丹镇北京 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 50 行「Saber」，厂牌字段原文：丹镇北京；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-173-crew-danzhen",
+      "source": "crew-danzhen",
+      "target": "pending-173",
+      "type": "member",
+      "label": "丹镇北京 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 51 行「MC张千」，厂牌字段原文：丹镇北京；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-174-crew-danzhen",
+      "source": "crew-danzhen",
+      "target": "pending-174",
+      "type": "member",
+      "label": "丹镇北京 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 52 行「生番」，厂牌字段原文：丹镇北京；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-008-crew-guangshun",
+      "source": "crew-guangshun",
+      "target": "pending-008",
+      "type": "member",
+      "label": "广顺社团 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 53 行「辉子」，厂牌字段原文：广顺社团；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-175-crew-guangshun",
+      "source": "crew-guangshun",
+      "target": "pending-175",
+      "type": "member",
+      "label": "广顺社团 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 54 行「秃子 2z」，厂牌字段原文：广顺社团；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-ar-crew-jingshen",
+      "source": "crew-jingshen",
+      "target": "ar",
+      "type": "member",
+      "label": "精气神 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 64 行「AR刘夫阳」，厂牌字段原文：精气神；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-181-crew-shuangchi",
+      "source": "crew-shuangchi",
+      "target": "pending-181",
+      "type": "member",
+      "label": "双赤组合 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 72 行「Person」，厂牌字段原文：双赤组合；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-nawukere-crew-tianshan",
+      "source": "crew-tianshan",
+      "target": "nawukere",
+      "type": "member",
+      "label": "天山四子 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 84 行「那吾克热」，厂牌字段原文：天山四子；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-001-crew-shamo",
+      "source": "crew-shamo",
+      "target": "pending-001",
+      "type": "member",
+      "label": "沙漠兄弟 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 85 行「艾福杰尼 After Journey」，厂牌字段原文：沙漠兄弟；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-huangxu-crew-shamo",
+      "source": "crew-shamo",
+      "target": "huangxu",
+      "type": "member",
+      "label": "沙漠兄弟 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 86 行「黄旭」，厂牌字段原文：沙漠兄弟；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-102-crew-tianshan",
+      "source": "crew-tianshan",
+      "target": "pending-102",
+      "type": "member",
+      "label": "天山四子 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 87 行「马俊 Maqi」，厂牌字段原文：天山四子；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-102-crew-oho",
+      "source": "crew-oho",
+      "target": "pending-102",
+      "type": "member",
+      "label": "OHO · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 87 行「马俊 Maqi」，厂牌字段原文：OHO；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-074-crew-tianshan",
+      "source": "crew-tianshan",
+      "target": "pending-074",
+      "type": "member",
+      "label": "天山四子 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 88 行「多雷」，厂牌字段原文：天山四子；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-075-huosiren",
+      "source": "huosiren",
+      "target": "pending-075",
+      "type": "member",
+      "label": "活死人 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 89 行「福克斯 FOX」，厂牌字段原文：活死人；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-gem-crew-wuren",
+      "source": "crew-wuren",
+      "target": "gem",
+      "type": "member",
+      "label": "吾人文化 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 94 行「董宝石 / 老舅」，厂牌字段原文：吾人文化；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-186-crew-wurenzu",
+      "source": "crew-wurenzu",
+      "target": "pending-186",
+      "type": "member",
+      "label": "吾人族 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 95 行「高煜然 / 莲花」，厂牌字段原文：吾人族；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-187-huosiren",
+      "source": "huosiren",
+      "target": "pending-187",
+      "type": "member",
+      "label": "活死人 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 99 行「八贼」，厂牌字段原文：活死人；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-190-hhh",
+      "source": "hhh",
+      "target": "pending-190",
+      "type": "affiliation",
+      "label": "原红花会 · 历史成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 104 行「蜘蛛 / Mercy」，厂牌字段原文：原红花会；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-108-crew-luanzhan",
+      "source": "crew-luanzhan",
+      "target": "pending-108",
+      "type": "member",
+      "label": "乱战门 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 105 行「夜楠」，厂牌字段原文：乱战门；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-191-hhh",
+      "source": "hhh",
+      "target": "pending-191",
+      "type": "affiliation",
+      "label": "原红花会（已退出） · 已退出",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 107 行「毕冉」，厂牌字段原文：原红花会（已退出）；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-192-crew-disiyinyue",
+      "source": "crew-disiyinyue",
+      "target": "pending-192",
+      "type": "member",
+      "label": "第四音乐 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 110 行「王晨宇 ICECRAZ」，厂牌字段原文：第四音乐；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-eso-pending-045",
+      "source": "pending-045",
+      "target": "eso",
+      "type": "member",
+      "label": "顽童 MJ116 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 120 行「瘦子 E.SO」，厂牌字段原文：顽童 MJ116；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-kenzy-pending-045",
+      "source": "pending-045",
+      "target": "kenzy",
+      "type": "member",
+      "label": "顽童 MJ116 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 121 行「小春 Kenzy」，厂牌字段原文：顽童 MJ116；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-muta-pending-045",
+      "source": "pending-045",
+      "target": "muta",
+      "type": "member",
+      "label": "顽童 MJ116 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 122 行「大渊 Muta」，厂牌字段原文：顽童 MJ116；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-softlipa-crew-yanshe",
+      "source": "crew-yanshe",
+      "target": "softlipa",
+      "type": "member",
+      "label": "颜社 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 123 行「蛋堡 Soft Lipa」，厂牌字段原文：颜社；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-030-crew-yanshe",
+      "source": "crew-yanshe",
+      "target": "pending-030",
+      "type": "member",
+      "label": "颜社 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 124 行「国蛋 GorDoN」，厂牌字段原文：颜社；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-036-crew-lmf",
+      "source": "crew-lmf",
+      "target": "pending-036",
+      "type": "member",
+      "label": "LMF · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 134 行「MC仁 MC Yan」，厂牌字段原文：LMF；核实状态：已核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-pending-121-crew-sanjiaodu",
+      "source": "crew-sanjiaodu",
+      "target": "pending-121",
+      "type": "member",
+      "label": "三角度 · 名单标注成员",
+      "evidence": [
+        {
+          "title": "用户名单（按省份）",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "名单第 138 行「厨房仔」，厂牌字段原文：三角度；核实状态：出生地未核实。仅按名单显式标注建关系，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    }
+  ]
+}

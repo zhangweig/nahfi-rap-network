@@ -1,0 +1,1417 @@
+{
+  "generatedAt": "2026-11-16",
+  "source": "用户名单（按省份）xlsx",
+  "totalRows": 141,
+  "assignments": [
+    {
+      "id": "xiedi",
+      "name": "谢帝",
+      "province": "四川",
+      "row": 1,
+      "via": "谢帝",
+      "verify": "已核实",
+      "origin": "四川成都",
+      "note": "CDC 核心人物，1989年生于成都"
+    },
+    {
+      "id": "yitai",
+      "name": "王以太",
+      "province": "四川",
+      "row": 2,
+      "via": "王以太",
+      "verify": "已核实",
+      "origin": "四川成都",
+      "note": "1995年生于成都"
+    },
+    {
+      "id": "ma",
+      "name": "马思唯",
+      "province": "四川",
+      "row": 3,
+      "via": "马思唯",
+      "verify": "已核实",
+      "origin": "四川成都郫都区（郫县）",
+      "note": "Higher Brothers 领军，1993年生于郫县"
+    },
+    {
+      "id": "psyp",
+      "name": "杨俊逸",
+      "province": "四川",
+      "row": 4,
+      "via": "Psy.P",
+      "verify": "已核实",
+      "origin": "四川成都",
+      "note": "Higher Brothers 成员"
+    },
+    {
+      "id": "melo",
+      "name": "谢宇杰",
+      "province": "四川",
+      "row": 5,
+      "via": "Melo",
+      "verify": "已核实",
+      "origin": "四川成都",
+      "note": "Higher Brothers 成员"
+    },
+    {
+      "id": "keyng",
+      "name": "杨和苏",
+      "province": "四川",
+      "row": 6,
+      "via": "杨和苏",
+      "verify": "已核实",
+      "origin": "四川成都",
+      "note": "1995年生于成都"
+    },
+    {
+      "id": "lijialong",
+      "name": "李佳隆",
+      "province": "四川",
+      "row": 7,
+      "via": "李佳隆",
+      "verify": "已核实",
+      "origin": "四川南充",
+      "note": "1997年生于南充"
+    },
+    {
+      "id": "vava",
+      "name": "毛衍七",
+      "province": "四川",
+      "row": 8,
+      "via": "VaVa",
+      "verify": "已核实",
+      "origin": "四川雅安名山区",
+      "note": "1995年生于雅安"
+    },
+    {
+      "id": "gai",
+      "name": "周延",
+      "province": "四川",
+      "row": 9,
+      "via": "GAI",
+      "verify": "出生地有争议",
+      "origin": "四川内江威远（籍贯）；出生地争议：宜宾珙县 / 内江威远",
+      "note": "籍贯威远，不要误作重庆出生；1987年生"
+    },
+    {
+      "id": "ty",
+      "name": "唐溢",
+      "province": "四川",
+      "row": 10,
+      "via": "Ty.",
+      "verify": "出生地未核实",
+      "origin": "四川成都（未核实具体）",
+      "note": "公开资料多称成都 rapper，出生地无可靠籍贯页"
+    },
+    {
+      "id": "lierxin",
+      "name": "李尔新",
+      "province": "四川",
+      "row": 11,
+      "via": "李尔新",
+      "verify": "出生地未核实",
+      "origin": "四川成都（未核实具体）",
+      "note": "以成都活动为准"
+    },
+    {
+      "id": "pending-160",
+      "name": "孟子",
+      "province": "四川",
+      "row": 12,
+      "via": "孟子",
+      "verify": "出生地未核实",
+      "origin": "四川成都（未核实具体）",
+      "note": "以成都活动为准"
+    },
+    {
+      "id": "pending-014",
+      "name": "刘静宁",
+      "province": "四川",
+      "row": 13,
+      "via": "AnsrJ",
+      "verify": "出生地未核实",
+      "origin": "四川成都（未核实具体）",
+      "note": "以成都活动为准"
+    },
+    {
+      "id": "ddg",
+      "name": "邓典果",
+      "province": "四川",
+      "row": 14,
+      "via": "邓典果",
+      "verify": "已核实",
+      "origin": "四川成都",
+      "note": "QQ音乐标注出生地成都"
+    },
+    {
+      "id": "pending-161",
+      "name": "猫儿师",
+      "province": "四川",
+      "row": 15,
+      "via": "猫儿师",
+      "verify": "出生地未核实",
+      "origin": "四川成都（未核实具体）",
+      "note": "CDC 早期成员"
+    },
+    {
+      "id": "pending-004",
+      "name": "Kafe.Hu",
+      "province": "四川",
+      "row": 16,
+      "via": "Kafe.Hu",
+      "verify": "出生地未核实",
+      "origin": "未核实（成都活动）",
+      "note": "出生地不明，勿作籍贯引用"
+    },
+    {
+      "id": "jarstick",
+      "name": "JarStick",
+      "province": "四川",
+      "row": 17,
+      "via": "JarStick",
+      "verify": "已核实",
+      "origin": "四川成都",
+      "note": "1994年生于成都"
+    },
+    {
+      "id": "pending-013",
+      "name": "李毅杰",
+      "province": "四川",
+      "row": 18,
+      "via": "Pissy",
+      "verify": "出生地未核实",
+      "origin": "四川成都（未核实具体）",
+      "note": "以成都活动为准"
+    },
+    {
+      "id": "pending-162",
+      "name": "夏之禹",
+      "province": "四川",
+      "row": 19,
+      "via": "夏之禹",
+      "verify": "出生地未核实",
+      "origin": "四川成都（未核实具体）",
+      "note": "新生代，以成都活动为准"
+    },
+    {
+      "id": "pending-022",
+      "name": "谢可寅",
+      "province": "四川",
+      "row": 20,
+      "via": "谢可寅",
+      "verify": "出生地未核实",
+      "origin": "四川（具体城市未核实）",
+      "note": "具体城市未核实"
+    },
+    {
+      "id": "ice",
+      "name": "ICE 杨长青",
+      "province": "四川",
+      "row": 21,
+      "via": "ICE 杨长青",
+      "verify": "出生地未核实",
+      "origin": "四川（未核实具体）",
+      "note": "2018《中国新说唱》季军，出生地无可靠来源"
+    },
+    {
+      "id": "bridge",
+      "name": "布瑞吉",
+      "province": "重庆",
+      "row": 22,
+      "via": "布瑞吉",
+      "verify": "已核实",
+      "origin": "重庆",
+      "note": "1993年生于重庆"
+    },
+    {
+      "id": "wangqiming",
+      "name": "王齐铭",
+      "province": "重庆",
+      "row": 23,
+      "via": "王齐铭",
+      "verify": "已核实",
+      "origin": "重庆綦江区",
+      "note": "1991年生于綦江"
+    },
+    {
+      "id": "wudu",
+      "name": "雾都",
+      "province": "重庆",
+      "row": 24,
+      "via": "L4WUDU",
+      "verify": "已核实",
+      "origin": "重庆",
+      "note": "GOSH 创始人，《雾都夜话》"
+    },
+    {
+      "id": "pending-017",
+      "name": "威尔",
+      "province": "重庆",
+      "row": 25,
+      "via": "Will.T",
+      "verify": "出生地未核实",
+      "origin": "重庆（具体区县未核实）",
+      "note": "《中国新说唱2020》五强"
+    },
+    {
+      "id": "pending-163",
+      "name": "王嗣尧",
+      "province": "重庆",
+      "row": 26,
+      "via": "王嗣尧",
+      "verify": "出生地未核实",
+      "origin": "重庆（未核实）",
+      "note": "GOSH 成员"
+    },
+    {
+      "id": "pending-164",
+      "name": "艾昊",
+      "province": "重庆",
+      "row": 27,
+      "via": "艾昊",
+      "verify": "出生地未核实",
+      "origin": "重庆（未核实）",
+      "note": "GOSH 元老"
+    },
+    {
+      "id": "pending-165",
+      "name": "K ELEVEN",
+      "province": "重庆",
+      "row": 28,
+      "via": "K ELEVEN",
+      "verify": "出生地未核实",
+      "origin": "重庆（未核实）",
+      "note": "GOSH 成员"
+    },
+    {
+      "id": "pending-005",
+      "name": "鬼卞",
+      "province": "重庆",
+      "row": 29,
+      "via": "鬼卞",
+      "verify": "已核实",
+      "origin": "重庆沙坪坝区",
+      "note": "曾任沙坪坝小学语文老师"
+    },
+    {
+      "id": "pending-021",
+      "name": "张颜齐",
+      "province": "重庆",
+      "row": 30,
+      "via": "张颜齐",
+      "verify": "出生地未核实",
+      "origin": "重庆（未核实）",
+      "note": "《中国新说唱》选手"
+    },
+    {
+      "id": "shengyu",
+      "name": "盛宇",
+      "province": "湖南",
+      "row": 31,
+      "via": "盛宇",
+      "verify": "已核实",
+      "origin": "湖南长沙",
+      "note": "C-Block 队长，1988年生于长沙"
+    },
+    {
+      "id": "kungfu",
+      "name": "功夫胖",
+      "province": "湖南",
+      "row": 32,
+      "via": "功夫胖",
+      "verify": "已核实",
+      "origin": "湖南长沙",
+      "note": "1991年生于长沙"
+    },
+    {
+      "id": "keyl",
+      "name": "刘聪",
+      "province": "湖南",
+      "row": 33,
+      "via": "刘聪",
+      "verify": "已核实",
+      "origin": "湖南衡阳",
+      "note": "1988年生于衡阳"
+    },
+    {
+      "id": "pending-012",
+      "name": "西奥",
+      "province": "湖南",
+      "row": 34,
+      "via": "西奥 Sio",
+      "verify": "出生地未核实",
+      "origin": "湖南长沙（未核实）",
+      "note": "以长沙活动为准"
+    },
+    {
+      "id": "pending-019",
+      "name": "于意",
+      "province": "湖南",
+      "row": 35,
+      "via": "Yee",
+      "verify": "出生地未核实",
+      "origin": "湖南（未核实）",
+      "note": "以长沙活动为准"
+    },
+    {
+      "id": "pending-166",
+      "name": "Ranzer",
+      "province": "湖南",
+      "row": 36,
+      "via": "Ranzer",
+      "verify": "出生地未核实",
+      "origin": "湖南长沙（未核实）",
+      "note": "CSC 成员"
+    },
+    {
+      "id": "pending-167",
+      "name": "东别",
+      "province": "湖南",
+      "row": 37,
+      "via": "东别",
+      "verify": "出生地未核实",
+      "origin": "湖南（未核实）",
+      "note": "CSC 成员"
+    },
+    {
+      "id": "pending-168",
+      "name": "老道",
+      "province": "湖南",
+      "row": 38,
+      "via": "老道",
+      "verify": "出生地未核实",
+      "origin": "湖南（未核实）",
+      "note": "CSC 成员"
+    },
+    {
+      "id": "pending-169",
+      "name": "王奕",
+      "province": "湖南",
+      "row": 39,
+      "via": "王奕",
+      "verify": "出生地未核实",
+      "origin": "湖南（未核实）",
+      "note": "CSC 成员"
+    },
+    {
+      "id": "lexie",
+      "name": "刘柏辛",
+      "province": "湖南",
+      "row": 40,
+      "via": "刘柏辛",
+      "verify": "出生地未核实",
+      "origin": "湖南长沙（未核实）",
+      "note": "说唱融合女歌手，出生地未在可靠来源核实"
+    },
+    {
+      "id": "pending-002",
+      "name": "白景屹",
+      "province": "陕西",
+      "row": 41,
+      "via": "白景屹",
+      "verify": "已核实",
+      "origin": "陕西西安",
+      "note": "1997年生于西安"
+    },
+    {
+      "id": "pact",
+      "name": "派克特",
+      "province": "陕西",
+      "row": 42,
+      "via": "派克特",
+      "verify": "出生地未核实",
+      "origin": "陕西西安（未核实）",
+      "note": "以西安活动为准"
+    },
+    {
+      "id": "capper",
+      "name": "张砚拙",
+      "province": "陕西",
+      "row": 43,
+      "via": "Capper",
+      "verify": "出生地未核实",
+      "origin": "陕西西安（未核实）",
+      "note": "《少年说唱企划》冠军，出生地无可靠来源"
+    },
+    {
+      "id": "nineone",
+      "name": "乃万",
+      "province": "陕西",
+      "row": 44,
+      "via": "乃万",
+      "verify": "出生地未核实",
+      "origin": "陕西西安（未核实）",
+      "note": "女 rapper，以西安活动为准"
+    },
+    {
+      "id": "pending-170",
+      "name": "隐藏",
+      "province": "北京",
+      "row": 45,
+      "via": "隐藏",
+      "verify": "已核实",
+      "origin": "北京",
+      "note": "内地最早嘻哈团体之一"
+    },
+    {
+      "id": "pending-171",
+      "name": "龙井说唱",
+      "province": "北京",
+      "row": 46,
+      "via": "龙井说唱",
+      "verify": "已核实",
+      "origin": "北京",
+      "note": "2007年成立于北京，团体条目"
+    },
+    {
+      "id": "pending-047",
+      "name": "阴三儿 In3",
+      "province": "北京",
+      "row": 47,
+      "via": "阴三儿 In3",
+      "verify": "已核实",
+      "origin": "北京",
+      "note": "2007年成立，团体条目"
+    },
+    {
+      "id": "pending-172",
+      "name": "龙胆紫",
+      "province": "北京",
+      "row": 48,
+      "via": "龙胆紫",
+      "verify": "已核实",
+      "origin": "北京",
+      "note": "北京老牌团体，团体条目"
+    },
+    {
+      "id": "pending-116",
+      "name": "黄硕",
+      "province": "北京",
+      "row": 49,
+      "via": "黄硕",
+      "verify": "已核实",
+      "origin": "北京",
+      "note": "丹镇北京成员"
+    },
+    {
+      "id": "pending-117",
+      "name": "梁维嘉",
+      "province": "北京",
+      "row": 50,
+      "via": "Saber",
+      "verify": "已核实",
+      "origin": "北京",
+      "note": "丹镇北京成员"
+    },
+    {
+      "id": "pending-173",
+      "name": "MC张千",
+      "province": "北京",
+      "row": 51,
+      "via": "MC张千",
+      "verify": "已核实",
+      "origin": "北京",
+      "note": "丹镇北京成员，兼开心麻花演员"
+    },
+    {
+      "id": "pending-174",
+      "name": "生番",
+      "province": "北京",
+      "row": 52,
+      "via": "生番",
+      "verify": "出生地未核实",
+      "origin": "北京（未核实）",
+      "note": "丹镇北京成员"
+    },
+    {
+      "id": "pending-008",
+      "name": "辉子",
+      "province": "北京",
+      "row": 53,
+      "via": "辉子",
+      "verify": "已核实",
+      "origin": "北京通州区",
+      "note": "代表作《Time》"
+    },
+    {
+      "id": "pending-175",
+      "name": "秃子 2z",
+      "province": "北京",
+      "row": 54,
+      "via": "秃子 2z",
+      "verify": "出生地未核实",
+      "origin": "北京（未核实）",
+      "note": "广顺社团成员"
+    },
+    {
+      "id": "pending-176",
+      "name": "小老虎",
+      "province": "北京",
+      "row": 55,
+      "via": "小老虎",
+      "verify": "出生地未核实",
+      "origin": "北京（未核实）",
+      "note": "以北京活动为准"
+    },
+    {
+      "id": "jd",
+      "name": "JD",
+      "province": "北京",
+      "row": 56,
+      "via": "JD",
+      "verify": "出生地未核实",
+      "origin": "北京（未核实）",
+      "note": "《说唱听我的》冠军"
+    },
+    {
+      "id": "gali",
+      "name": "蒋文涵",
+      "province": "上海",
+      "row": 57,
+      "via": "GALI",
+      "verify": "出生地未核实",
+      "origin": "上海（未核实）",
+      "note": "《中国新说唱2020》季军，坐标上海"
+    },
+    {
+      "id": "pending-024",
+      "name": "吴嘉轩",
+      "province": "上海",
+      "row": 58,
+      "via": "Rapeter",
+      "verify": "出生地未核实",
+      "origin": "上海（未核实）",
+      "note": "上海大学金融系，新生代"
+    },
+    {
+      "id": "pending-090",
+      "name": "钟文",
+      "province": "上海",
+      "row": 59,
+      "via": "UglyZ",
+      "verify": "出生地未核实",
+      "origin": "上海（未核实）",
+      "note": "《中国新说唱2020》选手"
+    },
+    {
+      "id": "pending-177",
+      "name": "幼稚园杀手",
+      "province": "上海",
+      "row": 60,
+      "via": "幼稚园杀手",
+      "verify": "出生地未核实",
+      "origin": "上海（未核实）",
+      "note": "地下 Battle 代表"
+    },
+    {
+      "id": "guangguang",
+      "name": "MC光光",
+      "province": "上海",
+      "row": 61,
+      "via": "MC光光",
+      "verify": "出生地有争议",
+      "origin": "上海 / 河北（有争议）",
+      "note": "一说上海一说河北，无可靠定论，勿单引一说"
+    },
+    {
+      "id": "danko",
+      "name": "弹壳",
+      "province": "广东",
+      "row": 62,
+      "via": "弹壳",
+      "verify": "已核实",
+      "origin": "广东汕头",
+      "note": "1992年生于汕头，不要误作陕西人"
+    },
+    {
+      "id": "tizzyt",
+      "name": "谢锐韬",
+      "province": "广东",
+      "row": 63,
+      "via": "Tizzy T",
+      "verify": "已核实",
+      "origin": "广东潮州",
+      "note": "1993年生于潮州，2014年移居广州"
+    },
+    {
+      "id": "ar",
+      "name": "AR刘夫阳",
+      "province": "广东",
+      "row": 64,
+      "via": "AR刘夫阳",
+      "verify": "出生地未核实",
+      "origin": "广东广州（未核实）",
+      "note": "以广州活动为准"
+    },
+    {
+      "id": "lanlao",
+      "name": "揽佬",
+      "province": "广东",
+      "row": 65,
+      "via": "揽佬",
+      "verify": "出生地未核实",
+      "origin": "广东汕尾/海丰一带（未核实）",
+      "note": "《大展鸿图》《八方来财》，具体出生地无可靠来源"
+    },
+    {
+      "id": "pending-105",
+      "name": "肥宝",
+      "province": "广东",
+      "row": 66,
+      "via": "肥宝",
+      "verify": "出生地未核实",
+      "origin": "广东广州（未核实）",
+      "note": "广东说唱代表"
+    },
+    {
+      "id": "shouheng",
+      "name": "瘦恒",
+      "province": "广东",
+      "row": 67,
+      "via": "瘦恒",
+      "verify": "出生地未核实",
+      "origin": "广东广州（未核实）",
+      "note": "广东说唱代表"
+    },
+    {
+      "id": "pending-178",
+      "name": "ODD陈思键",
+      "province": "广东",
+      "row": 68,
+      "via": "ODD陈思键",
+      "verify": "出生地未核实",
+      "origin": "广东广州（未核实）",
+      "note": "广东说唱代表"
+    },
+    {
+      "id": "pending-179",
+      "name": "Vyan",
+      "province": "广东",
+      "row": 69,
+      "via": "Vyan",
+      "verify": "出生地未核实",
+      "origin": "广东（未核实）",
+      "note": "广东说唱代表"
+    },
+    {
+      "id": "pending-180",
+      "name": "廖效浓",
+      "province": "广东",
+      "row": 70,
+      "via": "廖效浓",
+      "verify": "出生地未核实",
+      "origin": "广东（未核实）",
+      "note": "广东说唱代表"
+    },
+    {
+      "id": "pending-009",
+      "name": "徐真真",
+      "province": "广东",
+      "row": 71,
+      "via": "徐真真",
+      "verify": "出生地未核实",
+      "origin": "广东（未核实）",
+      "note": "广东说唱代表"
+    },
+    {
+      "id": "pending-181",
+      "name": "Person",
+      "province": "广东",
+      "row": 72,
+      "via": "Person",
+      "verify": "出生地未核实",
+      "origin": "广东潮州（未核实）",
+      "note": "Tizzy T 搭档"
+    },
+    {
+      "id": "knowknow",
+      "name": "丁震",
+      "province": "江苏",
+      "row": 73,
+      "via": "KnowKnow",
+      "verify": "已核实",
+      "origin": "江苏南京",
+      "note": "1996年生于南京；另有一低质量来源称籍贯无锡，以南京出生为准"
+    },
+    {
+      "id": "pending-182",
+      "name": "卢一",
+      "province": "江苏",
+      "row": 74,
+      "via": "Lu1",
+      "verify": "出生地未核实",
+      "origin": "江苏南京（未核实）",
+      "note": "南京说唱代表"
+    },
+    {
+      "id": "pharaoh",
+      "name": "法老",
+      "province": "浙江",
+      "row": 75,
+      "via": "法老",
+      "verify": "已核实",
+      "origin": "浙江海宁",
+      "note": "1992年生于海宁，不要误作上海人"
+    },
+    {
+      "id": "elfin",
+      "name": "小精灵",
+      "province": "浙江",
+      "row": 76,
+      "via": "小精灵",
+      "verify": "已核实",
+      "origin": "浙江嘉兴",
+      "note": "1994年生于嘉兴"
+    },
+    {
+      "id": "pending-016",
+      "name": "钟祺",
+      "province": "浙江",
+      "row": 77,
+      "via": "TangoZ",
+      "verify": "出生地未核实",
+      "origin": "浙江杭州（未核实）",
+      "note": "《说唱听我的》选手"
+    },
+    {
+      "id": "jiang",
+      "name": "姜云升",
+      "province": "浙江",
+      "row": 78,
+      "via": "姜云升",
+      "verify": "出生地有争议",
+      "origin": "浙江 / 山东（有争议）",
+      "note": "粉丝来源说法冲突，无可靠定论"
+    },
+    {
+      "id": "jonyj",
+      "name": "肖佳",
+      "province": "福建",
+      "row": 79,
+      "via": "Jony J",
+      "verify": "已核实",
+      "origin": "福建福州",
+      "note": "1989年生于福州，后居南京/盐城，不要误作江苏人"
+    },
+    {
+      "id": "vinida",
+      "name": "万妮达",
+      "province": "福建",
+      "row": 80,
+      "via": "万妮达",
+      "verify": "已核实",
+      "origin": "福建福州",
+      "note": "1994年生于福州"
+    },
+    {
+      "id": "pending-183",
+      "name": "八口 8uck",
+      "province": "福建",
+      "row": 81,
+      "via": "八口 8uck",
+      "verify": "已核实",
+      "origin": "福建厦门",
+      "note": "1993年生于厦门"
+    },
+    {
+      "id": "pending-028",
+      "name": "翁杰",
+      "province": "福建",
+      "row": 82,
+      "via": "翁杰",
+      "verify": "出生地未核实",
+      "origin": "福建（未核实）",
+      "note": "新生代闽语说唱"
+    },
+    {
+      "id": "air",
+      "name": "艾热",
+      "province": "新疆",
+      "row": 83,
+      "via": "艾热",
+      "verify": "已核实",
+      "origin": "新疆喀什",
+      "note": "1993年生于喀什，维吾尔族"
+    },
+    {
+      "id": "nawukere",
+      "name": "那吾克热",
+      "province": "新疆",
+      "row": 84,
+      "via": "那吾克热",
+      "verify": "已核实",
+      "origin": "新疆乌鲁木齐",
+      "note": "天山四子成员"
+    },
+    {
+      "id": "pending-001",
+      "name": "艾福杰尼",
+      "province": "新疆",
+      "row": 85,
+      "via": "艾福杰尼",
+      "verify": "已核实",
+      "origin": "新疆库尔勒",
+      "note": "1992年生于库尔勒，与黄旭组沙漠兄弟"
+    },
+    {
+      "id": "huangxu",
+      "name": "黄旭",
+      "province": "新疆",
+      "row": 86,
+      "via": "黄旭",
+      "verify": "出生地未核实",
+      "origin": "新疆乌鲁木齐（未核实具体）",
+      "note": "沙漠兄弟成员"
+    },
+    {
+      "id": "pending-102",
+      "name": "马俊",
+      "province": "新疆",
+      "row": 87,
+      "via": "马俊",
+      "verify": "已核实",
+      "origin": "新疆克拉玛依",
+      "note": "天山四子成员"
+    },
+    {
+      "id": "pending-074",
+      "name": "多雷",
+      "province": "新疆",
+      "row": 88,
+      "via": "多雷",
+      "verify": "出生地未核实",
+      "origin": "新疆（未核实）",
+      "note": "天山四子成员"
+    },
+    {
+      "id": "pending-075",
+      "name": "福克斯",
+      "province": "新疆",
+      "row": 89,
+      "via": "福克斯",
+      "verify": "已核实",
+      "origin": "新疆伊犁伊宁",
+      "note": "1996年生于伊宁"
+    },
+    {
+      "id": "liuxuanting",
+      "name": "刘炫廷",
+      "province": "新疆",
+      "row": 90,
+      "via": "刘炫廷",
+      "verify": "出生地有争议",
+      "origin": "新疆 / 广西（有争议）",
+      "note": "新疆与广西两说并存，无可靠定论"
+    },
+    {
+      "id": "shark",
+      "name": "米尔艾力",
+      "province": "新疆",
+      "row": 91,
+      "via": "SHarK",
+      "verify": "出生地未核实",
+      "origin": "新疆（未核实）",
+      "note": "《新说唱2025》冠军，维吾尔族"
+    },
+    {
+      "id": "pending-184",
+      "name": "泰格西",
+      "province": "新疆",
+      "row": 92,
+      "via": "泰格西",
+      "verify": "出生地未核实",
+      "origin": "新疆（未核实）",
+      "note": "新生代"
+    },
+    {
+      "id": "pending-185",
+      "name": "A-MAC",
+      "province": "新疆",
+      "row": 93,
+      "via": "A-MAC",
+      "verify": "出生地未核实",
+      "origin": "新疆乌鲁木齐（未核实）",
+      "note": "与马俊早期合作"
+    },
+    {
+      "id": "gem",
+      "name": "董宝石",
+      "province": "吉林",
+      "row": 94,
+      "via": "董宝石",
+      "verify": "已核实",
+      "origin": "吉林长春",
+      "note": "1986年生于长春，2014年后移居成都"
+    },
+    {
+      "id": "pending-186",
+      "name": "高煜然",
+      "province": "吉林",
+      "row": 95,
+      "via": "高煜然",
+      "verify": "出生地未核实",
+      "origin": "吉林长春（未核实）",
+      "note": "董宝石高中同学"
+    },
+    {
+      "id": "pending-082",
+      "name": "爆音",
+      "province": "辽宁",
+      "row": 96,
+      "via": "爆音",
+      "verify": "出生地未核实",
+      "origin": "辽宁沈阳（未核实）",
+      "note": "地下 Battle MC；注：艾志恒不在此省，见湖北"
+    },
+    {
+      "id": "pgone",
+      "name": "王昊 / 王唯楚",
+      "province": "黑龙江",
+      "row": 97,
+      "via": "PG One",
+      "verify": "出生地有争议",
+      "origin": "黑龙江肇东",
+      "note": "1994年生；一说哈尔滨，以百度百科肇东为准，不要误作陕西人"
+    },
+    {
+      "id": "pending-006",
+      "name": "小青龙",
+      "province": "山东",
+      "row": 98,
+      "via": "小青龙",
+      "verify": "出生地未核实",
+      "origin": "山东（未核实）",
+      "note": "《中国有嘻哈》选手，籍贯无可靠来源，勿作已核实引用"
+    },
+    {
+      "id": "pending-187",
+      "name": "八贼",
+      "province": "山东",
+      "row": 99,
+      "via": "八贼",
+      "verify": "出生地未核实",
+      "origin": "山东（未核实）",
+      "note": "活死人成员"
+    },
+    {
+      "id": "pending-188",
+      "name": "赵辰龙",
+      "province": "河南",
+      "row": 100,
+      "via": "赵辰龙",
+      "verify": "出生地未核实",
+      "origin": "河南郑州（未核实）",
+      "note": "Battle MC"
+    },
+    {
+      "id": "pending-189",
+      "name": "王尔德",
+      "province": "河南",
+      "row": 101,
+      "via": "王尔德",
+      "verify": "出生地未核实",
+      "origin": "河南（未核实）",
+      "note": "地下 rapper"
+    },
+    {
+      "id": "pending-190",
+      "name": "邓典",
+      "province": "河南",
+      "row": 102,
+      "via": "邓典",
+      "verify": "已核实",
+      "origin": "河南焦作",
+      "note": "偏流行/R&B歌手，非核心 rapper，仅作地域参考"
+    },
+    {
+      "id": "dingfei",
+      "name": "丁飞",
+      "province": "山西",
+      "row": 103,
+      "via": "丁飞",
+      "verify": "已核实",
+      "origin": "山西临汾",
+      "note": "红花会大管家，不要误作陕西人"
+    },
+    {
+      "id": "pending-191",
+      "name": "蜘蛛",
+      "province": "山西",
+      "row": 104,
+      "via": "蜘蛛",
+      "verify": "出生地未核实",
+      "origin": "山西（未核实）",
+      "note": "后在北京做幕后"
+    },
+    {
+      "id": "pending-108",
+      "name": "夜楠",
+      "province": "山西",
+      "row": 105,
+      "via": "夜楠",
+      "verify": "出生地未核实",
+      "origin": "山西（未核实）",
+      "note": "乱战门队长"
+    },
+    {
+      "id": "lidaben",
+      "name": "李大奔",
+      "province": "湖北",
+      "row": 106,
+      "via": "李大奔",
+      "verify": "已核实",
+      "origin": "湖北荆州",
+      "note": "1995年生于荆州"
+    },
+    {
+      "id": "pending-192",
+      "name": "毕冉",
+      "province": "湖北",
+      "row": 107,
+      "via": "毕冉",
+      "verify": "出生地未核实",
+      "origin": "湖北（未核实）",
+      "note": "未核实具体城市"
+    },
+    {
+      "id": "zaoan",
+      "name": "早安",
+      "province": "湖北",
+      "row": 108,
+      "via": "早安",
+      "verify": "出生地有争议",
+      "origin": "湖北武汉 / 四川成都（有争议）",
+      "note": "四川与湖北两说并存，本表归湖北并注明争议，去重只计一次"
+    },
+    {
+      "id": "asen",
+      "name": "艾志恒",
+      "province": "湖北",
+      "row": 109,
+      "via": "艾志恒",
+      "verify": "已核实",
+      "origin": "湖北恩施咸丰县",
+      "note": "湖北咸丰人，不是辽宁；原调研误标辽宁未核实，本表按咸丰计入湖北"
+    },
+    {
+      "id": "pending-193",
+      "name": "王晨宇",
+      "province": "安徽",
+      "row": 110,
+      "via": "王晨宇",
+      "verify": "出生地未核实",
+      "origin": "安徽（未核实）",
+      "note": "《地下八英里》全国总冠军"
+    },
+    {
+      "id": "pending-018",
+      "name": "张子豪 Wiz_H",
+      "province": "江西",
+      "row": 111,
+      "via": "张子豪",
+      "verify": "出生地未核实",
+      "origin": "江西（未核实）",
+      "note": "《说唱听我的》选手"
+    },
+    {
+      "id": "manshuke",
+      "name": "满舒克",
+      "province": "云南",
+      "row": 112,
+      "via": "满舒克",
+      "verify": "出生地未核实",
+      "origin": "云南昆明（未核实）",
+      "note": "昆明说法多见于粉丝来源，无百科页核实"
+    },
+    {
+      "id": "pending-194",
+      "name": "黄昭",
+      "province": "云南",
+      "row": 113,
+      "via": "黄昭",
+      "verify": "出生地未核实",
+      "origin": "云南（未核实）",
+      "note": "云南说唱代表"
+    },
+    {
+      "id": "pending-007",
+      "name": "孙八一",
+      "province": "贵州",
+      "row": 114,
+      "via": "孙八一",
+      "verify": "已核实",
+      "origin": "贵州黔东南凯里",
+      "note": "1990年生于凯里，常被误作辽宁人，特此纠正"
+    },
+    {
+      "id": "shayiting",
+      "name": "沙一汀",
+      "province": "内蒙古",
+      "row": 115,
+      "via": "沙一汀",
+      "verify": "已核实",
+      "origin": "内蒙古阿拉善盟",
+      "note": "1998年生于阿拉善盟"
+    },
+    {
+      "id": "pending-195",
+      "name": "童宇",
+      "province": "内蒙古",
+      "row": 116,
+      "via": "童宇",
+      "verify": "已核实",
+      "origin": "内蒙古呼和浩特",
+      "note": "旅行新蜜蜂主唱，说唱参与者"
+    },
+    {
+      "id": "beibei",
+      "name": "贝贝",
+      "province": "甘肃",
+      "row": 117,
+      "via": "贝贝",
+      "verify": "出生地有争议",
+      "origin": "甘肃兰州",
+      "note": "1995年生；一说实际出生北京（京泽一名来源），籍贯按兰州计"
+    },
+    {
+      "id": "hotdog",
+      "name": "MC HotDog 热狗",
+      "province": "台湾",
+      "row": 118,
+      "via": "MC HotDog 热狗",
+      "verify": "已核实",
+      "origin": "台湾台北",
+      "note": "台湾嘻哈代表人物"
+    },
+    {
+      "id": "pending-032",
+      "name": "大支",
+      "province": "台湾",
+      "row": 119,
+      "via": "大支",
+      "verify": "已核实",
+      "origin": "台湾台南",
+      "note": "出生年有争议（1979 / 1984两说），出生地台南无争议"
+    },
+    {
+      "id": "eso",
+      "name": "瘦子",
+      "province": "台湾",
+      "row": 120,
+      "via": "瘦子",
+      "verify": "已核实",
+      "origin": "台湾台北木栅",
+      "note": "1987年生于木栅"
+    },
+    {
+      "id": "kenzy",
+      "name": "小春",
+      "province": "台湾",
+      "row": 121,
+      "via": "小春",
+      "verify": "已核实",
+      "origin": "台湾台北木栅",
+      "note": "1986年生于木栅"
+    },
+    {
+      "id": "muta",
+      "name": "大渊",
+      "province": "台湾",
+      "row": 122,
+      "via": "大渊",
+      "verify": "已核实",
+      "origin": "台湾台北木栅",
+      "note": "1988年生于木栅"
+    },
+    {
+      "id": "softlipa",
+      "name": "蛋堡",
+      "province": "台湾",
+      "row": 123,
+      "via": "蛋堡",
+      "verify": "已核实",
+      "origin": "台湾台南",
+      "note": "1982年生于台南"
+    },
+    {
+      "id": "pending-030",
+      "name": "国蛋",
+      "province": "台湾",
+      "row": 124,
+      "via": "国蛋",
+      "verify": "已核实",
+      "origin": "台湾台南",
+      "note": "1986年生于台南"
+    },
+    {
+      "id": "pending-136",
+      "name": "宋岳庭 M80",
+      "province": "台湾",
+      "row": 125,
+      "via": "宋岳庭",
+      "verify": "已核实",
+      "origin": "台湾台北",
+      "note": "1978年生于台北，2002年逝世"
+    },
+    {
+      "id": "kumachan",
+      "name": "熊仔",
+      "province": "台湾",
+      "row": 126,
+      "via": "熊仔",
+      "verify": "已核实",
+      "origin": "台湾台北",
+      "note": "1990年生于台北"
+    },
+    {
+      "id": "pending-196",
+      "name": "吕士轩",
+      "province": "台湾",
+      "row": 127,
+      "via": "吕士轩",
+      "verify": "已核实",
+      "origin": "台湾新竹",
+      "note": "1989年生于新竹"
+    },
+    {
+      "id": "pending-094",
+      "name": "呆宝静",
+      "province": "台湾",
+      "row": 128,
+      "via": "呆宝静",
+      "verify": "出生地未核实",
+      "origin": "台湾台北（未核实）",
+      "note": "女 rapper"
+    },
+    {
+      "id": "pending-135",
+      "name": "满人",
+      "province": "台湾",
+      "row": 129,
+      "via": "满人",
+      "verify": "出生地未核实",
+      "origin": "台湾（未核实，纽约成长背景）",
+      "note": "台湾早期 rapper"
+    },
+    {
+      "id": "pending-133",
+      "name": "ØZI",
+      "province": "台湾",
+      "row": 130,
+      "via": "ØZI",
+      "verify": "出生地未核实",
+      "origin": "台湾台北（未核实）",
+      "note": "新生代"
+    },
+    {
+      "id": "pending-031",
+      "name": "LEO王",
+      "province": "台湾",
+      "row": 131,
+      "via": "LEO王",
+      "verify": "出生地未核实",
+      "origin": "台湾台北（未核实）",
+      "note": "新生代"
+    },
+    {
+      "id": "pending-197",
+      "name": "高尔宣",
+      "province": "台湾",
+      "row": 132,
+      "via": "高尔宣",
+      "verify": "出生地未核实",
+      "origin": "台湾台北（未核实）",
+      "note": "新生代"
+    },
+    {
+      "id": "mcjin",
+      "name": "欧阳靖",
+      "province": "香港",
+      "row": 133,
+      "via": "欧阳靖",
+      "verify": "已核实",
+      "origin": "出生美国迈阿密，祖籍香港",
+      "note": "1982年生于迈阿密，父母为香港移民，按祖籍/活动归香港组"
+    },
+    {
+      "id": "pending-036",
+      "name": "MC仁 MC Yan",
+      "province": "香港",
+      "row": 134,
+      "via": "MC仁 MC Yan",
+      "verify": "已核实",
+      "origin": "出生英属香港，籍贯广东广州",
+      "note": "1971年生于香港"
+    },
+    {
+      "id": "pending-035",
+      "name": "陈冠希",
+      "province": "香港",
+      "row": 135,
+      "via": "陈冠希",
+      "verify": "已核实",
+      "origin": "出生加拿大温哥华",
+      "note": "1980年生于温哥华，按活动归香港组"
+    },
+    {
+      "id": "pending-141",
+      "name": "陆永",
+      "province": "香港",
+      "row": 136,
+      "via": "陆永",
+      "verify": "出生地未核实",
+      "origin": "香港（未核实）",
+      "note": "农夫组合成员"
+    },
+    {
+      "id": "pending-141",
+      "name": "C君",
+      "province": "香港",
+      "row": 137,
+      "via": "C君",
+      "verify": "出生地未核实",
+      "origin": "香港（未核实）",
+      "note": "农夫组合成员"
+    },
+    {
+      "id": "pending-121",
+      "name": "厨房仔",
+      "province": "香港",
+      "row": 138,
+      "via": "厨房仔",
+      "verify": "出生地未核实",
+      "origin": "香港（未核实）",
+      "note": "三角度成员"
+    },
+    {
+      "id": "pending-126",
+      "name": "Novel Fergus",
+      "province": "香港",
+      "row": 139,
+      "via": "Novel Fergus",
+      "verify": "出生地未核实",
+      "origin": "香港（未核实）",
+      "note": "新生代粤语说唱"
+    },
+    {
+      "id": "pending-038",
+      "name": "YoungQueenz",
+      "province": "香港",
+      "row": 140,
+      "via": "YoungQueenz",
+      "verify": "出生地未核实",
+      "origin": "香港（未核实）",
+      "note": "新生代粤语说唱"
+    },
+    {
+      "id": "pending-143",
+      "name": "潘玮柏",
+      "province": "台湾",
+      "row": 141,
+      "via": "潘玮柏",
+      "verify": "已核实",
+      "origin": "出生美国西弗吉尼亚，祖籍上海",
+      "note": "歌手/rapper，《中国有嘻哈》导师；海外出生，仅作活动参考行"
+    }
+  ]
+}

@@ -94,18 +94,10 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
 
   const base = useMemo(() => {
     const located = data.nodes.filter(node => province === ALL_PROVINCES || provinceOf(node.city) === province);
-    const archivePool = located.filter(node => provinceOf(node.city) === UNKNOWN_PROVINCE);
-    const chosen = [...archivePool]
-      .sort((a, b) => (degree.get(b.id) || 0) - (degree.get(a.id) || 0))
-      .slice(0, 12);
-    if (selected && archivePool.some(node => node.id === selected) && !chosen.some(node => node.id === selected)) {
-      chosen.pop();
-      chosen.unshift(archivePool.find(node => node.id === selected)!);
-    }
-    const ids = new Set(chosen.map(node => node.id));
-    const boardNodes = located.filter(node => provinceOf(node.city) !== UNKNOWN_PROVINCE || ids.has(node.id));
-    return boardLayout(boardNodes, province, narrow);
-  }, [data.nodes, province, degree, selected, narrow]);
+    // 完整展示：地域待考据的每一个人都上画板，不再按关系数截取前 12 个。
+    // 框面积与世界尺寸由 boardLayout 按实际人数计算。
+    return boardLayout(located, province, narrow);
+  }, [data.nodes, province, narrow]);
 
   /** Layout with the hand-nudged province offsets folded in. */
   const {zones, positions, world} = useMemo(() => {

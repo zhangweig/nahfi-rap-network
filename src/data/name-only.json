@@ -1,0 +1,3521 @@
+{
+  "artists": [
+    {
+      "id": "pending-001",
+      "name": "艾福杰尼",
+      "aliases": [],
+      "kind": "artist",
+      "city": "乌鲁木齐",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "艾福",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "中国有嘻哈季军；巅峰对决2023倒计时联盟"
+      }
+    },
+    {
+      "id": "pending-002",
+      "name": "BrAnT.B白景屹",
+      "aliases": [
+        "小白",
+        "BrAnTB"
+      ],
+      "kind": "artist",
+      "city": "西安",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Br",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "红花会成员；有嘻哈23强；巅峰对决首发"
+      }
+    },
+    {
+      "id": "pending-003",
+      "name": "新秀",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "新秀",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "2019 四强、新说唱2024 亚军"
+      }
+    },
+    {
+      "id": "pending-004",
+      "name": "KAFE.HU咖啡壶",
+      "aliases": [
+        "KAFE.HU"
+      ],
+      "kind": "artist",
+      "city": "上海",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "KA",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "新说唱2020 四强；巅峰对决2023"
+      }
+    },
+    {
+      "id": "pending-005",
+      "name": "鬼卞",
+      "aliases": [],
+      "kind": "artist",
+      "city": "重庆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "鬼卞",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "中国有嘻哈23强"
+      }
+    },
+    {
+      "id": "pending-006",
+      "name": "小青龙",
+      "aliases": [],
+      "kind": "artist",
+      "city": "云南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "小青",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "中国有嘻哈40强；开山怪"
+      }
+    },
+    {
+      "id": "pending-007",
+      "name": "孙八一",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "孙八",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "中国有嘻哈23强"
+      }
+    },
+    {
+      "id": "pending-008",
+      "name": "辉子",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "辉子",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "中国有嘻哈40强；新说唱2024 殿军"
+      }
+    },
+    {
+      "id": "pending-009",
+      "name": "徐真真",
+      "aliases": [],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "徐真",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "中国有嘻哈23强"
+      }
+    },
+    {
+      "id": "pending-010",
+      "name": "大笑",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "大笑",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "中国有嘻哈23强"
+      }
+    },
+    {
+      "id": "pending-011",
+      "name": "王大痣",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "王大",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "中国有嘻哈23强"
+      }
+    },
+    {
+      "id": "pending-012",
+      "name": "西奥SIO",
+      "aliases": [],
+      "kind": "artist",
+      "city": "长沙",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "西奥",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "C-Block/Sup；巅峰对决2023"
+      }
+    },
+    {
+      "id": "pending-013",
+      "name": "李毅杰PISSY",
+      "aliases": [
+        "PISSY"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "李毅",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2023 流星花园联盟"
+      }
+    },
+    {
+      "id": "pending-014",
+      "name": "AnsrJ",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "AN",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2023 首发"
+      }
+    },
+    {
+      "id": "pending-015",
+      "name": "step.jad依加",
+      "aliases": [
+        "step.jad"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "st",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2023 首发"
+      }
+    },
+    {
+      "id": "pending-016",
+      "name": "TangoZ钟祺",
+      "aliases": [
+        "TangoZ"
+      ],
+      "kind": "artist",
+      "city": "上海",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Ta",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2023 倒计时联盟"
+      }
+    },
+    {
+      "id": "pending-017",
+      "name": "威尔Will.T",
+      "aliases": [
+        "Will.T"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "威尔",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2023 D.M.G 联盟"
+      }
+    },
+    {
+      "id": "pending-018",
+      "name": "Wiz_H张子豪",
+      "aliases": [
+        "Wiz_H"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Wi",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2023 Pizza 联盟"
+      }
+    },
+    {
+      "id": "pending-019",
+      "name": "于意YEE",
+      "aliases": [
+        "YEE"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "于意",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2023 首发"
+      }
+    },
+    {
+      "id": "pending-020",
+      "name": "SeanT肖恩恩",
+      "aliases": [
+        "肖恩恩",
+        "SeanT"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Se",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2023 首发"
+      }
+    },
+    {
+      "id": "pending-021",
+      "name": "张颜齐",
+      "aliases": [],
+      "kind": "artist",
+      "city": "重庆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "张颜",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2022 首发"
+      }
+    },
+    {
+      "id": "pending-022",
+      "name": "谢可寅",
+      "aliases": [
+        "Shaking Chloe"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "谢可",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "巅峰对决2023 首发"
+      }
+    },
+    {
+      "id": "pending-023",
+      "name": "JinJiBeWater_隼",
+      "aliases": [
+        "隼"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Ji",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "新说唱2024 总冠军"
+      }
+    },
+    {
+      "id": "pending-024",
+      "name": "Rapeter吴嘉轩",
+      "aliases": [
+        "Rapeter"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Ra",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "说唱巅峰对决2026 名人堂 TOP2"
+      }
+    },
+    {
+      "id": "pending-025",
+      "name": "Yamy郭颖",
+      "aliases": [
+        "Yamy"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Ya",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "说唱巅峰对决2026 名人堂 TOP5；有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-026",
+      "name": "Top Barry杨博睿",
+      "aliases": [
+        "Top Barry"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "To",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "新说唱2025 季军"
+      }
+    },
+    {
+      "id": "pending-027",
+      "name": "加木",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "加木",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "说唱巅峰对决2026 总决赛"
+      }
+    },
+    {
+      "id": "pending-028",
+      "name": "翁杰Winjay",
+      "aliases": [
+        "Winjay"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "翁杰",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "说唱巅峰对决2026 总决赛"
+      }
+    },
+    {
+      "id": "pending-029",
+      "name": "周汤豪NICKTHEREAL",
+      "aliases": [
+        "周汤豪"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "周汤",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "说唱巅峰对决2026 踢馆突围至决赛"
+      }
+    },
+    {
+      "id": "pending-030",
+      "name": "国蛋GorDoN",
+      "aliases": [
+        "国蛋",
+        "Dr.Paper"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "国蛋",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "颜社核心；台饶代表"
+      }
+    },
+    {
+      "id": "pending-031",
+      "name": "Leo王",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Le",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "颜社；金曲歌王"
+      }
+    },
+    {
+      "id": "pending-032",
+      "name": "大支Dwagie",
+      "aliases": [
+        "大支"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "大支",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "人人有功练创办人；台饶先驱"
+      }
+    },
+    {
+      "id": "pending-033",
+      "name": "葛仲珊Miss Ko",
+      "aliases": [
+        "葛仲珊"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "葛仲",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "颜社；金曲最佳新人"
+      }
+    },
+    {
+      "id": "pending-034",
+      "name": "李英宏",
+      "aliases": [
+        "DJ Didilong"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "李英",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "颜社；《台北直直撞》"
+      }
+    },
+    {
+      "id": "pending-035",
+      "name": "陈冠希",
+      "aliases": [
+        "Edison Chen"
+      ],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "陈冠",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "《战争》《香港地》；三角度"
+      }
+    },
+    {
+      "id": "pending-036",
+      "name": "MC仁",
+      "aliases": [
+        "MC Yan"
+      ],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "MC",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "LMF 主音；香港嘻哈教父"
+      }
+    },
+    {
+      "id": "pending-037",
+      "name": "Dough-Boy",
+      "aliases": [],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "DO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "金像奖 rapper/制作人"
+      }
+    },
+    {
+      "id": "pending-038",
+      "name": "YoungQueenz",
+      "aliases": [],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "YO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "香港 DIY 说唱代表"
+      }
+    },
+    {
+      "id": "pending-039",
+      "name": "MastaMic",
+      "aliases": [],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "MA",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "香港 freestyle 代表"
+      }
+    },
+    {
+      "id": "pending-040",
+      "name": "陈近南",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "陈近",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "W8VES 成员"
+      }
+    },
+    {
+      "id": "pending-041",
+      "name": "阿达娃",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "阿达",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "W8VES 成员"
+      }
+    },
+    {
+      "id": "pending-042",
+      "name": "Feezy飞贼",
+      "aliases": [
+        "Feezy"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Fe",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "W8VES 成员"
+      }
+    },
+    {
+      "id": "pending-043",
+      "name": "斯威特",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "斯威",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "W8VES 成员"
+      }
+    },
+    {
+      "id": "pending-044",
+      "name": "AK刘彰",
+      "aliases": [
+        "AK",
+        "刘彰"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "AK",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "W8VES 成员"
+      }
+    },
+    {
+      "id": "pending-045",
+      "name": "顽童MJ116",
+      "aliases": [],
+      "kind": "group",
+      "city": "台湾",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "顽童",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "本色音乐；兄弟本色"
+      }
+    },
+    {
+      "id": "pending-046",
+      "name": "玖壹壹",
+      "aliases": [],
+      "kind": "group",
+      "city": "台湾",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "玖壹",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "混血儿娱乐"
+      }
+    },
+    {
+      "id": "pending-047",
+      "name": "阴三儿in3",
+      "aliases": [
+        "阴三儿"
+      ],
+      "kind": "group",
+      "city": "北京",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "阴三",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 1,
+        "source": "北京地下说唱代表"
+      }
+    },
+    {
+      "id": "pending-048",
+      "name": "辛巴",
+      "aliases": [],
+      "kind": "artist",
+      "city": "西安",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "辛巴",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "NOUS；中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-049",
+      "name": "钧泽",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "钧泽",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈23强"
+      }
+    },
+    {
+      "id": "pending-050",
+      "name": "BCW",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "BC",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈；混血儿娱乐"
+      }
+    },
+    {
+      "id": "pending-051",
+      "name": "胡旭",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "胡旭",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈23强"
+      }
+    },
+    {
+      "id": "pending-052",
+      "name": "李文",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "李文",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-053",
+      "name": "赵涛",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "赵涛",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-054",
+      "name": "YZ于耀智",
+      "aliases": [
+        "YZ"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "YZ",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈23强；颜社"
+      }
+    },
+    {
+      "id": "pending-055",
+      "name": "赵温臻",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "赵温",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-056",
+      "name": "周艺轩",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "周艺",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈23强"
+      }
+    },
+    {
+      "id": "pending-057",
+      "name": "OBi&M03",
+      "aliases": [
+        "OBi",
+        "M03"
+      ],
+      "kind": "group",
+      "city": "未标注",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "OB",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈23强（组合）"
+      }
+    },
+    {
+      "id": "pending-058",
+      "name": "Billy King",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "BI",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈23强"
+      }
+    },
+    {
+      "id": "pending-059",
+      "name": "二毛",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "二毛",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-060",
+      "name": "will.D",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "WI",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-061",
+      "name": "黄薏帆",
+      "aliases": [
+        "Evan-E"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "黄薏",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈46强"
+      }
+    },
+    {
+      "id": "pending-062",
+      "name": "朱星杰",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "朱星",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈46强"
+      }
+    },
+    {
+      "id": "pending-063",
+      "name": "大鱼Big fish",
+      "aliases": [
+        "大鱼"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "大鱼",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-064",
+      "name": "EO",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "EO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-065",
+      "name": "Double Zhuo",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "DO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-066",
+      "name": "Young Gorilla",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "YO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-067",
+      "name": "Cat雨馨",
+      "aliases": [
+        "雨馨"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Ca",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "中国有嘻哈40强"
+      }
+    },
+    {
+      "id": "pending-068",
+      "name": "山鸡",
+      "aliases": [],
+      "kind": "artist",
+      "city": "重庆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "山鸡",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "GO$H 成员"
+      }
+    },
+    {
+      "id": "pending-069",
+      "name": "小安迪",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "小安",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-070",
+      "name": "杨晓川",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "杨晓",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-071",
+      "name": "陈梓童",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "陈梓",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-072",
+      "name": "Vex",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "VE",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-073",
+      "name": "Blow",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "BL",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-074",
+      "name": "多雷",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "多雷",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-075",
+      "name": "福克斯",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "福克",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-076",
+      "name": "Kozay",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "KO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-077",
+      "name": "Round2",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "RO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-078",
+      "name": "蜜妞",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "蜜妞",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-079",
+      "name": "李棒棒",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "李棒",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-080",
+      "name": "Young Lego",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "YO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-081",
+      "name": "马丁",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "马丁",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-082",
+      "name": "爆音",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "爆音",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-083",
+      "name": "陈令涛",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "陈令",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-084",
+      "name": "孔令奇",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "孔令",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-085",
+      "name": "Teniy Rey",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "TE",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-086",
+      "name": "Blue",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "BL",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-087",
+      "name": "DK",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "DK",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-088",
+      "name": "Al Rocco",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "AL",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-089",
+      "name": "Mac",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "MA",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-090",
+      "name": "Ugly Z",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "UG",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-091",
+      "name": "陈彦希",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "陈彦",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-092",
+      "name": "王思瑶",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "王思",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-093",
+      "name": "何美延",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "何美",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-094",
+      "name": "呆宝静",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "呆宝",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-095",
+      "name": "卓卓",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "卓卓",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-096",
+      "name": "JN",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "JN",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-097",
+      "name": "福来",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "福来",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-098",
+      "name": "Jason",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "JA",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-099",
+      "name": "潘潘",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "潘潘",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-100",
+      "name": "Free.C",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "FR",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-101",
+      "name": "双胞胎",
+      "aliases": [],
+      "kind": "group",
+      "city": "未标注",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "双胞",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强（组合）"
+      }
+    },
+    {
+      "id": "pending-102",
+      "name": "马俊",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "马俊",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-103",
+      "name": "大狗",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "大狗",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "新说唱100强"
+      }
+    },
+    {
+      "id": "pending-104",
+      "name": "阿龙",
+      "aliases": [],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "阿龙",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "精气神早期成员"
+      }
+    },
+    {
+      "id": "pending-105",
+      "name": "肥宝",
+      "aliases": [],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "肥宝",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "精气神早期成员"
+      }
+    },
+    {
+      "id": "pending-106",
+      "name": "肥轩",
+      "aliases": [],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "肥轩",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "精气神早期成员"
+      }
+    },
+    {
+      "id": "pending-107",
+      "name": "肥杰",
+      "aliases": [],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "肥杰",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "精气神早期成员"
+      }
+    },
+    {
+      "id": "pending-108",
+      "name": "夜楠",
+      "aliases": [],
+      "kind": "artist",
+      "city": "西安",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "夜楠",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "乱战门早期"
+      }
+    },
+    {
+      "id": "pending-109",
+      "name": "琴艺",
+      "aliases": [],
+      "kind": "artist",
+      "city": "西安",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "琴艺",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "乱战门早期"
+      }
+    },
+    {
+      "id": "pending-110",
+      "name": "李潇潇",
+      "aliases": [],
+      "kind": "artist",
+      "city": "西安",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "李潇",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "乱战门早期"
+      }
+    },
+    {
+      "id": "pending-111",
+      "name": "鱼头",
+      "aliases": [],
+      "kind": "artist",
+      "city": "西安",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "鱼头",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "NOUS 相关"
+      }
+    },
+    {
+      "id": "pending-112",
+      "name": "Buzzy",
+      "aliases": [],
+      "kind": "artist",
+      "city": "上海",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "BU",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "活死人"
+      }
+    },
+    {
+      "id": "pending-113",
+      "name": "深蓝儿童",
+      "aliases": [],
+      "kind": "group",
+      "city": "上海",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "深蓝",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "活死人"
+      }
+    },
+    {
+      "id": "pending-114",
+      "name": "龙崎",
+      "aliases": [],
+      "kind": "artist",
+      "city": "上海",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "龙崎",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "活死人"
+      }
+    },
+    {
+      "id": "pending-115",
+      "name": "天津饭",
+      "aliases": [],
+      "kind": "artist",
+      "city": "天津",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "天津",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "早期 diss 事件；南北对话关键节点"
+      }
+    },
+    {
+      "id": "pending-116",
+      "name": "黄硕",
+      "aliases": [],
+      "kind": "artist",
+      "city": "北京",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "黄硕",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "丹镇北京"
+      }
+    },
+    {
+      "id": "pending-117",
+      "name": "Saber",
+      "aliases": [],
+      "kind": "artist",
+      "city": "北京",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "SA",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "丹镇北京"
+      }
+    },
+    {
+      "id": "pending-118",
+      "name": "艾迪",
+      "aliases": [],
+      "kind": "artist",
+      "city": "北京",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "艾迪",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "丹镇北京"
+      }
+    },
+    {
+      "id": "pending-119",
+      "name": "MC飞",
+      "aliases": [],
+      "kind": "artist",
+      "city": "云南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "MC",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "云南说唱代表"
+      }
+    },
+    {
+      "id": "pending-120",
+      "name": "LaceDolL",
+      "aliases": [],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "LA",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "深圳说唱代表"
+      }
+    },
+    {
+      "id": "pending-121",
+      "name": "厨房仔",
+      "aliases": [],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "厨房",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "三角度/北斗黄祸"
+      }
+    },
+    {
+      "id": "pending-122",
+      "name": "Heyo",
+      "aliases": [],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "HE",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "香港新生代代表"
+      }
+    },
+    {
+      "id": "pending-123",
+      "name": "Tyson Yoshi",
+      "aliases": [],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "TY",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "香港 melodic rap 代表"
+      }
+    },
+    {
+      "id": "pending-124",
+      "name": "Fotan Laiki",
+      "aliases": [],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "FO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "香港女 rapper"
+      }
+    },
+    {
+      "id": "pending-125",
+      "name": "24Herbs廿四味",
+      "aliases": [
+        "24Herbs"
+      ],
+      "kind": "group",
+      "city": "香港",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "24",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "香港老牌说唱组合"
+      }
+    },
+    {
+      "id": "pending-126",
+      "name": "Novel Fergus",
+      "aliases": [],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "NO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "粤语说唱新生代"
+      }
+    },
+    {
+      "id": "pending-127",
+      "name": "润少",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "润少",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "混血儿娱乐"
+      }
+    },
+    {
+      "id": "pending-128",
+      "name": "LilHAO",
+      "aliases": [
+        "徐晧程"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "LI",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "混血儿娱乐"
+      }
+    },
+    {
+      "id": "pending-129",
+      "name": "草屯囝仔",
+      "aliases": [],
+      "kind": "group",
+      "city": "台湾",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "草屯",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "混血儿娱乐"
+      }
+    },
+    {
+      "id": "pending-130",
+      "name": "小人",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "小人",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "人人有功练"
+      }
+    },
+    {
+      "id": "pending-131",
+      "name": "阿达",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "阿达",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "颜社/台饶综艺代表"
+      }
+    },
+    {
+      "id": "pending-132",
+      "name": "谢和弦",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "谢和",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "台湾说唱/摇滚跨界"
+      }
+    },
+    {
+      "id": "pending-133",
+      "name": "ØZI",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "ØZ",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "台湾新生代 rap/R&B"
+      }
+    },
+    {
+      "id": "pending-134",
+      "name": "JNCO荆轲",
+      "aliases": [
+        "JNCO"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "JN",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "颜社早期；《黄金年代》"
+      }
+    },
+    {
+      "id": "pending-135",
+      "name": "满人AP",
+      "aliases": [
+        "AP满人"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "满人",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "颜社早期；《黄金年代》"
+      }
+    },
+    {
+      "id": "pending-136",
+      "name": "宋岳庭",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "宋岳",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "华语说唱早期代表"
+      }
+    },
+    {
+      "id": "pending-137",
+      "name": "黄明志",
+      "aliases": [],
+      "kind": "artist",
+      "city": "马来西亚",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "黄明",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "《漂向北方》；华语圈高频"
+      }
+    },
+    {
+      "id": "pending-138",
+      "name": "春艳",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "春艳",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "颜社；夜猫组"
+      }
+    },
+    {
+      "id": "pending-139",
+      "name": "陈嫺静",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "陈嫺",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "颜社；金曲奖"
+      }
+    },
+    {
+      "id": "pending-140",
+      "name": "李佳薇",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "李佳",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "跨界合作节点"
+      }
+    },
+    {
+      "id": "pending-141",
+      "name": "农夫",
+      "aliases": [
+        "陆永",
+        "C君"
+      ],
+      "kind": "group",
+      "city": "香港",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "农夫",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "香港说唱组合"
+      }
+    },
+    {
+      "id": "pending-142",
+      "name": "吴亦凡",
+      "aliases": [
+        "Kris Wu"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "吴亦",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "有嘻哈制作人；早期重要节点"
+      }
+    },
+    {
+      "id": "pending-143",
+      "name": "潘玮柏",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "潘玮",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "历届明星制作人"
+      }
+    },
+    {
+      "id": "pending-144",
+      "name": "张震岳",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "张震",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "历届明星制作人；本色音乐"
+      }
+    },
+    {
+      "id": "pending-145",
+      "name": "邓紫棋",
+      "aliases": [
+        "G.E.M."
+      ],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "邓紫",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱制作人/巅峰赛事组"
+      }
+    },
+    {
+      "id": "pending-146",
+      "name": "张靓颖",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "张靓",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱2020 制作人"
+      }
+    },
+    {
+      "id": "pending-147",
+      "name": "范丞丞",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "范丞",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱2024 制作人"
+      }
+    },
+    {
+      "id": "pending-148",
+      "name": "大张伟",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "大张",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱2024 制作人"
+      }
+    },
+    {
+      "id": "pending-149",
+      "name": "Tablo",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "TA",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱2024 制作人"
+      }
+    },
+    {
+      "id": "pending-150",
+      "name": "黄子韬",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "黄子",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱2025 制作人"
+      }
+    },
+    {
+      "id": "pending-151",
+      "name": "严浩翔",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "严浩",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱2025/巅峰对决2026 赛事组"
+      }
+    },
+    {
+      "id": "pending-152",
+      "name": "王嘉尔",
+      "aliases": [
+        "Jackson Wang"
+      ],
+      "kind": "artist",
+      "city": "香港",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "王嘉",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "巅峰对决嘉宾"
+      }
+    },
+    {
+      "id": "pending-153",
+      "name": "朴宰范",
+      "aliases": [
+        "Jay Park"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "朴宰",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱2020/巅峰对决嘉宾"
+      }
+    },
+    {
+      "id": "pending-154",
+      "name": "周震南",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "周震",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "巅峰对决嘉宾"
+      }
+    },
+    {
+      "id": "pending-155",
+      "name": "张艺兴",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "张艺",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "巅峰对决嘉宾"
+      }
+    },
+    {
+      "id": "pending-156",
+      "name": "刘逸云Amber",
+      "aliases": [
+        "Amber Liu"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "刘逸",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "巅峰对决2023 赛事组"
+      }
+    },
+    {
+      "id": "pending-157",
+      "name": "吴克群",
+      "aliases": [],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "吴克",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "巅峰对决2023 嘉宾"
+      }
+    },
+    {
+      "id": "pending-158",
+      "name": "龚琳娜",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "龚琳",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱2025 特邀制作人"
+      }
+    },
+    {
+      "id": "pending-159",
+      "name": "杜海涛",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "杜海",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "新说唱2025/巅峰对决2026 主持"
+      }
+    },
+    {
+      "id": "pending-160",
+      "name": "孟子",
+      "aliases": [
+        "Mengzi",
+        "孟子 Mengzi"
+      ],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "孟子",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· CDC / ATM · 出生地未核实",
+        "origin": "四川成都（未核实具体）",
+        "crew": "CDC / ATM",
+        "verify": "出生地未核实",
+        "note": "以成都活动为准"
+      }
+    },
+    {
+      "id": "pending-161",
+      "name": "猫儿师",
+      "aliases": [
+        "Sleepy Cat",
+        "猫儿师 Sleepy Cat"
+      ],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "猫儿",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· CDC · 出生地未核实",
+        "origin": "四川成都（未核实具体）",
+        "crew": "CDC",
+        "verify": "出生地未核实",
+        "note": "CDC 早期成员"
+      }
+    },
+    {
+      "id": "pending-162",
+      "name": "夏之禹",
+      "aliases": [],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "夏之",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· DIGI GHETTO 关联 · 出生地未核实",
+        "origin": "四川成都（未核实具体）",
+        "crew": "DIGI GHETTO 关联",
+        "verify": "出生地未核实",
+        "note": "新生代，以成都活动为准"
+      }
+    },
+    {
+      "id": "pending-163",
+      "name": "王嗣尧",
+      "aliases": [
+        "Turbo",
+        "王嗣尧 Turbo"
+      ],
+      "kind": "artist",
+      "city": "重庆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "王嗣",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· GOSH · 出生地未核实",
+        "origin": "重庆（未核实）",
+        "crew": "GOSH",
+        "verify": "出生地未核实",
+        "note": "GOSH 成员"
+      }
+    },
+    {
+      "id": "pending-164",
+      "name": "艾昊",
+      "aliases": [
+        "Tory",
+        "艾昊 Tory"
+      ],
+      "kind": "artist",
+      "city": "重庆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "艾昊",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· GOSH · 出生地未核实",
+        "origin": "重庆（未核实）",
+        "crew": "GOSH",
+        "verify": "出生地未核实",
+        "note": "GOSH 元老"
+      }
+    },
+    {
+      "id": "pending-165",
+      "name": "K ELEVEN",
+      "aliases": [
+        "K11",
+        "K ELEVEN / K11"
+      ],
+      "kind": "artist",
+      "city": "重庆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "K ",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· GOSH · 出生地未核实",
+        "origin": "重庆（未核实）",
+        "crew": "GOSH",
+        "verify": "出生地未核实",
+        "note": "GOSH 成员"
+      }
+    },
+    {
+      "id": "pending-166",
+      "name": "Ranzer",
+      "aliases": [],
+      "kind": "artist",
+      "city": "湖南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "RA",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· CSC · 出生地未核实",
+        "origin": "湖南长沙（未核实）",
+        "crew": "CSC",
+        "verify": "出生地未核实",
+        "note": "CSC 成员"
+      }
+    },
+    {
+      "id": "pending-167",
+      "name": "东别",
+      "aliases": [],
+      "kind": "artist",
+      "city": "湖南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "东别",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· CSC · 出生地未核实",
+        "origin": "湖南（未核实）",
+        "crew": "CSC",
+        "verify": "出生地未核实",
+        "note": "CSC 成员"
+      }
+    },
+    {
+      "id": "pending-168",
+      "name": "老道",
+      "aliases": [],
+      "kind": "artist",
+      "city": "湖南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "老道",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· CSC · 出生地未核实",
+        "origin": "湖南（未核实）",
+        "crew": "CSC",
+        "verify": "出生地未核实",
+        "note": "CSC 成员"
+      }
+    },
+    {
+      "id": "pending-169",
+      "name": "王奕",
+      "aliases": [],
+      "kind": "artist",
+      "city": "湖南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "王奕",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· CSC · 出生地未核实",
+        "origin": "湖南（未核实）",
+        "crew": "CSC",
+        "verify": "出生地未核实",
+        "note": "CSC 成员"
+      }
+    },
+    {
+      "id": "pending-170",
+      "name": "隐藏",
+      "aliases": [
+        "王波",
+        "隐藏（王波）"
+      ],
+      "kind": "group",
+      "city": "北京",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "隐藏",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 隐藏 · 已核实",
+        "origin": "北京",
+        "crew": "隐藏",
+        "verify": "已核实",
+        "note": "内地最早嘻哈团体之一"
+      }
+    },
+    {
+      "id": "pending-171",
+      "name": "龙井说唱",
+      "aliases": [
+        "孙骁 / 孙旭 / 奕文 / 益含"
+      ],
+      "kind": "group",
+      "city": "北京",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "龙井",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 龙井说唱 · 已核实",
+        "origin": "北京",
+        "crew": "龙井说唱",
+        "verify": "已核实",
+        "note": "2007年成立于北京，团体条目"
+      }
+    },
+    {
+      "id": "pending-172",
+      "name": "龙胆紫",
+      "aliases": [],
+      "kind": "group",
+      "city": "北京",
+      "category": "说唱 / 团体",
+      "color": "#8ea8bd",
+      "initials": "龙胆",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 龙胆紫 · 已核实",
+        "origin": "北京",
+        "crew": "龙胆紫",
+        "verify": "已核实",
+        "note": "北京老牌团体，团体条目"
+      }
+    },
+    {
+      "id": "pending-173",
+      "name": "MC张千",
+      "aliases": [
+        "张千"
+      ],
+      "kind": "artist",
+      "city": "北京",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "MC",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 丹镇北京 · 已核实",
+        "origin": "北京",
+        "crew": "丹镇北京",
+        "verify": "已核实",
+        "note": "丹镇北京成员，兼开心麻花演员"
+      }
+    },
+    {
+      "id": "pending-174",
+      "name": "生番",
+      "aliases": [],
+      "kind": "artist",
+      "city": "北京",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "生番",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 丹镇北京 · 出生地未核实",
+        "origin": "北京（未核实）",
+        "crew": "丹镇北京",
+        "verify": "出生地未核实",
+        "note": "丹镇北京成员"
+      }
+    },
+    {
+      "id": "pending-175",
+      "name": "秃子 2z",
+      "aliases": [
+        "秃子"
+      ],
+      "kind": "artist",
+      "city": "北京",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "秃子",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 广顺社团 · 出生地未核实",
+        "origin": "北京（未核实）",
+        "crew": "广顺社团",
+        "verify": "出生地未核实",
+        "note": "广顺社团成员"
+      }
+    },
+    {
+      "id": "pending-176",
+      "name": "小老虎",
+      "aliases": [],
+      "kind": "artist",
+      "city": "北京",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "小老",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "北京（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "以北京活动为准"
+      }
+    },
+    {
+      "id": "pending-177",
+      "name": "幼稚园杀手",
+      "aliases": [],
+      "kind": "artist",
+      "city": "上海",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "幼稚",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "上海（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "地下 Battle 代表"
+      }
+    },
+    {
+      "id": "pending-178",
+      "name": "ODD陈思键",
+      "aliases": [
+        "陈思键"
+      ],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "OD",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "广东广州（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "广东说唱代表"
+      }
+    },
+    {
+      "id": "pending-179",
+      "name": "Vyan",
+      "aliases": [],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "VY",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "广东（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "广东说唱代表"
+      }
+    },
+    {
+      "id": "pending-180",
+      "name": "廖效浓",
+      "aliases": [],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "廖效",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "广东（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "广东说唱代表"
+      }
+    },
+    {
+      "id": "pending-181",
+      "name": "Person",
+      "aliases": [],
+      "kind": "artist",
+      "city": "广东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "PE",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 双赤组合 · 出生地未核实",
+        "origin": "广东潮州（未核实）",
+        "crew": "双赤组合",
+        "verify": "出生地未核实",
+        "note": "Tizzy T 搭档"
+      }
+    },
+    {
+      "id": "pending-182",
+      "name": "卢一",
+      "aliases": [
+        "Lu1"
+      ],
+      "kind": "artist",
+      "city": "江苏",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "卢一",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "江苏南京（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "南京说唱代表"
+      }
+    },
+    {
+      "id": "pending-183",
+      "name": "八口 8uck",
+      "aliases": [
+        "张佳琪"
+      ],
+      "kind": "artist",
+      "city": "福建",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "八口",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 已核实",
+        "origin": "福建厦门",
+        "crew": "—",
+        "verify": "已核实",
+        "note": "1993年生于厦门"
+      }
+    },
+    {
+      "id": "pending-184",
+      "name": "泰格西",
+      "aliases": [],
+      "kind": "artist",
+      "city": "新疆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "泰格",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "新疆（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "新生代"
+      }
+    },
+    {
+      "id": "pending-185",
+      "name": "A-MAC",
+      "aliases": [],
+      "kind": "artist",
+      "city": "新疆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "A-",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "新疆乌鲁木齐（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "与马俊早期合作"
+      }
+    },
+    {
+      "id": "pending-186",
+      "name": "高煜然",
+      "aliases": [
+        "莲花",
+        "高煜然 / 莲花"
+      ],
+      "kind": "artist",
+      "city": "吉林",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "高煜",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 吾人族 · 出生地未核实",
+        "origin": "吉林长春（未核实）",
+        "crew": "吾人族",
+        "verify": "出生地未核实",
+        "note": "董宝石高中同学"
+      }
+    },
+    {
+      "id": "pending-187",
+      "name": "八贼",
+      "aliases": [],
+      "kind": "artist",
+      "city": "山东",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "八贼",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 活死人 · 出生地未核实",
+        "origin": "山东（未核实）",
+        "crew": "活死人",
+        "verify": "出生地未核实",
+        "note": "活死人成员"
+      }
+    },
+    {
+      "id": "pending-188",
+      "name": "赵辰龙",
+      "aliases": [],
+      "kind": "artist",
+      "city": "河南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "赵辰",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "河南郑州（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "Battle MC"
+      }
+    },
+    {
+      "id": "pending-189",
+      "name": "王尔德",
+      "aliases": [],
+      "kind": "artist",
+      "city": "河南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "王尔",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "河南（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "地下 rapper"
+      }
+    },
+    {
+      "id": "pending-190",
+      "name": "邓典",
+      "aliases": [],
+      "kind": "artist",
+      "city": "河南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "邓典",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 已核实",
+        "origin": "河南焦作",
+        "crew": "—",
+        "verify": "已核实",
+        "note": "偏流行/R&B歌手，非核心 rapper，仅作地域参考"
+      }
+    },
+    {
+      "id": "pending-191",
+      "name": "蜘蛛",
+      "aliases": [
+        "Mercy",
+        "刘蒙德",
+        "蜘蛛 / Mercy"
+      ],
+      "kind": "artist",
+      "city": "山西",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "蜘蛛",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 原红花会 · 出生地未核实",
+        "origin": "山西（未核实）",
+        "crew": "原红花会",
+        "verify": "出生地未核实",
+        "note": "后在北京做幕后"
+      }
+    },
+    {
+      "id": "pending-192",
+      "name": "毕冉",
+      "aliases": [],
+      "kind": "artist",
+      "city": "湖北",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "毕冉",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 原红花会（已退出） · 出生地未核实",
+        "origin": "湖北（未核实）",
+        "crew": "原红花会（已退出）",
+        "verify": "出生地未核实",
+        "note": "未核实具体城市"
+      }
+    },
+    {
+      "id": "pending-193",
+      "name": "王晨宇",
+      "aliases": [
+        "ICECRAZ",
+        "王晨宇 ICECRAZ"
+      ],
+      "kind": "artist",
+      "city": "安徽",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "王晨",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 第四音乐 · 出生地未核实",
+        "origin": "安徽（未核实）",
+        "crew": "第四音乐",
+        "verify": "出生地未核实",
+        "note": "《地下八英里》全国总冠军"
+      }
+    },
+    {
+      "id": "pending-194",
+      "name": "黄昭",
+      "aliases": [],
+      "kind": "artist",
+      "city": "云南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "黄昭",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "云南（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "云南说唱代表"
+      }
+    },
+    {
+      "id": "pending-195",
+      "name": "童宇",
+      "aliases": [],
+      "kind": "artist",
+      "city": "内蒙古",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "童宇",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 旅行新蜜蜂（跨界） · 已核实",
+        "origin": "内蒙古呼和浩特",
+        "crew": "旅行新蜜蜂（跨界）",
+        "verify": "已核实",
+        "note": "旅行新蜜蜂主唱，说唱参与者"
+      }
+    },
+    {
+      "id": "pending-196",
+      "name": "吕士轩",
+      "aliases": [
+        "Trout Fresh",
+        "吕士轩 Trout Fresh"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "吕士",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 已核实",
+        "origin": "台湾新竹",
+        "crew": "—",
+        "verify": "已核实",
+        "note": "1989年生于新竹"
+      }
+    },
+    {
+      "id": "pending-197",
+      "name": "高尔宣",
+      "aliases": [
+        "OSN",
+        "高尔宣 OSN"
+      ],
+      "kind": "artist",
+      "city": "台湾",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "高尔",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 2,
+        "source": "用户名单（按省份）· 无厂牌标注 · 出生地未核实",
+        "origin": "台湾台北（未核实）",
+        "crew": "—",
+        "verify": "出生地未核实",
+        "note": "新生代"
+      }
+    },
+    {
+      "id": "pending-198",
+      "name": "施鑫文月",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "施鑫",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · 施鑫文月"
+      }
+    },
+    {
+      "id": "pending-199",
+      "name": "地磁卡",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "地磁",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · 地磁卡"
+      }
+    },
+    {
+      "id": "pending-200",
+      "name": "SIKY",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "SI",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · SIKY"
+      }
+    },
+    {
+      "id": "pending-201",
+      "name": "Vgooo",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "VG",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · Vgooo"
+      }
+    },
+    {
+      "id": "pending-202",
+      "name": "Kokoheavenocean",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "KO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · Kokoheavenocean"
+      }
+    },
+    {
+      "id": "pending-203",
+      "name": "Monovisa",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "MO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · Monovisa"
+      }
+    },
+    {
+      "id": "pending-204",
+      "name": "Adam Ocean 亚当魔星",
+      "aliases": [
+        "Adam Ocean",
+        "亚当魔星"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Ad",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · Adam Ocean 亚当魔星"
+      }
+    },
+    {
+      "id": "pending-205",
+      "name": "春 Chun",
+      "aliases": [
+        "春",
+        "Chun"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "春 ",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · 春 Chun"
+      }
+    },
+    {
+      "id": "pending-206",
+      "name": "Haysen Cheng",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "HA",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · Haysen Cheng"
+      }
+    },
+    {
+      "id": "pending-207",
+      "name": "Alyway",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "AL",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · Alyway"
+      }
+    },
+    {
+      "id": "pending-208",
+      "name": "africakid",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "AF",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · africakid"
+      }
+    },
+    {
+      "id": "pending-209",
+      "name": "Akemen杀",
+      "aliases": [
+        "Akemen"
+      ],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "Ak",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · Akemen杀"
+      }
+    },
+    {
+      "id": "pending-210",
+      "name": "BOBBYNOPEACE",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "BO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · BOBBYNOPEACE"
+      }
+    },
+    {
+      "id": "pending-211",
+      "name": "周乘羽",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "周乘",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · 周乘羽"
+      }
+    },
+    {
+      "id": "pending-212",
+      "name": "ddmashawty",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "DD",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · ddmashawty"
+      }
+    },
+    {
+      "id": "pending-213",
+      "name": "youngcashjason",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "YO",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · youngcashjason"
+      }
+    },
+    {
+      "id": "pending-214",
+      "name": "狂兆北",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "狂兆",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · 狂兆北"
+      }
+    },
+    {
+      "id": "pending-215",
+      "name": "莽",
+      "aliases": [],
+      "kind": "artist",
+      "city": "未标注",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "莽",
+      "description": "仅收录姓名，关系、作品与头像待补充。",
+      "_pending": {
+        "tier": 3,
+        "source": "用户直接补充的姓名（未附省份信息） · 莽"
+      }
+    }
+  ]
+}

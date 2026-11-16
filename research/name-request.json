@@ -1,0 +1,27 @@
+{
+  "addedAt": "2026-11-16",
+  "source": "用户直接补充的姓名（未附省份信息）",
+  "excluded": [
+    {"name": "夏之禹", "reason": "已在库 pending-162（四川），跳过"}
+  ],
+  "names": [
+    {"name": "施鑫文月", "aliases": []},
+    {"name": "地磁卡", "aliases": []},
+    {"name": "SIKY", "aliases": []},
+    {"name": "Vgooo", "aliases": []},
+    {"name": "Kokoheavenocean", "aliases": []},
+    {"name": "Monovisa", "aliases": []},
+    {"name": "Adam Ocean 亚当魔星", "aliases": ["Adam Ocean", "亚当魔星"]},
+    {"name": "春 Chun", "aliases": ["春", "Chun"]},
+    {"name": "Haysen Cheng", "aliases": []},
+    {"name": "Alyway", "aliases": []},
+    {"name": "africakid", "aliases": []},
+    {"name": "Akemen杀", "aliases": ["Akemen"]},
+    {"name": "BOBBYNOPEACE", "aliases": []},
+    {"name": "周乘羽", "aliases": []},
+    {"name": "ddmashawty", "aliases": []},
+    {"name": "youngcashjason", "aliases": []},
+    {"name": "狂兆北", "aliases": []},
+    {"name": "莽", "aliases": []}
+  ]
+}

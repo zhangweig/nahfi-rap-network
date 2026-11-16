@@ -4,8 +4,15 @@ import {ALL_PROVINCES, PROVINCE_NAMES, UNKNOWN_PROVINCE, provinceOf} from './pro
 /** The board is a flat design space; the viewport scales it to fit. */
 export const BOARD = {width: 1260, height: 650};
 
-/** Treemap area. The legend and timeline float over the viewport instead of reserving rows. */
+/** Minimum canvas — real size grows with the number of people so no zone gets squeezed. */
 const RECT = {x: 56, y: 56, w: 1148, h: 586};
+
+/** Every artist gets this much design space; a province box is the sum of its members. */
+const AREA_PER_PERSON = 2450;
+/** Header + breathing room for one box, regardless of headcount. */
+const AREA_PER_ZONE = 7200;
+/** Keep the canvas close to the original aspect ratio as it grows. */
+const CANVAS_RATIO = BOARD.width / BOARD.height;
 
 export interface ZoneDef {
   province: string;
@@ -159,12 +166,20 @@ export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false)
     const count = (groups.get(province) || []).length;
     if (filter !== ALL_PROVINCES && province !== filter) continue;
     if (filter === ALL_PROVINCES || count > 0 || true) {
-      seeds.push({province, weight: count > 0 ? count + 1.6 : 0.45, count, mini: false});
+      // 框面积随人数线性增长；空省份只保留一个最小占位框。
+      seeds.push({
+        province, count, mini: false,
+        weight: count > 0 ? AREA_PER_ZONE + count * AREA_PER_PERSON : AREA_PER_ZONE * 0.16,
+      });
     }
   }
   const archive = groups.get(UNKNOWN_PROVINCE) || [];
   if (archive.length && (filter === ALL_PROVINCES || filter === UNKNOWN_PROVINCE)) {
-    seeds.push({province: UNKNOWN_PROVINCE, weight: Math.min(archive.length, 12) * 0.85 + 1.6, count: archive.length, mini: true});
+    // 不设上限：待考据有 110 人，框就该装下 110 人。
+    seeds.push({
+      province: UNKNOWN_PROVINCE, count: archive.length, mini: true,
+      weight: AREA_PER_ZONE + archive.length * AREA_PER_PERSON,
+    });
   }
 
   const positions = new Map<string, NodePlace>();
@@ -193,9 +208,13 @@ export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false)
   }
 
   // A single province keeps a comfortable card size instead of stretching edge to edge.
+  const totalWeight = seeds.reduce((sum, seed) => sum + seed.weight, 0);
+  const boardRatio = filter === ALL_PROVINCES ? CANVAS_RATIO : 1.6;
+  const worldW = Math.max(BOARD.width, Math.round(Math.sqrt(totalWeight * boardRatio)));
+  const worldH = Math.max(BOARD.height, Math.round(Math.sqrt(totalWeight / boardRatio)));
   const rect = filter === ALL_PROVINCES
-    ? RECT
-    : {x: RECT.x + (RECT.w - 860) / 2, y: RECT.y + 26, w: 860, h: RECT.h - 52};
+    ? {x: GAP, y: GAP, w: worldW - GAP * 2, h: worldH - GAP * 2}
+    : {x: GAP, y: GAP, w: worldW - GAP * 2, h: worldH - GAP * 2};
   const laid = squarify(seeds, seed => seed.weight, rect);
   for (const [seed, zoneRect] of laid) {
     // Scattered, hand-placed look: each zone shrinks and drifts inside its own cell,
@@ -229,7 +248,7 @@ export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false)
     zones.push({def, count});
   }
 
-  return {zones, positions, world: BOARD};
+  return {zones, positions, world: {width: worldW, height: worldH}};
 }
 
 function placeNodes(
@@ -256,8 +275,10 @@ function placeNodes(
     : Math.min(96, Math.max(22, Math.min(cellW, cellH) * 0.46));
   const dense = cellW < 74;
   /** Narrow cells drop the plate entirely; it appears on hover / selection. */
-  const tight = cellW < 50;
-  const labelW = Math.max(34, Math.min(132, cellW * 0.9));
+  const tight = cellW < 62;
+  // 小省份的格子很窄，名字牌必须跟着收窄，否则会溢出框外压到邻居。
+  // tight 格子默认只在 hover / 选中时显示名字，这里给一个不至于挤成竖排的安全下限。
+  const labelW = tight ? 30 : Math.max(44, Math.min(132, cellW * 0.86));
   /** How many wrapped lines fit under the avatar without touching the next row. */
   let lines: 1 | 2 = cellH - size - 8 >= 28 ? 2 : 1;
   // Prefer a readable two-line plate over a bigger avatar.
@@ -273,8 +294,12 @@ function placeNodes(
     // Slight organic scatter inside each cell — keeps plates readable, kills the spreadsheet feel.
     const jx = (nodeRng() - 0.5) * Math.min(10, cellW * 0.08);
     const jy = (nodeRng() - 0.5) * Math.min(8, cellH * 0.07);
+    // 牌子以头像为中心展开，边缘列向框内收，避免伸到相邻省份框里。
+    const halfPlate = tight ? 14 : Math.min(labelW / 2, 60);
+    const rawX = def.x + padX + cellW * (col + (cols - inRow) / 2 + 0.5) + jx;
+    const x = Math.min(Math.max(rawX, def.x + padX + halfPlate), def.x + def.w - padX - halfPlate);
     positions.set(node.id, {
-      x: def.x + padX + cellW * (col + (cols - inRow) / 2 + 0.5) + jx,
+      x,
       y: def.y + headH + padY + cellH * (row + 0.5) + jy,
       size,
       province: def.province,

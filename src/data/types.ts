@@ -6,6 +6,8 @@ export interface ArtistNode {
   category:string; color:string; initials:string; description:string;
   catalogArtistIds?:number[]; sources?:Evidence[];
   avatarUrl?:string;
+  /** 用户提供的按省份名单覆盖；originalCity 保留覆盖前的具体城市。 */
+  xlsxProvince?:{province:string; originalCity:string; row:number; verify:string; origin:string; note:string};
 }
 export type WorkVersion = '录音室版' | '现场版' | '混音版' | '发行版';
 export interface TrackReference { id:string; title:string; year:number; version:WorkVersion; }

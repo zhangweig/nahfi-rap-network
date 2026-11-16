@@ -1,0 +1,471 @@
+{
+  "generatedAt": "2026-11-16",
+  "counts": {
+    "artistNodes": 79,
+    "groupNodes": 14,
+    "allNodes": 93,
+    "relations": 471,
+    "works": 337,
+    "relationsWithTrack": 418
+  },
+  "artistNoCity": 16,
+  "isolated": [
+    {
+      "id": "jackzebra",
+      "name": "jackzebra"
+    },
+    {
+      "id": "liuxuanting",
+      "name": "刘炫廷"
+    },
+    {
+      "id": "shark",
+      "name": "SHarK米尔艾力"
+    },
+    {
+      "id": "ar",
+      "name": "AR刘夫阳"
+    },
+    {
+      "id": "lanlao",
+      "name": "揽佬"
+    },
+    {
+      "id": "shouheng",
+      "name": "瘦恒"
+    },
+    {
+      "id": "wanida",
+      "name": "万妮达"
+    },
+    {
+      "id": "jd",
+      "name": "JD"
+    },
+    {
+      "id": "lijialong",
+      "name": "李佳隆"
+    },
+    {
+      "id": "kenrobb",
+      "name": "kenrobb"
+    },
+    {
+      "id": "zhangfangzhao",
+      "name": "张方钊"
+    }
+  ],
+  "duplicates": [
+    {
+      "name": "万妮达",
+      "ids": [
+        "vinida",
+        "wanida"
+      ]
+    },
+    {
+      "name": "杨和苏",
+      "ids": [
+        "keyng",
+        "yanghesu"
+      ]
+    }
+  ],
+  "artists": [
+    {
+      "id": "ma",
+      "name": "马思唯",
+      "city": "成都"
+    },
+    {
+      "id": "knowknow",
+      "name": "KnowKnow",
+      "city": "成都"
+    },
+    {
+      "id": "psyp",
+      "name": "Psy.P",
+      "city": "成都"
+    },
+    {
+      "id": "melo",
+      "name": "Melo",
+      "city": "成都"
+    },
+    {
+      "id": "shengyu",
+      "name": "盛宇",
+      "city": "长沙"
+    },
+    {
+      "id": "keyl",
+      "name": "刘聪",
+      "city": "长沙"
+    },
+    {
+      "id": "kungfu",
+      "name": "功夫胖",
+      "city": "长沙"
+    },
+    {
+      "id": "bridge",
+      "name": "Bridge",
+      "city": "重庆"
+    },
+    {
+      "id": "yitai",
+      "name": "王以太",
+      "city": "成都"
+    },
+    {
+      "id": "air",
+      "name": "艾热",
+      "city": "喀什"
+    },
+    {
+      "id": "asen",
+      "name": "艾志恒Asen",
+      "city": "成都"
+    },
+    {
+      "id": "gai",
+      "name": "GAI",
+      "city": "重庆"
+    },
+    {
+      "id": "pharaoh",
+      "name": "法老",
+      "city": "未标注"
+    },
+    {
+      "id": "elfin",
+      "name": "小精灵",
+      "city": "未标注"
+    },
+    {
+      "id": "keyng",
+      "name": "杨和苏KeyNG",
+      "city": "成都"
+    },
+    {
+      "id": "vinida",
+      "name": "万妮达",
+      "city": "福州"
+    },
+    {
+      "id": "vava",
+      "name": "VaVa",
+      "city": "成都"
+    },
+    {
+      "id": "capper",
+      "name": "Capper",
+      "city": "未标注"
+    },
+    {
+      "id": "jonyj",
+      "name": "Jony J",
+      "city": "未标注"
+    },
+    {
+      "id": "tizzyt",
+      "name": "Tizzy T",
+      "city": "未标注"
+    },
+    {
+      "id": "hotdog",
+      "name": "MC HotDog",
+      "city": "台湾"
+    },
+    {
+      "id": "mcjin",
+      "name": "欧阳靖",
+      "city": "未标注"
+    },
+    {
+      "id": "gem",
+      "name": "宝石Gem",
+      "city": "长春"
+    },
+    {
+      "id": "xiedi",
+      "name": "谢帝",
+      "city": "成都"
+    },
+    {
+      "id": "ty",
+      "name": "Ty.",
+      "city": "成都"
+    },
+    {
+      "id": "ddg",
+      "name": "邓典果DDG",
+      "city": "成都"
+    },
+    {
+      "id": "wudu",
+      "name": "雾都L4WUDU",
+      "city": "重庆"
+    },
+    {
+      "id": "wangqiming",
+      "name": "王齐铭",
+      "city": "重庆"
+    },
+    {
+      "id": "lianma",
+      "name": "连麻",
+      "city": "成都"
+    },
+    {
+      "id": "guangguang",
+      "name": "MC光光",
+      "city": "南京"
+    },
+    {
+      "id": "gaotianzuo",
+      "name": "高天佐",
+      "city": "南京"
+    },
+    {
+      "id": "zaoan",
+      "name": "早安",
+      "city": "南京"
+    },
+    {
+      "id": "icepaper",
+      "name": "Ice Paper",
+      "city": "南京"
+    },
+    {
+      "id": "pact",
+      "name": "派克特",
+      "city": "西安"
+    },
+    {
+      "id": "creamd",
+      "name": "CREAM D",
+      "city": "西安"
+    },
+    {
+      "id": "danko",
+      "name": "弹壳Danko",
+      "city": "西安"
+    },
+    {
+      "id": "gali",
+      "name": "GALI",
+      "city": "上海"
+    },
+    {
+      "id": "narchy",
+      "name": "那奇沃夫",
+      "city": "新疆"
+    },
+    {
+      "id": "athree",
+      "name": "AThree",
+      "city": "新疆"
+    },
+    {
+      "id": "nawukere",
+      "name": "那吾克热",
+      "city": "乌鲁木齐"
+    },
+    {
+      "id": "huangxu",
+      "name": "黄旭",
+      "city": "乌鲁木齐"
+    },
+    {
+      "id": "ice",
+      "name": "ICE杨长青",
+      "city": "四川"
+    },
+    {
+      "id": "jiang",
+      "name": "姜云升",
+      "city": "云南"
+    },
+    {
+      "id": "shayiting",
+      "name": "沙一汀EL",
+      "city": "未标注"
+    },
+    {
+      "id": "nineone",
+      "name": "NINEONE",
+      "city": "未标注"
+    },
+    {
+      "id": "eso",
+      "name": "瘦子E.SO",
+      "city": "台湾"
+    },
+    {
+      "id": "kenzy",
+      "name": "小春Kenzy",
+      "city": "台湾"
+    },
+    {
+      "id": "muta",
+      "name": "大渊MUTA",
+      "city": "台湾"
+    },
+    {
+      "id": "softlipa",
+      "name": "蛋堡",
+      "city": "台湾"
+    },
+    {
+      "id": "kumachan",
+      "name": "熊仔",
+      "city": "台湾"
+    },
+    {
+      "id": "lexie",
+      "name": "刘柏辛Lexie",
+      "city": "未标注"
+    },
+    {
+      "id": "lierxin",
+      "name": "李尔新",
+      "city": "成都"
+    },
+    {
+      "id": "jackzebra",
+      "name": "jackzebra",
+      "city": "成都"
+    },
+    {
+      "id": "thome",
+      "name": "Thomeboydontkill",
+      "city": "成都"
+    },
+    {
+      "id": "sakee",
+      "name": "Mula Sakee",
+      "city": "成都"
+    },
+    {
+      "id": "beibei",
+      "name": "贝贝",
+      "city": "西安"
+    },
+    {
+      "id": "pgone",
+      "name": "PG One",
+      "city": "西安"
+    },
+    {
+      "id": "dingfei",
+      "name": "丁飞",
+      "city": "西安"
+    },
+    {
+      "id": "mai",
+      "name": "Mai",
+      "city": "西安"
+    },
+    {
+      "id": "erwan",
+      "name": "贰万",
+      "city": "南京"
+    },
+    {
+      "id": "kc",
+      "name": "Kc",
+      "city": "南京"
+    },
+    {
+      "id": "liuxuanting",
+      "name": "刘炫廷",
+      "city": "乌鲁木齐"
+    },
+    {
+      "id": "shark",
+      "name": "SHarK米尔艾力",
+      "city": "乌鲁木齐"
+    },
+    {
+      "id": "ar",
+      "name": "AR刘夫阳",
+      "city": "广东"
+    },
+    {
+      "id": "lanlao",
+      "name": "揽佬",
+      "city": "广东"
+    },
+    {
+      "id": "shouheng",
+      "name": "瘦恒",
+      "city": "广东"
+    },
+    {
+      "id": "manshuke",
+      "name": "满舒克",
+      "city": "上海"
+    },
+    {
+      "id": "wanida",
+      "name": "万妮达",
+      "city": "福州"
+    },
+    {
+      "id": "yanghesu",
+      "name": "杨和苏",
+      "city": "成都"
+    },
+    {
+      "id": "jarstick",
+      "name": "JarStick",
+      "city": "四川"
+    },
+    {
+      "id": "landuo",
+      "name": "懒惰",
+      "city": "未标注"
+    },
+    {
+      "id": "yuzhen",
+      "name": "于贞",
+      "city": "未标注"
+    },
+    {
+      "id": "subs",
+      "name": "Subs张毅成",
+      "city": "未标注"
+    },
+    {
+      "id": "shengda",
+      "name": "圣代",
+      "city": "未标注"
+    },
+    {
+      "id": "lidaben",
+      "name": "李大奔",
+      "city": "未标注"
+    },
+    {
+      "id": "jd",
+      "name": "JD",
+      "city": "未标注"
+    },
+    {
+      "id": "lijialong",
+      "name": "李佳隆",
+      "city": "未标注"
+    },
+    {
+      "id": "kenrobb",
+      "name": "kenrobb",
+      "city": "成都"
+    },
+    {
+      "id": "zhangfangzhao",
+      "name": "张方钊",
+      "city": "河南"
+    }
+  ]
+}

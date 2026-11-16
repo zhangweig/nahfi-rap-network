@@ -1,0 +1,960 @@
+{
+  "generatedAt": "2026-11-16T07:48:26.300Z",
+  "tier": "2",
+  "results": [
+    {
+      "name": "辛巴",
+      "aliases": [],
+      "city": "西安",
+      "tier": 2,
+      "note": "NOUS；中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "钧泽",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈23强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "BCW",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "中国有嘻哈；混血儿娱乐",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "胡旭",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈23强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "李文",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "赵涛",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "YZ于耀智",
+      "aliases": [
+        "YZ"
+      ],
+      "city": "台湾",
+      "tier": 2,
+      "note": "中国有嘻哈23强；颜社",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "赵温臻",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "周艺轩",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈23强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "OBi&M03",
+      "aliases": [
+        "OBi",
+        "M03"
+      ],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈23强（组合）",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Billy King",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈23强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "二毛",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "will.D",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "黄薏帆",
+      "aliases": [
+        "Evan-E"
+      ],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈46强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "朱星杰",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈46强",
+      "status": "wiki-page-no-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "朱星杰",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E6%9C%B1%E6%98%9F%E6%9D%B0",
+      "description": "中国大陆唱作人、魔术师",
+      "rap": false
+    },
+    {
+      "name": "大鱼Big fish",
+      "aliases": [
+        "大鱼"
+      ],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "EO",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Double Zhuo",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Young Gorilla",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Cat雨馨",
+      "aliases": [
+        "雨馨"
+      ],
+      "city": "",
+      "tier": 2,
+      "note": "中国有嘻哈40强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "山鸡",
+      "aliases": [],
+      "city": "重庆",
+      "tier": 2,
+      "note": "GO$H 成员",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "小安迪",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "杨晓川",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "陈梓童",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "wiki-page-no-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "陈梓童",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E9%99%88%E6%A2%93%E7%AB%A5",
+      "description": "中國女歌手",
+      "rap": false
+    },
+    {
+      "name": "Vex",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Blow",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "多雷",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "福克斯",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Kozay",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Round2",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "蜜妞",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "李棒棒",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Young Lego",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "马丁",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "爆音",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "陈令涛",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "孔令奇",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "wiki-page-no-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "孔令奇",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E5%AD%94%E4%BB%A4%E5%A5%87",
+      "description": "",
+      "rap": true
+    },
+    {
+      "name": "Teniy Rey",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Blue",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "wiki-image-needs-review",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "Blue",
+      "pageUrl": "https://zh.wikipedia.org/wiki/Blue",
+      "description": "",
+      "rap": false
+    },
+    {
+      "name": "DK",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Al Rocco",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Mac",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Ugly Z",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "陈彦希",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "王思瑶",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "何美延",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "wiki-page-no-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "何美延",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E4%BD%95%E7%BE%8E%E5%BB%B6",
+      "description": "",
+      "rap": false
+    },
+    {
+      "name": "呆宝静",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "卓卓",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "wiki-image-needs-review",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "卓卓",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E5%8D%93%E5%8D%93",
+      "description": "",
+      "rap": false
+    },
+    {
+      "name": "JN",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "福来",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Jason",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "wiki-image-needs-review",
+      "source": "wikipedia",
+      "lang": "en",
+      "pageTitle": "Jason",
+      "pageUrl": "https://en.wikipedia.org/wiki/Jason",
+      "description": "Greek mythological hero and leader of the Argonauts",
+      "rap": false
+    },
+    {
+      "name": "潘潘",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Free.C",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "双胞胎",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强（组合）",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "马俊",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "大狗",
+      "aliases": [],
+      "city": "",
+      "tier": 2,
+      "note": "新说唱100强",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "阿龙",
+      "aliases": [],
+      "city": "广东",
+      "tier": 2,
+      "note": "精气神早期成员",
+      "status": "wiki-page-no-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "阿龙",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E9%98%BF%E9%BE%99",
+      "description": "印度中央邦城镇",
+      "rap": false
+    },
+    {
+      "name": "肥宝",
+      "aliases": [],
+      "city": "广东",
+      "tier": 2,
+      "note": "精气神早期成员",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "肥轩",
+      "aliases": [],
+      "city": "广东",
+      "tier": 2,
+      "note": "精气神早期成员",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "肥杰",
+      "aliases": [],
+      "city": "广东",
+      "tier": 2,
+      "note": "精气神早期成员",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "夜楠",
+      "aliases": [],
+      "city": "西安",
+      "tier": 2,
+      "note": "乱战门早期",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "琴艺",
+      "aliases": [],
+      "city": "西安",
+      "tier": 2,
+      "note": "乱战门早期",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "李潇潇",
+      "aliases": [],
+      "city": "西安",
+      "tier": 2,
+      "note": "乱战门早期",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "鱼头",
+      "aliases": [],
+      "city": "西安",
+      "tier": 2,
+      "note": "NOUS 相关",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Buzzy",
+      "aliases": [],
+      "city": "上海",
+      "tier": 2,
+      "note": "活死人",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "深蓝儿童",
+      "aliases": [],
+      "city": "上海",
+      "tier": 2,
+      "note": "活死人",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "龙崎",
+      "aliases": [],
+      "city": "上海",
+      "tier": 2,
+      "note": "活死人",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "天津饭",
+      "aliases": [],
+      "city": "天津",
+      "tier": 2,
+      "note": "早期 diss 事件；南北对话关键节点",
+      "status": "wiki-image-needs-review",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "天津饭",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E5%A4%A9%E6%B4%A5%E9%A5%AD",
+      "description": "",
+      "rap": false
+    },
+    {
+      "name": "黄硕",
+      "aliases": [],
+      "city": "北京",
+      "tier": 2,
+      "note": "丹镇北京",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Saber",
+      "aliases": [],
+      "city": "北京",
+      "tier": 2,
+      "note": "丹镇北京",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "艾迪",
+      "aliases": [],
+      "city": "北京",
+      "tier": 2,
+      "note": "丹镇北京",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "MC飞",
+      "aliases": [],
+      "city": "云南",
+      "tier": 2,
+      "note": "云南说唱代表",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "LaceDolL",
+      "aliases": [],
+      "city": "广东",
+      "tier": 2,
+      "note": "深圳说唱代表",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "厨房仔",
+      "aliases": [],
+      "city": "香港",
+      "tier": 2,
+      "note": "三角度/北斗黄祸",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "Heyo",
+      "aliases": [],
+      "city": "香港",
+      "tier": 2,
+      "note": "香港新生代代表",
+      "status": "wiki-page-no-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "Heyo",
+      "pageUrl": "https://zh.wikipedia.org/wiki/Heyo",
+      "description": "",
+      "rap": true
+    },
+    {
+      "name": "Tyson Yoshi",
+      "aliases": [],
+      "city": "香港",
+      "tier": 2,
+      "note": "香港 melodic rap 代表",
+      "status": "wiki-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "Tyson Yoshi",
+      "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Tyson_Yoshi_The_Villain_Live_in_Macao_24_Jan_2026_%28%E5%A4%A7%E5%B9%85%E8%A3%81%E5%89%AA%29.jpg/330px-Tyson_Yoshi_The_Villain_Live_in_Macao_24_Jan_2026_%28%E5%A4%A7%E5%B9%85%E8%A3%81%E5%89%AA%29.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+      "pageUrl": "https://zh.wikipedia.org/wiki/Tyson_Yoshi",
+      "description": "香港歌手、饒舌者、詞曲作家、導演"
+    },
+    {
+      "name": "Fotan Laiki",
+      "aliases": [],
+      "city": "香港",
+      "tier": 2,
+      "note": "香港女 rapper",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "24Herbs廿四味",
+      "aliases": [
+        "24Herbs"
+      ],
+      "city": "香港",
+      "tier": 2,
+      "note": "香港老牌说唱组合",
+      "status": "wiki-page-no-image",
+      "source": "wikipedia",
+      "lang": "en",
+      "pageTitle": "24Herbs",
+      "pageUrl": "https://en.wikipedia.org/wiki/24Herbs",
+      "description": "Hong Kong hip hop group",
+      "rap": true
+    },
+    {
+      "name": "Novel Fergus",
+      "aliases": [],
+      "city": "香港",
+      "tier": 2,
+      "note": "粤语说唱新生代",
+      "status": "wiki-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "Novel Fergus",
+      "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Novel_Fergus_20260709.jpg/330px-Novel_Fergus_20260709.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+      "pageUrl": "https://zh.wikipedia.org/wiki/Novel_Fergus",
+      "description": "香港男饒舌歌手"
+    },
+    {
+      "name": "润少",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "混血儿娱乐",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "LilHAO",
+      "aliases": [
+        "徐晧程"
+      ],
+      "city": "台湾",
+      "tier": 2,
+      "note": "混血儿娱乐",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "草屯囝仔",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "混血儿娱乐",
+      "status": "wiki-page-no-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "草屯囝仔",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E8%8D%89%E5%B1%AF%E5%9B%9D%E4%BB%94",
+      "description": "臺語嘻哈團體",
+      "rap": true
+    },
+    {
+      "name": "小人",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "人人有功练",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "阿达",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "颜社/台饶综艺代表",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "谢和弦",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "台湾说唱/摇滚跨界",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "ØZI",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "台湾新生代 rap/R&B",
+      "status": "wiki-page-no-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "ØZI",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%C3%98ZI",
+      "description": "臺灣創作歌手",
+      "rap": false
+    },
+    {
+      "name": "JNCO荆轲",
+      "aliases": [
+        "JNCO"
+      ],
+      "city": "台湾",
+      "tier": 2,
+      "note": "颜社早期；《黄金年代》",
+      "status": "wiki-image-needs-review",
+      "source": "wikipedia",
+      "lang": "en",
+      "pageTitle": "JNCO",
+      "pageUrl": "https://en.wikipedia.org/wiki/JNCO",
+      "description": "Los Angeles, California-based clothing company",
+      "rap": false
+    },
+    {
+      "name": "满人AP",
+      "aliases": [
+        "AP满人"
+      ],
+      "city": "台湾",
+      "tier": 2,
+      "note": "颜社早期；《黄金年代》",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "宋岳庭",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "华语说唱早期代表",
+      "status": "wiki-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "宋岳庭",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/zh/c/c0/%E5%AE%8B%E5%B2%B3%E5%BA%AD%E5%83%8F.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E5%AE%8B%E5%B2%B3%E5%BA%AD",
+      "description": ""
+    },
+    {
+      "name": "黄明志",
+      "aliases": [],
+      "city": "马来西亚",
+      "tier": 2,
+      "note": "《漂向北方》；华语圈高频",
+      "status": "wiki-image-needs-review",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "黄明志",
+      "pageUrl": "https://zh.wikipedia.org/wiki/%E9%BB%84%E6%98%8E%E5%BF%97",
+      "description": "馬來西亞音樂人、歌手、演員、導演",
+      "rap": false
+    },
+    {
+      "name": "春艳",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "颜社；夜猫组",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "陈嫺静",
+      "aliases": [],
+      "city": "台湾",
+      "tier": 2,
+      "note": "颜社；金曲奖",
+      "status": "no-page",
+      "source": null
+    },
+    {
+      "name": "农夫",
+      "aliases": [
+        "陆永",
+        "C君"
+      ],
+      "city": "香港",
+      "tier": 2,
+      "note": "香港说唱组合",
+      "status": "wiki-image",
+      "source": "wikipedia",
+      "lang": "zh",
+      "pageTitle": "C君",
+      "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/FAMA_Ckwan.jpg/330px-FAMA_Ckwan.jpg?utm_source=zh.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+      "pageUrl": "https://zh.wikipedia.org/wiki/C%E5%90%9B",
+      "description": ""
+    }
+  ]
+}

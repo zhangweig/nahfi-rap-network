@@ -247,6 +247,7 @@
 .neon-mode{background:radial-gradient(1200px 620px at 18% -12%,#0e2233 0%,#060b14 55%,#04070d 100%)}
 .neon-mode .site-header{background:linear-gradient(180deg,#0a131f,#070d16);border-bottom:1px solid #183246;box-shadow:0 1px 0 #000000aa}
 .neon-mode .brand,.neon-mode .brand strong{color:#dff3ff}
+.neon-mode .brand strong{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;letter-spacing:2px}
 .neon-mode .site-header nav button{color:#6d90a8}
 .neon-mode .site-header nav button.active{color:#8ff0ff;border-bottom-color:#4fd8ff;text-shadow:0 0 14px #4fd8ff88}
 .neon-mode .primary.add-person{background:#0c2233;border:1px solid #2b6d8a;color:#8ff0ff;box-shadow:none}
@@ -661,6 +662,9 @@ body{background:#04070d}
   .neon-mode .board-drawer .artist-panel.game-card{max-height:64vh;overflow:auto;display:block}
   .neon-mode .board-drawer .gc-scroll{max-height:none;overflow:visible}
   .neon-mode .board-drawer .gc-contribute{margin-bottom:10px}
+  /* 详情面板整体滚动时，头部（含关闭按钮）必须吸顶，否则往下看内容就把 X 滚没了，面板关不掉 */
+  .neon-mode .board-drawer .gc-head{position:sticky;top:0;z-index:10;margin:-13px -13px 8px;padding:13px 13px 10px;background:#0a1421;box-shadow:0 6px 14px #05080ecc}
+  .neon-mode .board-drawer .gc-close{padding:5px}
 }
 
 /* 底部条对比度微调，年份与图例在小屏也能看清 */

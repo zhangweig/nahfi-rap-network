@@ -136,7 +136,7 @@ export default function App() {
   return <div className={`app pixel-app neon-mode ${section === 'map' ? 'board-mode' : ''}`}>
     <header className="site-header">
       <a href="#" className="brand" onClick={e => { e.preventDefault(); openSection('map'); }}>
-        <span className="vinyl-logo" /><strong>NAHFI<span>®</span></strong>
+        <span className="vinyl-logo" /><strong>嘻哈版图<span>®</span></strong>
       </a>
       <nav aria-label="主要导航">
         {NAV.map(([key, label]) => <button key={key} className={section === key ? 'active' : ''} onClick={() => openSection(key)}>{label}</button>)}

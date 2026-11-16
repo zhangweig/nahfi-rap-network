@@ -33,5 +33,5 @@ const base=()=>{
 };
 base();
 const app=createApplication({base,dbPath:resolve(dataDir,'community.sqlite'),adminPassword:password,publicOrigin:process.env.PUBLIC_ORIGIN,staticDir:resolve('dist'),secureCookies:production});
-const port=Number(process.env.PORT||8787);app.server.listen(port,process.env.HOST||'127.0.0.1',()=>console.log(`NAHFI 数据与审核服务 http://localhost:${port}`));
+const port=Number(process.env.PORT||8787);app.server.listen(port,process.env.HOST||'127.0.0.1',()=>console.log(`嘻哈版图 Flowline 数据与审核服务 http://localhost:${port}`));
 for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>app.close().then(()=>process.exit(0)));

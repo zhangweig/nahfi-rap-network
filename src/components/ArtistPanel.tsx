@@ -144,7 +144,7 @@ export function ArtistPanel({current, works, relations, nodeById, types, canCont
       <div className="gc-id">
         <span className="gc-kind">{current.kind === 'group' ? 'CREW / 团体' : 'RAPPER / 说唱音乐人'}</span>
         <h2>{current.name}</h2>
-        <p className="gc-alias">{current.aliases?.slice(0, 3).join(' / ') || 'NAHFI ARCHIVE'}</p>
+        <p className="gc-alias">{current.aliases?.slice(0, 3).join(' / ') || 'FLOWLINE ARCHIVE'}</p>
         <span className="gc-prov"><MapPin size={11} />{provinceLabel(province)}{current.city !== '未标注' && current.city !== province && province !== UNKNOWN_PROVINCE ? ` · ${current.city}` : ''}</span>
       </div>
       <button className="gc-share" onClick={() => setShare(value => !value)} aria-label="分享这个人物" aria-expanded={share}><Share2 size={14} /></button>

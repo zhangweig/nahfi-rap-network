@@ -123,14 +123,14 @@ export async function buildPoster(input: PosterInput): Promise<Blob> {
   ctx.fillStyle = '#ffffff';
   ctx.font = `600 46px ${FONT}`;
   ctx.textBaseline = 'alphabetic';
-  ctx.fillText('NAHFI', 90, 108);
-  const brandWidth = ctx.measureText('NAHFI').width;
+  ctx.fillText('嘻哈版图', 90, 108);
+  const brandWidth = ctx.measureText('嘻哈版图').width;
   ctx.fillStyle = accent;
   ctx.font = `600 22px ${FONT}`;
   ctx.fillText('®', 90 + brandWidth + 6, 90);
   ctx.fillStyle = 'rgba(255,255,255,.42)';
   ctx.font = `500 22px ${FONT}`;
-  ctx.fillText('RAP NETWORK', 90, 148);
+  ctx.fillText('FLOWLINE', 90, 148);
 
   ctx.textAlign = 'right';
   ctx.fillStyle = 'rgba(255,255,255,.38)';
@@ -195,7 +195,7 @@ export async function buildPoster(input: PosterInput): Promise<Blob> {
       const value = item.trim();
       return value && value !== node.name && !value.replace(/\s/g, '').includes(node.name);
     })
-    .slice(0, 2).join(' / ') || 'NAHFI ARCHIVE';
+    .slice(0, 2).join(' / ') || 'FLOWLINE ARCHIVE';
   ctx.fillText(fitText(ctx, alias, textMax), textX, 404);
 
   // 省份胶囊

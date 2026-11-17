@@ -1,4 +1,5 @@
 import {avatarPath} from '../components/PixelAvatar';
+import {buildAsciiPortrait} from './ascii';
 import type {ArtistNode} from '../data/types';
 
 /**
@@ -123,14 +124,14 @@ export async function buildPoster(input: PosterInput): Promise<Blob> {
   ctx.fillStyle = '#ffffff';
   ctx.font = `600 46px ${FONT}`;
   ctx.textBaseline = 'alphabetic';
-  ctx.fillText('嘻哈版图', 90, 108);
-  const brandWidth = ctx.measureText('嘻哈版图').width;
+  ctx.fillText('FLOWLINE', 90, 108);
+  const brandWidth = ctx.measureText('FLOWLINE').width;
   ctx.fillStyle = accent;
   ctx.font = `600 22px ${FONT}`;
   ctx.fillText('®', 90 + brandWidth + 6, 90);
   ctx.fillStyle = 'rgba(255,255,255,.42)';
   ctx.font = `500 22px ${FONT}`;
-  ctx.fillText('FLOWLINE', 90, 148);
+  ctx.fillText('中文说唱人物关系图谱', 90, 148);
 
   ctx.textAlign = 'right';
   ctx.fillStyle = 'rgba(255,255,255,.38)';
@@ -153,6 +154,8 @@ export async function buildPoster(input: PosterInput): Promise<Blob> {
     const dw = image.width * scale;
     const dh = image.height * scale;
     ctx.drawImage(image, bx + (box - dw) / 2, by + (box - dh) / 2, dw, dh);
+    // ASCII 表层：原图完整保留，只叠半透明字符；面部区降到 18% 保证认得出人
+    ctx.drawImage(buildAsciiPortrait(image, box), bx, by);
   } else {
     // 没有官方头像时不要糊一张来路不明的图，也不要把首字母放到铺满——
     // 大方承认「暂无」反而更符合这个站「没有来源就不写」的调性。

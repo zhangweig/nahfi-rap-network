@@ -3,7 +3,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {randomBytes,randomUUID,scryptSync,timingSafeEqual,createHash} from 'node:crypto';
 import {readFile,stat} from 'node:fs/promises';
 import {resolve,sep,extname} from 'node:path';
-import {validateSubmission,validateReport,compose,fingerprint,InputError} from './domain.mjs';
+import {validateSubmission,validateReport,compose,publishPayload,fingerprint,InputError} from './domain.mjs';
 
 /**
  * `base` may be a plain snapshot or a getter. The getter form lets the dev server pick up
@@ -77,7 +77,7 @@ export function createApplication({base,dbPath,adminPassword,publicOrigin='',sta
       }
       if(pathname==='/api/review'&&method==='GET'){
         requireOwner(req);const rows=db.prepare('SELECT * FROM submissions ORDER BY created_at DESC LIMIT 500').all();
-        const data=snapshot();return send(res,200,{items:rows.map(row=>({...row,payload:JSON.parse(row.payload),original:row.target_id?(row.kind==='artist'?data.nodes:data.relations).find(x=>x.id===row.target_id):null})),audit:db.prepare('SELECT * FROM audit ORDER BY id DESC LIMIT 100').all()});
+        const data=snapshot();return send(res,200,{items:rows.map(row=>({...row,payload:JSON.parse(row.payload),original:row.target_id?(row.kind==='artist'?data.nodes:row.kind==='beef'?(data.beefs||[]):data.relations).find(x=>x.id===row.target_id):null})),audit:db.prepare('SELECT * FROM audit ORDER BY id DESC LIMIT 100').all()});
       }
       const decision=pathname.match(/^\/api\/review\/([a-zA-Z0-9-]+)$/);
       if(decision&&method==='POST'){
@@ -90,12 +90,17 @@ export function createApplication({base,dbPath,adminPassword,publicOrigin='',sta
           if(!row)throw new InputError('投稿不存在',404);
           if(row.status!=='pending')throw new InputError('该投稿已经审核，请刷新列表',409);
           if(action==='approve'){
-            const data=snapshot(),entity=JSON.parse(row.payload),collection=row.kind==='artist'?data.nodes:data.relations;
+            const data=snapshot(),entity=JSON.parse(row.payload),collection=row.kind==='artist'?data.nodes:row.kind==='beef'?(data.beefs||[]):data.relations;
             if(row.target_id&&fingerprint(collection.find(x=>x.id===row.target_id))!==row.base_revision)throw new InputError('原记录已被其他投稿更新，请退回并重新提交',409);
             if(row.kind==='artist'&&collection.some(x=>x.id!==entity.id&&x.name.toLocaleLowerCase()===entity.name.toLocaleLowerCase()))throw new InputError('已存在同名人物，请退回并重新提交',409);
             if(row.kind==='relationship'&&(!data.nodes.some(x=>x.id===entity.source)||!data.nodes.some(x=>x.id===entity.target)))throw new InputError('关系人物不存在',409);
             if(row.kind==='relationship'&&data.relations.some(x=>x.id!==entity.id&&x.type===entity.type&&x.label===entity.label&&[x.source,x.target].sort().join('|')===[entity.source,entity.target].sort().join('|')))throw new InputError('已有相同关系通过审核，请退回重复投稿',409);
-            db.prepare('INSERT INTO approved VALUES(?,?,?,?) ON CONFLICT(entity_id) DO UPDATE SET kind=excluded.kind,payload=excluded.payload,submission_id=excluded.submission_id').run(entity.id,row.kind,row.payload,row.id);
+            if(row.kind==='beef'){
+              const pair=b=>b.sides.filter(Boolean).map(s=>s.nodeId).sort().join('|');
+              if(!entity.sides?.filter(Boolean).length||!entity.sides.filter(Boolean).every(s=>data.nodes.some(n=>n.id===s.nodeId)))throw new InputError('BEEF 当事人不存在',409);
+              if((data.beefs||[]).some(b=>b.id!==entity.id&&b.title===entity.title&&pair(b)===pair(entity)))throw new InputError('已有相同 BEEF 通过审核，请退回重复投稿',409);
+            }
+            db.prepare('INSERT INTO approved VALUES(?,?,?,?) ON CONFLICT(entity_id) DO UPDATE SET kind=excluded.kind,payload=excluded.payload,submission_id=excluded.submission_id').run(entity.id,row.kind,publishPayload(row.kind,row.payload),row.id);
           }
           const now=new Date().toISOString();db.prepare('UPDATE submissions SET status=?,reviewed_at=?,review_note=? WHERE id=?').run(action==='approve'?'approved':'rejected',now,note.trim(),row.id);
           db.prepare('INSERT INTO audit(submission_id,action,note,created_at) VALUES(?,?,?,?)').run(row.id,action,note.trim(),now);db.exec('COMMIT');

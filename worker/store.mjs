@@ -1,4 +1,4 @@
-import {compose,fingerprint,InputError} from '../server/domain.mjs';
+import {compose,publishPayload,fingerprint,InputError} from '../server/domain.mjs';
 /**
  * D1 数据访问层。对应 server/app.mjs 里 node:sqlite 的那部分逻辑，
  * 区别是 D1 的 API 全为异步，并且没有长事务，所以审核用「先抢占状态再批量写入」的方式保证幂等。
@@ -33,7 +33,7 @@ export async function listSubmissions(db, base) {
   ]);
   const data = await snapshot(db, base);
   const items = (rows.results || []).map(row => {
-    const collection = row.kind === 'artist' ? data.nodes : data.relations;
+    const collection = row.kind === 'artist' ? data.nodes : row.kind === 'beef' ? (data.beefs || []) : data.relations;
     return {
       ...row,
       payload: JSON.parse(row.payload),
@@ -56,7 +56,7 @@ export async function decideSubmission(db, base, id, action, note) {
   const data = await snapshot(db, base);
   const entity = JSON.parse(row.payload);
   if (action === 'approve') {
-    const collection = row.kind === 'artist' ? data.nodes : data.relations;
+    const collection = row.kind === 'artist' ? data.nodes : row.kind === 'beef' ? (data.beefs || []) : data.relations;
     if (row.target_id && fingerprint(collection.find(item => item.id === row.target_id)) !== row.base_revision) {
       throw new InputError('原记录已被其他投稿更新，请退回并重新提交', 409);
     }
@@ -74,6 +74,15 @@ export async function decideSubmission(db, base, id, action, note) {
     )) {
       throw new InputError('已有相同关系通过审核，请退回重复投稿', 409);
     }
+    if (row.kind === 'beef') {
+      const pair = (b) => b.sides.filter(Boolean).map(s => s.nodeId).sort().join('|');
+      if (!entity.sides?.filter(Boolean).length || !entity.sides.filter(Boolean).every(s => data.nodes.some(n => n.id === s.nodeId))) {
+        throw new InputError('BEEF 当事人不存在', 409);
+      }
+      if (data.beefs.some(b => b.id !== entity.id && b.title === entity.title && pair(b) === pair(entity))) {
+        throw new InputError('已有相同 BEEF 通过审核，请退回重复投稿', 409);
+      }
+    }
   }
 
   const now = new Date().toISOString();
@@ -88,7 +97,7 @@ export async function decideSubmission(db, base, id, action, note) {
   if (action === 'approve') {
     batch.push(db.prepare(
       'INSERT INTO approved(entity_id,kind,payload,submission_id) VALUES(?,?,?,?) ON CONFLICT(entity_id) DO UPDATE SET kind=excluded.kind, payload=excluded.payload, submission_id=excluded.submission_id'
-    ).bind(entity.id, row.kind, row.payload, row.id));
+    ).bind(entity.id, row.kind, publishPayload(row.kind, row.payload), row.id));
   }
   batch.push(db.prepare('INSERT INTO audit(submission_id,action,note,created_at) VALUES(?,?,?,?)')
     .bind(row.id, action, note.trim(), now));

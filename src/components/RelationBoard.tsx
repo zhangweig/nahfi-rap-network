@@ -3,8 +3,10 @@ import {LayoutGrid, RotateCcw, Search, Sparkles, Users, X} from 'lucide-react';
 import {useDataset} from '../state/Dataset';
 import {Avatar} from './PixelAvatar';
 import {ALL_PROVINCES, UNKNOWN_PROVINCE, provinceLabel, provinceOf} from '../lib/province';
-import {boardLayout, buildEdges, edgeMid, edgePath, relationMeta, type NodePlace} from '../lib/board';
+import {boardLayout, buildEdges, edgeMid, edgePath, beefPath, relationMeta, type NodePlace} from '../lib/board';
 import type {RelationType} from '../data/types';
+import type {BeefEvent} from '../data/beefs';
+import {beefNodeIds} from '../data/beefs';
 
 const YEARS = Array.from({length: 10}, (_, index) => 2017 + index);
 
@@ -40,7 +42,7 @@ interface RosterState {
   h: number;
 }
 
-export function RelationBoard({selected, onSelect, onClear, types, province, path, focus, onToggleType, onLocate, onResetProvince}: {
+export function RelationBoard({selected, onSelect, onClear, types, province, path, focus, onToggleType, onLocate, onResetProvince, beefs, onlyBeef, onToggleBeef, onOpenBeef}: {
   selected: string | null;
   onSelect: (id: string) => void;
   /** A click on empty canvas closes the detail drawer. */
@@ -53,6 +55,11 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   onToggleType: (type: RelationType) => void;
   onLocate: () => void;
   onResetProvince: () => void;
+  /** BEEF 链事件；独立于普通关系渲染。 */
+  beefs: BeefEvent[];
+  onlyBeef: boolean;
+  onToggleBeef: () => void;
+  onOpenBeef: (beef: BeefEvent) => void;
 }) {
   const {data} = useDataset();
   const viewport = useRef<HTMLDivElement>(null);
@@ -117,6 +124,52 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     () => buildEdges(data, types, province, year, positions),
     [data, types, province, year, positions],
   );
+
+  /**
+   * BEEF 默认不显示。只在两种情况下亮出冲突链：
+   * 1) 选中了卷入某条 beef 的人物 → 只显示与他相关的链（关系网是主角，beef 是选中后的档案层）；
+   * 2) 用户主动打开 rail 上的「BEEF」总开关 → 显示全部（保留原「只看 BEEF」的探索入口）。
+   */
+  const shownBeefs = useMemo(() => {
+    if (onlyBeef) return beefs;
+    if (!selected) return [];
+    return beefs.filter(beef => beef.sides.some(side => side && side.nodeId === selected));
+  }, [beefs, onlyBeef, selected]);
+
+  /** BEEF 链几何：只有双方都在当前面板/筛选内的事件才画。 */
+  const beefLinks = useMemo(() => {
+    const result: {beef: BeefEvent; d: string; mid: {x: number; y: number}; anchor: {x: number; y: number}; ax: number; ay: number; bx: number; by: number; nearA: {x: number; y: number}; nearB: {x: number; y: number}}[] = [];
+    for (const beef of shownBeefs) {
+      const a = beef.sides[0] ? positions.get(beef.sides[0].nodeId) : null;
+      const b = beef.sides[1] ? positions.get(beef.sides[1].nodeId) : null;
+      if (!a || !b) continue;
+      // 弯曲控制点：中点沿垂线偏移，让双方锯齿线不与普通直线重合
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const len = Math.hypot(dx, dy) || 1;
+      const bow = Math.min(40, len * 0.12);
+      const ux = dx / len, uy = dy / len;
+      const c = {x: mx - uy * bow, y: my + ux * bow};
+      // 端点标记从头像边缘起笔，避免被头像盖住
+      const nearA = {x: a.x + ux * 26, y: a.y + uy * 26};
+      const nearB = {x: b.x - ux * 26, y: b.y - uy * 26};
+      // 档案牌沿锯齿线法线外移：外移量按牌面在法线上的投影算，
+      // 保证任何连线角度下牌面都不压在线身或两端头像上（同省近距离 beef 尤其需要）。
+      const nx = -uy, ny = ux;
+      const extent = Math.abs(nx) * 84 + Math.abs(ny) * 25 + 18;
+      const anchor = {x: (nearA.x + 2 * c.x + nearB.x) / 4, y: (nearA.y + 2 * c.y + nearB.y) / 4};
+      result.push({
+        beef,
+        d: beefPath(nearA, nearB, c),
+        mid: {x: anchor.x + nx * extent, y: anchor.y + ny * extent}, anchor,
+        ax: a.x, ay: a.y, bx: b.x, by: b.y, nearA, nearB,
+      });
+    }
+    return result;
+  }, [shownBeefs, positions]);
+
+  // 节点角标也随显隐走：默认不给人任何「这里有 beef」的暗示，选中/总开关才亮。
+  const beefIds = useMemo(() => beefNodeIds(shownBeefs), [shownBeefs]);
   const archiveTotal = useMemo(
     () => data.nodes.filter(node => provinceOf(node.city) === UNKNOWN_PROVINCE).length,
     [data.nodes],
@@ -481,7 +534,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       </div>
       <div className="board-stage" style={{transform: `translate3d(${view.x}px,${view.y}px,0)`}}>
         <div className={`board-world ${zoomed ? 'is-zoomed' : ''}`}
-          style={{width: world.width, height: world.height, zoom: view.scale}}>
+          style={{width: world.width, height: world.height, transform: `scale(${view.scale})`}}>
           {zones.map(zone => <div key={zone.def.province}
             className={`bz ${zone.def.mini ? 'mini' : ''} ${zone.def.empty ? 'empty' : ''} ${zone.def.tiny ? 'tiny' : ''} ${dragProvince === zone.def.province ? 'is-dragging' : ''}`}
             style={{left: zone.def.x, top: zone.def.y, width: zone.def.w, height: zone.def.h, borderRadius: zone.def.radius ?? 10, ['--c' as string]: zone.def.color, zIndex: dragProvince === zone.def.province ? 4 : undefined}}
@@ -499,8 +552,8 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
             </div>
           </div>)}
 
-          <svg className="board-edges" width={world.width} height={world.height} viewBox={`0 0 ${world.width} ${world.height}`} aria-hidden="true">
-            {[...edges].sort((a, b) => Number(isFocusEdge(a)) - Number(isFocusEdge(b))).map(edge => {
+          <svg className={`board-edges ${onlyBeef ? 'beef-only' : ''}`} width={world.width} height={world.height} viewBox={`0 0 ${world.width} ${world.height}`} aria-hidden="true">
+            {!onlyBeef && [...edges].sort((a, b) => Number(isFocusEdge(a)) - Number(isFocusEdge(b))).map(edge => {
               const focus = isFocusEdge(edge);
               const onPath = isPathEdge(edge);
               const color = relationMeta[edge.type].color;
@@ -541,18 +594,51 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
                 <text textAnchor="middle" y={3.4} fill={meta.color} fontSize={9.5} fontFamily="'JetBrains Mono','Microsoft YaHei',monospace" letterSpacing="0.6">{text}</text>
               </g>;
             })}
+
+            {/* BEEF 冲突链：证据链视觉（档案牌 + 双端定位标 + 流动信号），点线/牌打开冲突档案 */}
+            <g className="beef-links">
+              {beefLinks.map(({beef, d, mid, anchor, nearA, nearB}) => {
+                const active = beef.sides.some(s => s && s.nodeId === selected);
+                const status = beef.status === 'verified' ? '已核实' : '待核实';
+                const title = beef.title.length > 15 ? `${beef.title.slice(0, 14)}…` : beef.title;
+                // 引线从线上的锚点连到档案牌边缘，牌面外移后仍读得出「这条链的档案」。
+                const leaderD = `M${anchor.x.toFixed(1)},${anchor.y.toFixed(1)} L${mid.x.toFixed(1)},${mid.y.toFixed(1)}`;
+                return <g key={beef.id} className={`beef-link ${active ? 'is-active' : ''}`} onClick={e => { e.stopPropagation(); onOpenBeef(beef); }}>
+                  {/* 透明命中区在最底层，捕获线身点击；宽而不挡档案牌 */}
+                  <path d={d} fill="none" stroke="transparent" strokeWidth={20} className="beef-hit" />
+                  <path d={leaderD} fill="none" className="beef-leader" />
+                  <path d={d} fill="none" className="beef-thread" />
+                  <path d={d} fill="none" className="beef-halo" />
+                  <path d={d} fill="none" className={`beef-zig ${active ? 'is-active' : ''}`} />
+                  <path d={d} fill="none" className="beef-spark" />
+                  {[nearA, nearB].map((p, i) => <g key={i} className="beef-anchor" transform={`translate(${p.x},${p.y})`}>
+                    <path className="beef-anchor-diamond" d="M0,-8 L8,0 L0,8 L-8,0 Z" />
+                    <path className="beef-anchor-ticks" d="M-15,0 H-10 M10,0 H15 M0,-15 V-10 M0,10 V15" />
+                  </g>)}
+                  <g className="beef-tag" transform={`translate(${mid.x},${mid.y})`}>
+                    <path className="beef-tag-body" d="M-84,-25 L74,-25 L84,-15 L84,25 L-74,25 L-84,15 Z" />
+                    <path className="beef-tag-accent" d="M-84,-25 H84" />
+                    <text className="beef-tag-kicker" x={-73} y={-10}>⚡ BEEF FILE / {status}</text>
+                    <text className="beef-tag-title" x={-73} y={8}>{title}</text>
+                    <text className="beef-tag-hint" x={-73} y={20}>点击查看冲突档案 →</text>
+                  </g>
+                </g>;
+              })}
+            </g>
           </svg>
 
           {visibleNodes.map(node => {
             const place = positions.get(node.id)!;
             const active = node.id === selected;
-            const dim = !!focusId && node.id !== focusId && !neighbours.has(node.id) && !path?.includes(node.id);
+            const inBeef = beefIds.has(node.id);
+            const dim = (!!focusId && node.id !== focusId && !neighbours.has(node.id) && !path?.includes(node.id))
+              || (onlyBeef && !inBeef);
             const latin = /^[\x20-\x7F]+$/.test(node.name);
             const featured = node.kind === 'group';
             const raised = dragProvince === place.province;
             // Focused plates may wrap further so the full name can be read.
             const labelFocus = node.id === hover || active;
-            return <button key={node.id} className={`bn ${place.mini ? 'mini' : ''} ${place.tight ? 'tight' : ''} ${active ? 'is-active' : ''} ${dim ? 'is-dim' : ''} ${featured ? 'is-group' : ''}`}
+            return <button key={node.id} className={`bn ${place.mini ? 'mini' : ''} ${place.tight ? 'tight' : ''} ${active ? 'is-active' : ''} ${dim ? 'is-dim' : ''} ${featured ? 'is-group' : ''} ${inBeef ? 'has-beef' : ''}`}
               style={{left: place.x - place.size / 2, top: place.y - place.size / 2, ['--c' as string]: place.color, ['--s' as string]: `${place.size}px`, zIndex: raised ? 3 : undefined}}
               onClick={() => { if (suppressClick.current) return; onSelect(node.id); }}
               // An avatar works as a handle for its whole province card: dragging any face
@@ -562,6 +648,8 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
               title={`${node.name} · ${provinceLabel(provinceOf(node.city))}`}>
               <span className="bn-pic"><Avatar node={node} />
                 {featured && <span className="bn-flag">CREW</span>}
+                {inBeef && <span className="bn-beef-ring" aria-hidden="true" />}
+                {inBeef && <span className="bn-beef-flag">⚡BEEF</span>}
               </span>
               <span className="bn-name" title={node.name} style={{
                 maxWidth: labelFocus ? Math.max(place.labelW, 168) : place.labelW,
@@ -598,6 +686,12 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       <div className="rail-group">
         <button className={province === ALL_PROVINCES ? 'on' : ''} onClick={onResetProvince} title="查看全部省份">
           <Users size={15} /><span>ALL</span>
+        </button>
+        <button className={onlyBeef ? 'on beef-on' : ''} onClick={onToggleBeef}
+          title={onlyBeef ? '退出 BEEF 全景：恢复默认，仅在选中相关人物时显示冲突链' : 'BEEF 全景：一次展开全部冲突链（默认只在选中相关人物时显示）'}
+          aria-pressed={onlyBeef}>
+          <span className="rail-beef-mark">⚡</span><span>BEEF</span>
+          <i className="rail-beef-count">{beefs.length}</i>
         </button>
       </div>
       <div className="rail-group">

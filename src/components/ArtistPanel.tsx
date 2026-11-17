@@ -180,7 +180,7 @@ export function ArtistPanel({current, works, relations, nodeById, types, canCont
       <h3><Sparkles size={12} /> HIGHLIGHT MOMENTS</h3>
       <div className="gc-shots">
         {stats.recent.length ? stats.recent.map((work, index) => <button key={work.id} onClick={() => onPick(current.id)}
-          style={{['--h' as string]: ['#ff3d6e', '#35d6ff', '#ffc93c'][index % 3]}}>
+          style={{['--h' as string]: ['#e4572e', '#d9a05b', '#b8703a'][index % 3]}}>
           <span className="gc-shot-art">{work.title.slice(0, 1)}</span>
           <span className="gc-shot-meta"><b>{work.title}</b><small>{work.year} · {work.version}</small></span>
         </button>) : <p className="gc-none">暂未收录作品</p>}

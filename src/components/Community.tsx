@@ -148,7 +148,7 @@ function LocalEditor({target,onClose}:{target:EditorTarget;onClose:()=>void}){
 }
 
 type ReviewItem={id:string;kind:string;target_id:string|null;payload:any;original:any;contributor:string;message:string;status:string;created_at:string;review_note:string};
-const labels:Record<string,string>={name:'名字',aliases:'别名',city:'省份',description:'简介',kind:'类型',source:'起点',target:'终点',type:'关系类型',label:'关系说明',observedYear:'资料年份',track:'作品',sources:'来源',evidence:'证据'};
+const labels:Record<string,string>={name:'名字',aliases:'别名',city:'省份',description:'简介',kind:'类型',source:'起点',target:'终点',type:'关系类型',label:'关系说明',observedYear:'资料年份',track:'作品',sources:'来源',evidence:'证据',title:'事件标题',sides:'参与方',status:'核实状态',moments:'时间线',note:'补充说明'};
 export function ReviewPanel({onClose}:{onClose:()=>void}){
   const {data,refresh}=useDataset(),[owner,setOwner]=useState(false),[checking,setChecking]=useState(true),[items,setItems]=useState<ReviewItem[]>([]),[filter,setFilter]=useState('pending'),[error,setError]=useState(''),[busy,setBusy]=useState(false),[active,setActive]=useState<string|null>(null),[note,setNote]=useState(''),[audit,setAudit]=useState<any[]>([]);
   // 勘误和投稿是两条独立队列：投稿产出公开数据，勘误只产出待办。
@@ -174,12 +174,25 @@ export function ReviewPanel({onClose}:{onClose:()=>void}){
   const openReports=reports.filter(r=>r.status==='open').length;
   const shownReports=reports.filter(r=>r.status===reportFilter);
   const selectedReport=reports.find(r=>r.id===reportActive)||null;
-  const display=(key:string,value:any)=>{if(value===undefined||value==='')return '—';if(key==='source'||key==='target')return data.nodes.find(n=>n.id===value)?.name||value;if(key==='type')return relationNames[value]||value;if(key==='kind')return value==='artist'?'说唱音乐人':'团体 / 组合';if(key==='city')return value==='未定'?'待考据':value;if(key==='aliases')return value.length?value.join('、'):'无';if(key==='track')return `${value.title} · ${value.year} · ${value.version}`;if(typeof value==='object')return JSON.stringify(value,null,2);return String(value);};
+  const display=(key:string,value:any)=>{
+    if(value===undefined||value==='')return '—';
+    if(key==='source'||key==='target')return data.nodes.find(n=>n.id===value)?.name||value;
+    if(key==='type')return relationNames[value]||value;
+    if(key==='kind')return value==='artist'?'说唱音乐人':'团体 / 组合';
+    if(key==='city')return value==='未定'?'待考据':value;
+    if(key==='aliases')return value.length?value.join('、'):'无';
+    if(key==='track')return `${value.title} · ${value.year} · ${value.version}`;
+    if(key==='sides')return value.map((s:any)=>s?(data.nodes.find(n=>n.id===s.nodeId)?.name||s.nodeId):'（待补充）').join('  vs  ');
+    if(key==='status')return value==='verified'?'已核实':'待核实';
+    if(key==='moments')return value.length?`${value.length} 条（正文由站长核实后补录）`:'暂无（正文由站长核实后补录）';
+    if(typeof value==='object')return JSON.stringify(value,null,2);
+    return String(value);
+  };
   return <Modal title="站长审核台" onClose={onClose}>
     {checking?<p className="empty">正在确认登录状态…</p>:!owner?<form className="login-form" onSubmit={login}><div className="record-icon">◆</div><h3>只有你能决定哪些内容公开</h3><p>输入站长审核密钥。普通访客可以投稿，无法访问审核队列。</p><label>审核密钥<input name="password" type="password" required autoComplete="current-password"/></label><p className="field-help">密钥由站长保管，只用于审核队列；普通访客可以投稿，无需登录。</p><button className="primary" disabled={busy}>{busy?'登录中…':'进入审核台 →'}</button></form>:<div className="review-body">
       <div className="review-toolbar"><div className="segmented"><button className={mode==='queue'?'active':''} onClick={()=>setMode('queue')}>投稿</button><button className={mode==='reports'?'active':''} onClick={()=>setMode('reports')}>勘误 {openReports||''}</button></div>{mode==='queue'&&<div className="segmented">{[['pending','待审核'],['approved','已通过'],['rejected','已退回']].map(([key,label])=><button key={key} className={filter===key?'active':''} onClick={()=>{setFilter(key);setActive(null);setNote('');}}>{label} {items.filter(i=>i.status===key).length}</button>)}</div>}<button disabled={busy} onClick={async()=>{try{await api('/logout',{});}catch{/* 服务端已失效也要能退出 */}ownerToken.clear();setOwner(false);setItems([]);setReports([]);}}>退出登录</button></div>
-      {mode==='queue'&&<div className="review-grid"><div className="review-list">{items.filter(i=>i.status===filter).length===0&&<p className="empty">这里暂时没有投稿。</p>}{items.filter(i=>i.status===filter).map(item=><button className={`review-item ${item.id===active?'selected':''}`} key={item.id} onClick={()=>{setActive(item.id);setNote('');setError('');}}><span>{item.target_id?'修改':'新增'} · {item.kind==='artist'?'人物':'关系'}</span><strong>{item.payload.name||item.payload.label}</strong><small>{item.contributor} · {new Date(item.created_at).toLocaleDateString('zh-CN')}</small></button>)}</div>
-      <div className="review-detail">{selected?<><h3>{selected.payload.name||selected.payload.label}</h3><p>{selected.message||'投稿者没有额外备注'}</p><p className="field-help">请打开来源核对人物身份、城市和具体关系后再批准。</p>
+      {mode==='queue'&&<div className="review-grid"><div className="review-list">{items.filter(i=>i.status===filter).length===0&&<p className="empty">这里暂时没有投稿。</p>}{items.filter(i=>i.status===filter).map(item=><button className={`review-item ${item.id===active?'selected':''}`} key={item.id} onClick={()=>{setActive(item.id);setNote('');setError('');}}><span>{item.target_id?'修改':'新增'} · {item.kind==='artist'?'人物':item.kind==='beef'?'BEEF':'关系'}</span><strong>{item.payload.name||item.payload.label||item.payload.title}</strong><small>{item.contributor} · {new Date(item.created_at).toLocaleDateString('zh-CN')}</small></button>)}</div>
+      <div className="review-detail">{selected?<><h3>{selected.payload.name||selected.payload.label||selected.payload.title}</h3><p>{selected.message||'投稿者没有额外备注'}</p><p className="field-help">{selected.kind==='beef'?'请打开来源链接核对当事人与事件，确认站得住再批准；通过后状态会标为「已核实」并公开给所有访客。':'请打开来源核对人物身份、城市和具体关系后再批准。'}</p>
         {Object.keys(labels).filter(key=>selected.payload[key]!==undefined&&!(Array.isArray(selected.payload[key])&&!selected.payload[key].length)).map(key=><div className="review-field" key={key}><b>{labels[key]}</b>{selected.original&&JSON.stringify(selected.original[key])!==JSON.stringify(selected.payload[key])&&<div className="before-value"><small>当前</small><pre>{display(key,selected.original[key])}</pre></div>}{['sources','evidence'].includes(key)?selected.payload[key].map((source:any,i:number)=><div key={i}><a href={source.url} target="_blank" rel="noopener noreferrer">{source.title} ↗</a><p>{source.note}</p></div>):<pre>{display(key,selected.payload[key])}</pre>}</div>)}
         {selected.status==='pending'?<><label>审核意见<textarea value={note} onChange={e=>setNote(e.target.value)} maxLength={1500} rows={2} placeholder="退回时必填；可写明需要补充的证据"/></label><div className="review-actions"><button disabled={busy||!note.trim()} onClick={()=>decide(selected.id,'reject')}>退回修改</button><button className="primary" disabled={busy} onClick={()=>decide(selected.id,'approve')}>{busy?'正在处理…':'批准并公开'}</button></div></>:<p className="notice">审核意见：{selected.review_note||'已核对'}</p>}
       </>:<p className="empty">选择一条投稿，查看完整内容和修改对比。</p>}</div></div>}

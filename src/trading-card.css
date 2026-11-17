@@ -1,0 +1,149 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   FLOWLINE · Rapper 球星卡（全息效果移植自 simeydotme/pokemon-cards-css, MIT）
+   彩虹镭射改为焦橙单色档（橙→暗金→炭黑），贴合 Retro Digital 主题。
+   整文件删除即可回退。无新依赖、无逐帧重绘，静态为默认。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.catalog-panel:has(.rapper-card){overflow:auto}
+
+/* 卡阵：自适应网格，卡片比例接近实体球星卡（约 5:7） */
+.artist-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(178px,1fr));
+  gap:18px;
+  padding:4px 2px 16px;
+}
+
+/* ── 卡片本体 ───────────────────────────────────────────────────────── */
+.rapper-card{
+  --px:50%;--py:50%;--rx:0deg;--ry:0deg;
+  position:relative;display:block;width:100%;aspect-ratio:5/7;
+  padding:0;border:1px solid #7a4a2b;border-radius:12px;
+  background:#0c0908;overflow:hidden;text-align:left;
+  transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style:preserve-3d;
+  transition:transform .45s cubic-bezier(.2,.8,.25,1),box-shadow .45s,
+             border-color .45s;
+  box-shadow:0 6px 18px #0009,inset 0 0 0 1px #e4572e1f;
+  will-change:transform;
+}
+.rapper-card:hover,.rapper-card:focus-visible{
+  border-color:#e4572e;
+  box-shadow:0 14px 34px #000c,0 0 0 1px #e4572e66,0 0 26px #e4572e2b;
+  z-index:2;
+}
+
+/* 内框：卡纸层次 + 顶部/底部装饰条 */
+.rc-inner{
+  position:absolute;inset:5px;border-radius:8px;z-index:2;
+  display:flex;flex-direction:column;
+  background:linear-gradient(168deg,#171310 0%,#0e0b09 46%,#120d0a 100%);
+  border:1px solid #3c2c22;
+  box-shadow:inset 0 0 22px #000a;
+}
+
+/* 卡头：编号 + 类型标签 */
+.rc-top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 9px 6px;
+  font:700 9px/1 ui-monospace,Consolas,monospace;letter-spacing:.08em;
+}
+.rc-no{color:#e4572e}
+.rc-kind{color:#b3a593;border:1px solid #4d382a;border-radius:2px;padding:2px 5px;font-size:8px}
+
+/* 头像主图区 */
+.rc-art{
+  position:relative;display:block;margin:0 8px;
+  aspect-ratio:1/1.04;border-radius:4px;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 20%,#2e221c,#0a0807 78%);
+  border:1px solid #4d382a;
+}
+.rc-art img{
+  width:100%;height:100%;object-fit:cover;object-position:center top;
+  display:block;filter:grayscale(.12) contrast(1.08);
+  image-rendering:auto;
+}
+.rc-art-ph{
+  display:grid;place-items:center;width:100%;height:100%;
+  font:800 64px/1 "Microsoft YaHei",sans-serif;
+  color:#e4572e;background:radial-gradient(circle at 50% 35%,#3c2c22,#0a0807 75%);
+}
+/* 图片底部渐隐，压暗向信息区过渡 */
+.rc-art-shade{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 55%,#0e0b09dd 100%);
+  pointer-events:none;
+}
+
+/* 姓名 + 省份 */
+.rc-info{display:flex;flex-direction:column;gap:3px;padding:8px 10px 6px}
+.rc-name{
+  font-size:16px;font-weight:800;letter-spacing:.5px;color:#f2ede4;
+  line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  text-shadow:0 0 12px #e4572e55;
+}
+.rc-prov{font:10px/1 ui-monospace,Consolas,monospace;color:#c9a873;letter-spacing:.06em}
+
+/* 三栏数值 */
+.rc-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  margin:0 8px;border-top:1px solid #3c2c22;border-bottom:1px solid #3c2c22;
+  padding:7px 0;
+}
+.rc-stats>span{display:flex;flex-direction:column;align-items:center;gap:2px;border-right:1px solid #3c2c2277}
+.rc-stats>span:last-child{border-right:0}
+.rc-stats b{font:800 15px/1 ui-monospace,Consolas,monospace;color:#e4572e}
+.rc-stats>span:last-child b{font-size:11px;color:#d9a05b}
+.rc-stats small{font:9px/1 "Microsoft YaHei",sans-serif;color:#a39584;letter-spacing:.1em}
+
+/* 卡脚：档案标 */
+.rc-foot{
+  margin-top:auto;display:flex;justify-content:space-between;
+  padding:6px 10px 8px;
+  font:8px/1 ui-monospace,Consolas,monospace;letter-spacing:.1em;color:#7a6d5f;
+}
+
+/* ── 全息层：默认静态（焦橙档），hover 时随指针位移 ─────────────────── */
+/* foil：橙→暗金→炭黑的多层条纹，用叠加混合贴在整卡上，随 --px/--py 平移 */
+.rc-foil{
+  position:absolute;inset:-40%;z-index:3;pointer-events:none;
+  background:
+    repeating-linear-gradient(115deg,
+      transparent 0 8px,
+      #e4572e12 8px 9px,
+      transparent 9px 17px),
+    conic-gradient(from 200deg at 50% 50%,
+      #e4572e00 0deg,#e4572e33 40deg,#c9a87344 80deg,
+      #e4572e00 130deg,#e4572e2b 210deg,#d9a05b3a 260deg,#e4572e00 320deg),
+    radial-gradient(60% 40% at var(--px) var(--py),#ffb08a2e,transparent 72%);
+  mix-blend-mode:color-dodge;
+  opacity:.5;
+  transition:opacity .4s;
+  transform:translate3d(0,0,0);
+}
+.rapper-card:hover .rc-foil,.rapper-card:focus-visible .rc-foil{opacity:.9}
+
+/* glare：跟随指针的暖白高光热点 */
+.rc-glare{
+  position:absolute;inset:0;z-index:4;pointer-events:none;border-radius:12px;
+  background:radial-gradient(48% 38% at var(--px) var(--py),
+    #fff3e44d 0%,#ffb08a24 32%,transparent 68%);
+  mix-blend-mode:screen;
+  opacity:0;transition:opacity .35s;
+}
+.rapper-card:hover .rc-glare,.rapper-card:focus-visible .rc-glare{opacity:1}
+
+/* ── 移动端 / 无障碍 / 4K：关掉全息与 3D，保留静态卡面 ─────────────── */
+@media(max-width:780px){
+  .rc-foil,.rc-glare{display:none}
+  .rapper-card{transform:none}
+  .artist-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rc-foil,.rc-glare{display:none}
+  .rapper-card{transform:none;transition:none}
+}
+@media (min-resolution:1.5dppx),(-webkit-min-device-pixel-ratio:1.5),(min-width:2400px){
+  .rc-foil,.rc-glare{display:none}
+  .rapper-card{transform:none;transition:box-shadow .3s,border-color .3s}
+}

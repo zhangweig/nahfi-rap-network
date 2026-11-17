@@ -2,9 +2,9 @@ import {build} from 'esbuild';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 export async function buildData(destination='server/generated'){
-  const result=await build({stdin:{contents:"export {nodes,relations,works,baseDataset} from './src/data/rap-data';export {PROVINCE_NAMES,cityProvince,UNKNOWN_PROVINCE} from './src/lib/province';",resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
-  const {nodes,relations,works,baseDataset,PROVINCE_NAMES,cityProvince,UNKNOWN_PROVINCE}=await import(`data:text/javascript;base64,${Buffer.from(result.outputFiles[0].text).toString('base64')}`);
-  mkdirSync(destination,{recursive:true});writeFileSync(`${destination}/base-data.json`,JSON.stringify({nodes,relations,works}));
+  const result=await build({stdin:{contents:"export {nodes,relations,works,baseDataset} from './src/data/rap-data';export {SEED_BEEFS} from './src/data/beefs';export {PROVINCE_NAMES,cityProvince,UNKNOWN_PROVINCE} from './src/lib/province';",resolveDir:process.cwd()},bundle:true,platform:'node',format:'esm',write:false});
+  const {nodes,relations,works,SEED_BEEFS,baseDataset,PROVINCE_NAMES,cityProvince,UNKNOWN_PROVINCE}=await import(`data:text/javascript;base64,${Buffer.from(result.outputFiles[0].text).toString('base64')}`);
+  mkdirSync(destination,{recursive:true});writeFileSync(`${destination}/base-data.json`,JSON.stringify({nodes,relations,works,beefs:SEED_BEEFS}));
   // 未叠加任何人工编辑的基线，sheet:import 用它判断哪些行真的被改过。
   // 只是导入时的比对材料，放缓存目录，不进仓库也不进构建产物。
   const cache=resolve('.data');mkdirSync(cache,{recursive:true});

@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>地下杂志风 · 皮肤测试</title>
+<style>
+:root{
+  --bg:#100f0d; --paper:#f2ede3; --accent:#ff3b14;
+  --dim:#aaa294; --faint:#6e685e; --rule:#39362f;
+  --display:Impact,"Arial Narrow","Haettenschweiler",sans-serif;
+  --cn:"Microsoft YaHei","PingFang SC",sans-serif;
+  --mono:"Consolas","SFMono-Regular",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#1a1917}
+body{font-family:var(--cn);color:var(--paper);-webkit-font-smoothing:antialiased}
+.nav{position:sticky;top:0;z-index:50;display:flex;gap:0;background:#000;border-bottom:1px solid #333;height:42px;align-items:stretch;padding:0 20px}
+.nav button{background:none;border:0;color:#888;font:11px var(--mono);letter-spacing:.14em;padding:0 18px;cursor:pointer}
+.nav button.on{color:var(--paper);border-bottom:2px solid var(--accent)}
+.nav span{margin-left:auto;align-self:center;color:#666;font:10px var(--mono);letter-spacing:.1em}
+.stage{display:none;padding:26px 0 60px}
+.stage.on{display:block}
+.paper{position:relative;width:1200px;margin:0 auto;background:var(--bg);padding:30px 50px 46px;overflow:hidden}
+.paper:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.13;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.paper>*{position:relative;z-index:1}
+
+/* ---------- masthead ---------- */
+.topbar{display:flex;justify-content:space-between;align-items:center;color:var(--accent);
+  font:700 10px var(--mono);letter-spacing:.24em;padding-bottom:9px;border-bottom:1px solid var(--accent)}
+.topbar em{font-style:normal;color:var(--dim)}
+.masthead{display:flex;align-items:flex-end;justify-content:space-between;padding:18px 0 12px;border-bottom:3px solid var(--paper)}
+.masthead h1{font:var(--display);font-size:88px;line-height:.78;letter-spacing:-.035em;margin:0}
+.masthead h1 span{color:var(--accent)}
+.masthead .meta{text-align:right;font:10px/1.8 var(--mono);letter-spacing:.12em;color:var(--dim)}
+.masthead .meta b{color:var(--paper)}
+.section-bar{display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--rule);margin-bottom:0}
+.section-bar .no{background:var(--accent);color:#fff;font:700 10px var(--mono);letter-spacing:.1em;padding:4px 8px}
+.section-bar h2{font:900 15px var(--cn);letter-spacing:.24em;margin:0}
+.section-bar .rule{flex:1;height:1px;background:var(--rule)}
+.section-bar small{font:10px var(--mono);color:var(--faint);letter-spacing:.1em}
+
+/* ---------- dossier ---------- */
+.feature{display:grid;grid-template-columns:410px 1fr;gap:34px;padding-top:26px}
+.portrait{align-self:start}
+.photo-frame{border:1px solid var(--rule);padding:7px;position:relative}
+.photo-frame img{display:block;width:100%;height:414px;object-fit:cover;object-position:center 22%;
+  filter:grayscale(1) contrast(1.3) brightness(.92) sepia(.08)}
+.photo-frame:before{content:"FIG. 01";position:absolute;top:-9px;left:14px;background:var(--bg);padding:0 6px;
+  font:10px var(--mono);letter-spacing:.14em;color:var(--accent)}
+.figcap{display:flex;justify-content:space-between;margin-top:9px;font:10px var(--mono);color:var(--faint);letter-spacing:.06em}
+.photo-frame+.stamp{margin-top:22px;border-top:1px solid var(--rule);padding-top:13px}
+.stamp dl{margin:0;display:grid;grid-template-columns:88px 1fr;gap:9px 0;font-size:11px}
+.stamp dt{color:var(--faint);font:10px var(--mono);letter-spacing:.1em;padding-top:2px}
+.stamp dd{margin:0;color:var(--paper)}
+
+.head .kicker{font:700 11px var(--mono);letter-spacing:.28em;color:var(--accent)}
+.head .en{font:var(--display);font-size:116px;line-height:.82;letter-spacing:-.03em;margin:12px 0 2px}
+.head .cn{font-size:31px;font-weight:900;letter-spacing:.18em;margin:0 0 15px}
+.head .alias{font:10px var(--mono);letter-spacing:.12em;color:var(--faint);margin-bottom:18px}
+.deck{font-size:12.5px;line-height:1.95;color:var(--dim);columns:2;column-gap:24px;margin:0 0 20px;text-align:justify}
+.figures{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--paper);border-bottom:1px solid var(--rule);padding:14px 0}
+.figures div+div{border-left:1px solid var(--rule);padding-left:18px}
+.figures b{display:block;font:var(--display);font-size:44px;line-height:1;color:var(--accent)}
+.figures span{font:10px var(--mono);letter-spacing:.12em;color:var(--dim)}
+.subhead{display:flex;align-items:center;gap:10px;margin:22px 0 10px}
+.subhead b{font:900 12px var(--cn);letter-spacing:.16em}
+.subhead i{flex:1;height:1px;background:var(--rule)}
+.subhead em{font:10px var(--mono);font-style:normal;color:var(--faint)}
+.rel{display:grid;grid-template-columns:74px 1fr 78px;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dotted var(--rule);font-size:11.5px}
+.rel .t{font:700 9px var(--mono);letter-spacing:.08em;color:var(--accent)}
+.rel .n{color:var(--paper)}
+.rel .n span{color:var(--faint);font-size:10px}
+.rel .y{text-align:right;font:10px var(--mono);color:var(--faint)}
+.notes{margin-top:20px;border-left:2px solid var(--accent);padding:2px 0 2px 12px;font-size:10.5px;line-height:1.85;color:var(--faint)}
+.notes b{color:var(--dim)}
+
+/* ---------- roster ---------- */
+.roster-head{display:grid;grid-template-columns:1fr 300px;gap:30px;align-items:end;padding:24px 0 20px}
+.roster-head h1{font:var(--display);font-size:118px;line-height:.78;letter-spacing:-.035em;margin:0}
+.roster-head h1 span{color:var(--accent)}
+.roster-head p{font-size:11px;line-height:1.9;color:var(--dim);margin:0;border-left:1px solid var(--rule);padding-left:16px}
+.roster-body{display:grid;grid-template-columns:150px 1fr;gap:30px;border-top:1px solid var(--paper);padding-top:22px}
+.index{border-right:1px solid var(--rule);padding-right:18px;align-self:start;position:sticky;top:60px}
+.index h4{font:10px var(--mono);letter-spacing:.16em;color:var(--accent);margin:0 0 12px}
+.index a{display:block;font:10px var(--mono);color:var(--faint);padding:4px 0;text-decoration:none}
+.index a b{color:var(--paper)}
+.cols{column-count:2;column-gap:34px}
+.prov{break-inside:avoid;margin-bottom:24px}
+.prov-h{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--paper);padding-bottom:6px;margin-bottom:4px}
+.prov-h .idx{font:var(--display);font-size:26px;color:var(--accent)}
+.prov-h h3{font-size:16px;font-weight:900;letter-spacing:.14em;margin:0}
+.prov-h span{margin-left:auto;font:10px var(--mono);color:var(--faint)}
+.entry{display:grid;grid-template-columns:26px 34px 1fr auto;align-items:center;gap:10px;
+  padding:6px 0;border-bottom:1px dotted var(--rule)}
+.entry .num{font:10px var(--mono);color:var(--faint)}
+.entry img{width:34px;height:34px;object-fit:cover;filter:grayscale(1) contrast(1.25)}
+.entry .who b{font-size:12.5px;font-weight:700;letter-spacing:.03em}
+.entry .who small{display:block;font:9px var(--mono);color:var(--faint);margin-top:2px;letter-spacing:.06em}
+.entry .cnt{font:10px var(--mono);color:var(--dim);text-align:right}
+.entry .cnt b{color:var(--accent);font-size:13px}
+.colophon{border-top:3px solid var(--paper);margin-top:8px;padding-top:12px;display:flex;justify-content:space-between;
+  font:10px var(--mono);letter-spacing:.1em;color:var(--faint)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <button class="on" data-go="s-dossier">01 / 人物档案</button>
+  <button data-go="s-roster">02 / 人物名录</button>
+  <span>UNDERGROUND EDITORIAL · SKIN TEST</span>
+</nav>
+
+<!-- ============ 人物档案 ============ -->
+<section class="stage on" id="s-dossier">
+<div class="paper">
+  <div class="topbar"><span>NAHFI RAP NETWORK — 独立说唱地理档案</span><span>VOL. 01 <em>/</em> ISSUE 07 <em>/</em> 2026</span></div>
+  <div class="masthead">
+    <h1>NAHFI<span>.</span></h1>
+    <div class="meta">档案编号 <b>NO. 014</b><br>考据状态 <b>已校验 / VERIFIED</b><br>最后更新 <b>2026.11</b></div>
+  </div>
+  <div class="section-bar"><span class="no">DOSSIER</span><h2>人物档案</h2><span class="rule"></span><small>人物 · 关系 · 来源</small></div>
+
+  <div class="feature">
+    <div class="portrait">
+      <div class="photo-frame"><img src="../src/assets/avatars/air.jpg" alt="艾热"></div>
+      <div class="figcap"><span>FIG. 01 — 艺人肖像</span><span>来源：公开头像资料</span></div>
+      <div class="stamp">
+        <dl>
+          <dt>NAME</dt><dd>艾热 / AIR</dd>
+          <dt>ORIGIN</dt><dd>新疆 · 喀什</dd>
+          <dt>CATEGORY</dt><dd>说唱音乐人</dd>
+          <dt>DATA ID</dt><dd>air · 1233590583</dd>
+          <dt>SOURCE</dt><dd>Apple Music 艺人目录</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="head">
+      <div class="kicker">FEATURE / 本期人物</div>
+      <div class="en">AIR</div>
+      <h2 class="cn">艾 热</h2>
+      <div class="alias">ALIAS — 艾热AIR · 艾熱AIR</div>
+      <p class="deck">来自新疆喀什的说唱音乐人。本档案只收录有明确出处的合作关系：与王以太的录音室及现场合作、与 GAI 的《永不独行》。合作是否延续到当下，此处不作推断。平台目录仅用于校对身份，目录收录不等同于同属厂牌。</p>
+
+      <div class="figures">
+        <div><b>49</b><span>条关联记录</span></div>
+        <div><b>16</b><span>首收录作品</span></div>
+        <div><b>01</b><span>项身份来源</span></div>
+      </div>
+
+      <div class="subhead"><b>关联摘录</b><i></i><em>SELECTED LINKS / 05</em></div>
+      <div class="rel"><span class="t">FEAT.</span><span class="n">王以太 <span>《别怕变老》· 录音室版</span></span><span class="y">2021</span></div>
+      <div class="rel"><span class="t">FEAT.</span><span class="n">GAI <span>《永不独行》· 录音室版</span></span><span class="y">2019</span></div>
+      <div class="rel"><span class="t">FEAT.</span><span class="n">王以太 <span>《Where to go》· 录音室版</span></span><span class="y">2024</span></div>
+      <div class="rel"><span class="t">LIVE</span><span class="n">盛宇 / 杨和苏KeyNG <span>《一代》· 现场版</span></span><span class="y">2022</span></div>
+      <div class="rel"><span class="t">REF.</span><span class="n">DMG <span>经纪合作 · 报告厂牌章节</span></span><span class="y">2025</span></div>
+
+      <div class="notes"><b>来源与判读</b> — 关联类型为「合作 / 成员 / 厂牌 / 制作」四类，不等于商业签约关系。标注 seed-reference 的条目为待复核线索，不计入已校验统计。每条记录均可展开查看出处链接与原文备注。</div>
+    </div>
+  </div>
+
+  <div class="colophon"><span>© NAHFI RAP NETWORK — 非商业档案项目</span><span>DATA SNAPSHOT / 327 NODES · 471 RELATIONS</span></div>
+</div>
+</section>
+
+<!-- ============ 人物名录 ============ -->
+<section class="stage" id="s-roster">
+<div class="paper">
+  <div class="topbar"><span>NAHFI RAP NETWORK — 独立说唱地理档案</span><span>VOL. 01 <em>/</em> ISSUE 07 <em>/</em> 2026</span></div>
+  <div class="roster-head">
+    <h1>THE<br>ROSTER<span>.</span></h1>
+    <p>以地域为索引的人物名录。<br>按公开资料标注的籍贯或活动地归档；未标注者不进入本页。<br>姓名右侧数字为档案内已校验的关联记录条数。</p>
+  </div>
+  <div class="section-bar"><span class="no">INDEX</span><h2>人物名录</h2><span class="rule"></span><small>24 位 · 有肖像档案人物</small></div>
+
+  <div class="roster-body">
+    <div class="index">
+      <h4>PROVINCE INDEX</h4>
+      <a href="#"><b>01</b> 四川 / 成都</a>
+      <a href="#"><b>02</b> 中国台湾</a>
+      <a href="#"><b>03</b> 福建</a>
+      <a href="#"><b>04</b> 江苏 / 上海</a>
+      <a href="#"><b>05</b> 新疆</a>
+      <a href="#"><b>06</b> 中国香港</a>
+      <a href="#"><b>07</b> 其他地区</a>
+    </div>
+    <div class="cols">
+      <div class="prov">
+        <div class="prov-h"><span class="idx">01</span><h3>四川 · 成都</h3><span>05 ENTRIES</span></div>
+        <div class="entry"><span class="num">001</span><img src="../src/assets/avatars/vava.jpg"><span class="who"><b>VaVa</b><small>VAVA · 成都</small></span><span class="cnt"><b>36</b> 关联</span></div>
+        <div class="entry"><span class="num">002</span><img src="../src/assets/avatars/keyng.jpg"><span class="who"><b>杨和苏KeyNG</b><small>KEYNG · 成都</small></span><span class="cnt"><b>35</b> 关联</span></div>
+        <div class="entry"><span class="num">003</span><img src="../src/assets/avatars/ice.jpg"><span class="who"><b>ICE杨长青</b><small>ICE · 四川</small></span><span class="cnt"><b>16</b> 关联</span></div>
+        <div class="entry"><span class="num">004</span><img src="../src/assets/avatars/psyp.jpg"><span class="who"><b>Psy.P</b><small>PSYP · 成都</small></span><span class="cnt"><b>13</b> 关联</span></div>
+        <div class="entry"><span class="num">005</span><img src="../src/assets/avatars/knowknow.jpg"><span class="who"><b>KnowKnow</b><small>江苏 · CDC</small></span><span class="cnt"><b>13</b> 关联</span></div>
+      </div>
+      <div class="prov">
+        <div class="prov-h"><span class="idx">02</span><h3>中国台湾</h3><span>04 ENTRIES</span></div>
+        <div class="entry"><span class="num">006</span><img src="../src/assets/avatars/hotdog.jpg"><span class="who"><b>MC HotDog</b><small>HOTDOG</small></span><span class="cnt"><b>34</b> 关联</span></div>
+        <div class="entry"><span class="num">007</span><img src="../src/assets/avatars/eso.png"><span class="who"><b>瘦子E.SO</b><small>ESO</small></span><span class="cnt"><b>06</b> 关联</span></div>
+        <div class="entry"><span class="num">008</span><img src="../src/assets/avatars/kenzy.jpg"><span class="who"><b>小春Kenzy</b><small>KENZY</small></span><span class="cnt"><b>05</b> 关联</span></div>
+        <div class="entry"><span class="num">009</span><img src="../src/assets/avatars/softlipa.jpg"><span class="who"><b>蛋堡</b><small>SOFTLIPA</small></span><span class="cnt"><b>03</b> 关联</span></div>
+      </div>
+      <div class="prov">
+        <div class="prov-h"><span class="idx">03</span><h3>福建 · 上海</h3><span>04 ENTRIES</span></div>
+        <div class="entry"><span class="num">010</span><img src="../src/assets/avatars/vinida.jpg"><span class="who"><b>万妮达</b><small>福州</small></span><span class="cnt"><b>31</b> 关联</span></div>
+        <div class="entry"><span class="num">011</span><img src="../src/assets/avatars/gali.jpg"><span class="who"><b>GALI</b><small>GALI · 上海</small></span><span class="cnt"><b>27</b> 关联</span></div>
+        <div class="entry"><span class="num">012</span><img src="../src/assets/avatars/jonyj.jpg"><span class="who"><b>Jony J</b><small>福建</small></span><span class="cnt"><b>04</b> 关联</span></div>
+        <div class="entry"><span class="num">013</span><img src="../src/assets/avatars/guangguang.jpg"><span class="who"><b>MC光光</b><small>上海</small></span><span class="cnt"><b>09</b> 关联</span></div>
+      </div>
+      <div class="prov">
+        <div class="prov-h"><span class="idx">04</span><h3>江苏 · 广东</h3><span>02 ENTRIES</span></div>
+        <div class="entry"><span class="num">014</span><img src="../src/assets/avatars/tizzyt.jpg"><span class="who"><b>Tizzy T</b><small>广东</small></span><span class="cnt"><b>28</b> 关联</span></div>
+        <div class="entry"><span class="num">015</span><img src="../src/assets/avatars/icepaper.jpg"><span class="who"><b>Ice Paper</b><small>南京</small></span><span class="cnt"><b>09</b> 关联</span></div>
+      </div>
+      <div class="prov">
+        <div class="prov-h"><span class="idx">05</span><h3>新疆</h3><span>02 ENTRIES</span></div>
+        <div class="entry"><span class="num">016</span><img src="../src/assets/avatars/air.jpg"><span class="who"><b>艾热</b><small>AIR · 喀什</small></span><span class="cnt"><b>49</b> 关联</span></div>
+        <div class="entry"><span class="num">017</span><img src="../src/assets/avatars/athree.jpg"><span class="who"><b>AThree</b><small>新疆</small></span><span class="cnt"><b>03</b> 关联</span></div>
+      </div>
+      <div class="prov">
+        <div class="prov-h"><span class="idx">06</span><h3>中国香港</h3><span>01 ENTRY</span></div>
+        <div class="entry"><span class="num">018</span><img src="../src/assets/avatars/mcjin.jpg"><span class="who"><b>欧阳靖</b><small>MCJIN · 香港</small></span><span class="cnt"><b>12</b> 关联</span></div>
+      </div>
+      <div class="prov">
+        <div class="prov-h"><span class="idx">07</span><h3>其他地区</h3><span>06 ENTRIES</span></div>
+        <div class="entry"><span class="num">019</span><img src="../src/assets/avatars/pact.jpg"><span class="who"><b>派克特</b><small>西安</small></span><span class="cnt"><b>15</b> 关联</span></div>
+        <div class="entry"><span class="num">020</span><img src="../src/assets/avatars/asen.jpg"><span class="who"><b>艾志恒Asen</b><small>湖北</small></span><span class="cnt"><b>09</b> 关联</span></div>
+        <div class="entry"><span class="num">021</span><img src="../src/assets/avatars/elfin.jpg"><span class="who"><b>小精灵</b><small>浙江</small></span><span class="cnt"><b>09</b> 关联</span></div>
+        <div class="entry"><span class="num">022</span><img src="../src/assets/avatars/wangqiming.jpg"><span class="who"><b>王齐铭</b><small>重庆</small></span><span class="cnt"><b>07</b> 关联</span></div>
+        <div class="entry"><span class="num">023</span><img src="../src/assets/avatars/nineone.jpg"><span class="who"><b>NINEONE</b><small>陕西</small></span><span class="cnt"><b>04</b> 关联</span></div>
+        <div class="entry"><span class="num">024</span><img src="../src/assets/avatars/lexie.jpg"><span class="who"><b>刘柏辛Lexie</b><small>湖南</small></span><span class="cnt"><b>02</b> 关联</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="colophon"><span>© NAHFI RAP NETWORK — 非商业档案项目</span><span>ROSTER / PROVINCE INDEX · 2026</span></div>
+</div>
+</section>
+
+<script>
+document.querySelectorAll('.nav button').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.nav button').forEach(function(x){x.classList.remove('on')});
+    document.querySelectorAll('.stage').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    document.getElementById(b.dataset.go).classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

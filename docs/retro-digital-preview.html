@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NAHFI · RETRO DIGITAL / VISUAL DIRECTION</title>
+<style>
+:root{
+  --bg:#08090a; --bg2:#0b0d0f; --panel:#0e1113; --panel2:#121619;
+  --line:#252b2f; --line2:#343b40;
+  --ink:#e9ece8; --dim:#798186; --dim2:#4d555a;
+  --orange:#ff4d00; --orange2:#d93c08;
+  --acid:#c2ff32; --blue:#3d7bff; --cyan:#38dfff; --red:#ff2d46;
+  --mono:"Consolas","SFMono-Regular","Menlo","Courier New",monospace;
+  --disp:"Bahnschrift SemiCondensed","Bahnschrift Condensed","Arial Narrow",Impact,sans-serif;
+  --zh:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#050607;color:var(--ink);font-family:var(--mono);overflow-x:hidden}
+body{padding:26px 0 60px}
+.topbar{width:1400px;margin:0 auto 18px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--line2);padding-bottom:10px}
+.topbar h1{font:700 22px/1 var(--disp);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.topbar h1 b{color:var(--orange)}
+.topbar .sub{font-size:10px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+.tabs{width:1400px;margin:0 auto 18px;display:flex;gap:6px}
+.tabs button{background:transparent;border:1px solid var(--line2);color:var(--dim);font:11px/1 var(--mono);letter-spacing:.14em;padding:10px 14px;cursor:pointer;text-transform:uppercase;transition:background .12s steps(2),color .12s steps(2),border-color .12s}
+.tabs button:hover{color:var(--ink);border-color:var(--dim)}
+.tabs button.on{background:var(--orange);border-color:var(--orange);color:#0a0a0a;font-weight:700}
+.sheet{width:1400px;height:900px;margin:0 auto;position:relative;overflow:hidden;background:var(--bg);border:1px solid var(--line2);display:none}
+.sheet.on{display:block;animation:boot .28s steps(4)}
+@keyframes boot{0%{clip-path:inset(0 0 98% 0);filter:brightness(3)}40%{clip-path:inset(0 0 0 0);filter:brightness(2)}100%{filter:none}}
+
+/* ===== procedural texture layers ===== */
+.noise{position:absolute;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:90;opacity:.14;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:noiseShift .28s steps(3) infinite}
+@keyframes noiseShift{0%{transform:translate(0,0)}33%{transform:translate(-1.5%,1%)}66%{transform:translate(1%,-1.5%)}100%{transform:translate(0,0)}}
+.scan{position:absolute;inset:0;pointer-events:none;z-index:91;background:repeating-linear-gradient(0deg,rgba(0,0,0,.5) 0px,rgba(0,0,0,.5) 1px,transparent 1px,transparent 3px);opacity:.38}
+.vig{position:absolute;inset:0;pointer-events:none;z-index:89;background:radial-gradient(ellipse at 50% 45%,transparent 38%,rgba(0,0,0,.62) 100%)}
+.dither{position:absolute;inset:0;pointer-events:none;z-index:5;opacity:.16;background-image:radial-gradient(circle,#fff .55px,transparent .65px);background-size:3px 3px}
+.hgrid{position:absolute;inset:0;pointer-events:none;z-index:1;background-image:linear-gradient(rgba(120,140,150,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(120,140,150,.09) 1px,transparent 1px);background-size:64px 64px}
+
+/* ===== shared type / atoms ===== */
+.mono{font-family:var(--mono)}
+.tiny{font-size:9px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.tiny-b{font-size:10px;letter-spacing:.16em;color:var(--ink);text-transform:uppercase}
+.orange{color:var(--orange)}.acid{color:var(--acid)}.blue{color:var(--blue)}.cyan{color:var(--cyan)}
+.rgb{text-shadow:-3px 0 0 rgba(255,45,70,.78),3px 0 0 rgba(56,223,255,.72)}
+.rgb-s{text-shadow:-1.5px 0 0 rgba(255,45,70,.8),1.5px 0 0 rgba(56,223,255,.8)}
+.disp{font-family:var(--disp);font-weight:700;text-transform:uppercase;letter-spacing:-.035em}
+.corner{position:absolute;width:12px;height:12px;border-color:var(--orange);z-index:96;pointer-events:none}
+.corner.tl{top:10px;left:10px;border-top:1px solid;border-left:1px solid}
+.corner.tr{top:10px;right:10px;border-top:1px solid;border-right:1px solid}
+.corner.bl{bottom:10px;left:10px;border-bottom:1px solid;border-left:1px solid}
+.corner.br{bottom:10px;right:10px;border-bottom:1px solid;border-right:1px solid}
+.cross{position:absolute;width:9px;height:9px;z-index:8;pointer-events:none}
+.cross:before,.cross:after{content:"";position:absolute;background:var(--dim2)}
+.cross:before{width:9px;height:1px;top:4px}.cross:after{height:9px;width:1px;left:4px}
+.pixelblock{position:absolute;background:var(--orange);opacity:.7;z-index:7}
+.barcode{height:15px;background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 3px,var(--ink) 3px 4px,transparent 4px 7px,var(--ink) 7px 9px,transparent 9px 12px);opacity:.45}
+
+/* ============ 01 · NETWORK ============ */
+#s-network .head{position:absolute;left:42px;top:36px;z-index:20}
+#s-network .head .kicker{font-size:9px;letter-spacing:.42em;color:var(--orange);margin-bottom:9px}
+#s-network .head .title{font:700 45px/.92 var(--disp);letter-spacing:-.04em;text-transform:uppercase}
+#s-network .head .title span{color:var(--dim2)}
+#s-network .head .rule{width:330px;height:1px;background:var(--line2);margin-top:13px}
+#s-network .head .meta{display:flex;gap:22px;margin-top:9px;font-size:9px;letter-spacing:.16em;color:var(--dim)}
+.giant{position:absolute;left:24px;top:210px;z-index:2;font:700 172px/.76 var(--disp);letter-spacing:-.075em;color:transparent;-webkit-text-stroke:1px rgba(190,205,210,.17);text-transform:uppercase;pointer-events:none}
+.giant.solid{color:rgba(190,205,210,.055);-webkit-text-stroke:0}
+.wall{position:absolute;inset:0;z-index:6}
+.node{position:absolute;width:78px;transform:translate(-50%,-50%);z-index:12;cursor:crosshair}
+.node .frame{position:relative;width:66px;height:66px;margin:0 auto;border:1px solid var(--line2);background:#0b0d0f}
+.node img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:pixelated;filter:grayscale(1) contrast(1.55) brightness(.85);transition:transform .12s steps(2),filter .12s steps(2)}
+.node .lab{margin-top:6px;text-align:center;font-size:9px;letter-spacing:.06em;color:var(--dim);white-space:nowrap;text-transform:uppercase}
+.node .no{position:absolute;top:-9px;left:-8px;font-size:8px;color:var(--orange);background:var(--bg);padding:1px 3px;border:1px solid var(--orange2);z-index:3}
+.node:hover img{transform:translate(3px,-2px);filter:grayscale(.2) contrast(1.7) brightness(1.05)}
+.node:hover .frame{box-shadow:-3px 0 0 rgba(255,45,70,.5),3px 0 0 rgba(56,223,255,.5)}
+.node.sel .frame{border:2px solid var(--acid);box-shadow:-4px 0 0 rgba(255,45,70,.65),4px 0 0 rgba(56,223,255,.65)}
+.node.sel img{filter:grayscale(.15) contrast(1.8) brightness(1.05)}
+.node.sel .lab{color:var(--ink);font-weight:700}
+.node.sel .no{color:#0a0a0a;background:var(--acid);border-color:var(--acid)}
+.threads{position:absolute;inset:0;width:100%;height:100%;z-index:9;pointer-events:none}
+.focus{position:absolute;right:46px;top:150px;width:306px;z-index:30;background:rgba(9,11,12,.93);border:1px solid var(--line2);border-top:2px solid var(--orange)}
+.focus .fh{padding:12px 14px 11px;border-bottom:1px solid var(--line)}
+.focus .fh .tag{font-size:8px;letter-spacing:.32em;color:var(--orange)}
+.focus .fh h2{font:700 44px/.95 var(--disp);letter-spacing:-.03em;margin-top:6px;text-transform:uppercase}
+.focus .fh h2 small{font:700 17px/1 var(--zh);letter-spacing:.02em;color:var(--dim);margin-left:8px}
+.focus .body{padding:14px}
+.focus .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.focus .stat{background:#0b0e10;padding:11px 8px}
+.focus .stat b{display:block;font:700 27px/1 var(--disp);letter-spacing:-.03em;color:var(--ink)}
+.focus .stat span{display:block;font-size:8px;letter-spacing:.14em;color:var(--dim);margin-top:6px}
+.focus h3{font-size:9px;letter-spacing:.26em;color:var(--orange);margin:16px 0 8px;text-transform:uppercase}
+.focus .rel{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:7px 0;font-size:10px;color:var(--ink)}
+.focus .rel i{font-style:normal;color:var(--orange);font-size:9px;width:16px}
+.focus .rel em{margin-left:auto;font-style:normal;color:var(--dim2);font-size:9px}
+.focus .src{margin-top:14px;border-left:2px solid var(--acid);padding:6px 0 6px 10px;background:rgba(194,255,50,.035)}
+.focus .src b{display:block;font-size:9px;letter-spacing:.1em;color:var(--acid)}
+.focus .src span{display:block;font-size:9px;color:var(--dim);margin-top:4px;line-height:1.5;word-break:break-all}
+.ticker{position:absolute;left:0;right:0;bottom:0;height:38px;border-top:1px solid var(--line2);background:rgba(8,9,10,.92);z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0 42px;font-size:9px;letter-spacing:.18em;color:var(--dim)}
+.ticker b{color:var(--orange);font-weight:400}
+.ticker .live{display:inline-flex;align-items:center;gap:7px;color:var(--acid)}
+.ticker .live:before{content:"";width:6px;height:6px;background:var(--acid);display:block;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:.15}}
+.legend{position:absolute;left:42px;bottom:62px;z-index:25;display:flex;gap:20px;font-size:9px;letter-spacing:.12em;color:var(--dim)}
+.legend i{display:inline-block;width:26px;height:1px;background:var(--orange);vertical-align:middle;margin-right:7px}
+.legend i.dash{background:repeating-linear-gradient(90deg,var(--orange) 0 5px,transparent 5px 9px)}
+.legend i.dot{background:repeating-linear-gradient(90deg,var(--orange) 0 2px,transparent 2px 6px)}
+.legend i.blue{background:var(--blue)}
+.vtext{position:absolute;right:16px;top:400px;z-index:5;writing-mode:vertical-rl;font:9px/1 var(--mono);letter-spacing:.42em;color:var(--dim2);text-transform:uppercase}
+
+/* ============ 02 · SUBJECT ============ */
+#s-subject .idxmark{position:absolute;left:40px;top:34px;font-size:9px;letter-spacing:.38em;color:var(--orange)}
+#s-subject .big{position:absolute;left:38px;top:66px;z-index:20}
+#s-subject .big h2{font:700 168px/.78 var(--disp);letter-spacing:-.075em;text-transform:uppercase}
+#s-subject .big h2 span{color:var(--orange)}
+#s-subject .big .cn{font:700 24px/1 var(--zh);letter-spacing:.28em;margin-top:15px;color:var(--ink)}
+#s-subject .big .rule{width:500px;height:1px;background:var(--line2);margin-top:16px}
+#s-subject .big .line{font-size:10px;letter-spacing:.18em;color:var(--dim);margin-top:10px;max-width:490px;line-height:1.7}
+.portrait{position:absolute;left:56px;top:352px;width:336px;height:336px;z-index:20;border:1px solid var(--line2)}
+.portrait .pic{position:absolute;inset:0;overflow:hidden;background:#0b0d0f}
+.portrait img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;filter:grayscale(1) contrast(1.75) brightness(.8)}
+.portrait .ghost{position:absolute;inset:0;mix-blend-mode:screen;opacity:.42;background:repeating-linear-gradient(0deg,rgba(255,45,70,.12) 0 2px,transparent 2px 5px)}
+.portrait .pan{position:absolute;bottom:-1px;left:-1px;right:-1px;background:rgba(8,9,10,.9);border-top:1px solid var(--orange);padding:8px 12px;display:flex;justify-content:space-between;font-size:9px;letter-spacing:.17em;color:var(--dim)}
+.portrait .cnr{position:absolute;width:18px;height:18px;border-color:var(--acid)}
+.portrait .cnr.a{top:-1px;left:-1px;border-top:2px solid;border-left:2px solid}
+.portrait .cnr.b{bottom:-1px;right:-1px;border-bottom:2px solid;border-right:2px solid}
+#s-subject .readout{position:absolute;right:56px;top:66px;width:520px;z-index:20}
+#s-subject .readout .row{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line2);background:var(--panel)}
+#s-subject .readout .cell{padding:16px 14px;border-right:1px solid var(--line)}
+#s-subject .readout .cell:last-child{border:0}
+#s-subject .readout .cell b{font:700 52px/.9 var(--disp);letter-spacing:-.04em;display:block}
+#s-subject .readout .cell b i{font-style:normal;font-size:18px;color:var(--orange)}
+#s-subject .readout .cell span{display:block;font-size:8px;letter-spacing:.2em;color:var(--dim);margin-top:9px}
+#s-subject .sect{margin-top:22px}
+#s-subject .sect>h3{font-size:9px;letter-spacing:.3em;color:var(--orange);border-bottom:1px solid var(--line2);padding-bottom:8px;text-transform:uppercase;display:flex;justify-content:space-between}
+#s-subject .sect>h3 small{color:var(--dim2);letter-spacing:.12em}
+.chart{height:92px;display:flex;align-items:flex-end;gap:8px;padding-top:12px;border-bottom:1px solid var(--line)}
+.chart .col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}
+.chart .col .v{width:100%;background:#252d31;position:relative;image-rendering:pixelated}
+.chart .col .v:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 2px,transparent 2px 4px)}
+.chart .col.hot .v{background:var(--orange)}
+.chart .col small{font-size:8px;color:var(--dim2)}
+.chart .col.hot small{color:var(--orange)}
+.rellist{margin-top:5px}
+.rellist .r{display:flex;align-items:center;gap:10px;padding:7px 2px;border-bottom:1px solid var(--line);font-size:10px;color:var(--ink)}
+.rellist .r .ix{color:var(--orange);font-size:9px;width:20px}
+.rellist .r .who{width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rellist .r .what{color:var(--dim);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rellist .r .yr{color:var(--dim2);font-size:9px}
+#s-subject .footnote{position:absolute;left:56px;bottom:62px;width:336px;border-left:2px solid var(--acid);background:rgba(194,255,50,.035);padding:9px 12px;z-index:20}
+#s-subject .footnote b{display:block;font-size:9px;letter-spacing:.16em;color:var(--acid)}
+#s-subject .footnote span{display:block;font-size:9px;line-height:1.6;color:var(--dim);margin-top:5px;word-break:break-all}
+
+/* ============ 03 · SIGNAL ARCHIVE ============ */
+#s-archive .ahead{position:absolute;left:42px;top:36px;z-index:20;display:flex;align-items:flex-end;gap:20px}
+#s-archive .ahead h2{font:700 78px/.85 var(--disp);letter-spacing:-.05em;text-transform:uppercase}
+#s-archive .ahead .k{font-size:9px;letter-spacing:.3em;color:var(--orange);margin-bottom:10px}
+#s-archive .ahead .n{font:700 18px/1 var(--disp);color:var(--dim);letter-spacing:.04em;margin-bottom:11px}
+.genart{position:absolute;right:48px;top:34px;width:280px;height:150px;z-index:20;border:1px solid var(--line2);overflow:hidden;background:#080a0b}
+.genart .g1{position:absolute;inset:0;background:conic-gradient(from 210deg at 45% 50%,#0b0d0f 0deg,#ff4d00 38deg,#0b0d0f 72deg,#3d7bff 140deg,#0b0d0f 190deg,#c2ff32 250deg,#0b0d0f 300deg);filter:contrast(180%) saturate(70%) blur(1px);opacity:.55}
+.genart .g2{position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 3px,rgba(0,0,0,.8) 3px 5px);mix-blend-mode:multiply}
+.genart .g3{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.55) 0 1px,transparent 1px 3px)}
+.genart .gl{position:absolute;left:8px;bottom:7px;font-size:8px;letter-spacing:.2em;color:var(--ink);z-index:4}
+#s-archive .cols{position:absolute;left:42px;right:48px;top:212px;bottom:64px;z-index:20}
+#s-archive .colhead{display:grid;grid-template-columns:78px minmax(200px,1.2fr) minmax(160px,1fr) 250px 86px;gap:12px;padding:8px 10px;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);font-size:8px;letter-spacing:.24em;color:var(--dim2)}
+.wrow{display:grid;grid-template-columns:78px minmax(200px,1.2fr) minmax(160px,1fr) 250px 86px;gap:12px;align-items:center;padding:10px;border-bottom:1px solid var(--line);min-height:56px;position:relative;transition:background .12s steps(2),transform .12s steps(2)}
+.wrow:hover{background:rgba(255,77,0,.07)}
+.wrow.sel{background:rgba(255,77,0,.12)}
+.wrow.sel:before{content:"";position:absolute;left:-42px;top:0;bottom:0;width:3px;background:var(--orange)}
+.wrow .yr{font:700 21px/1 var(--disp);color:var(--dim2)}
+.wrow.sel .yr{color:var(--orange)}
+.wrow .tt{font:700 20px/1 var(--disp);letter-spacing:-.01em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrow .tt small{font:400 12px/1 var(--zh);color:var(--dim);margin-left:8px;letter-spacing:0}
+.wrow .who{font-size:9px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.04em}
+.wave{height:26px;display:flex;align-items:center;gap:2px}
+.wave i{display:block;width:3px;background:#394247;height:var(--h)}
+.wrow.sel .wave i{background:var(--orange)}
+.wave i:nth-child(3n){background:var(--dim2)}
+.wrow.sel .wave i:nth-child(3n){background:var(--red)}
+.tag{font-size:8px;letter-spacing:.14em;padding:3px 5px;border:1px solid var(--line2);color:var(--dim);display:inline-block}
+.tag.live{border-color:var(--orange2);color:var(--orange)}
+.tag.stu{border-color:var(--line2)}
+#s-archive .abottom{position:absolute;left:42px;right:48px;bottom:20px;z-index:20;display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:.18em;color:var(--dim)}
+.abar{width:180px;height:8px;background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 3px,var(--ink) 3px 5px,transparent 5px 9px);opacity:.4}
+
+/* ============ 04 · INDEX ============ */
+#s-index .ihead{position:absolute;left:42px;top:32px;z-index:20}
+#s-index .ihead h2{font:700 88px/.82 var(--disp);letter-spacing:-.055em;text-transform:uppercase}
+#s-index .ihead .s{font-size:9px;letter-spacing:.32em;color:var(--orange);margin-bottom:12px}
+#s-index .rails{position:absolute;left:42px;right:48px;top:206px;bottom:60px;z-index:20;display:grid;grid-template-columns:270px 1fr;gap:34px}
+.provs{border-top:1px solid var(--line2)}
+.provs h3,.roster-wrap h3{font-size:9px;letter-spacing:.3em;color:var(--dim);padding:9px 0;border-bottom:1px solid var(--line2);text-transform:uppercase}
+.prov{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--line);font-size:11px;color:var(--dim);cursor:crosshair;transition:background .12s steps(2),color .12s steps(2)}
+.prov:hover,.prov.on{background:rgba(255,77,0,.1);color:var(--ink)}
+.prov .n{font:700 15px/1 var(--disp);color:var(--dim2);width:22px}
+.prov.on .n{color:var(--orange)}
+.prov .c{margin-left:auto;color:var(--dim2);font-size:10px}
+.prov.on .c{color:var(--orange)}
+.prov .fill{height:2px;background:var(--orange);opacity:.55}
+.roster-wrap{border-top:1px solid var(--line2)}
+.rtop{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line2);padding:9px 0}
+.rtop span{font-size:9px;letter-spacing:.2em;color:var(--dim)}
+.rtop b{color:var(--orange);font-weight:400}
+.rtable{margin-top:2px}
+.rr{display:grid;grid-template-columns:56px 42px minmax(140px,1fr) 120px 76px 100px;align-items:center;gap:10px;padding:6px 8px;border-bottom:1px solid var(--line);font-size:11px;position:relative;transition:background .12s steps(2),transform .1s steps(2)}
+.rr:hover{background:rgba(255,77,0,.1);transform:translateX(3px)}
+.rr:hover .name{text-shadow:-2px 0 0 rgba(255,45,70,.8),2px 0 0 rgba(56,223,255,.8)}
+.rr .ix{font-size:9px;color:var(--orange)}
+.rr img{width:34px;height:34px;object-fit:cover;image-rendering:pixelated;filter:grayscale(1) contrast(1.5) brightness(.85);border:1px solid var(--line2);display:block}
+.rr .name{font-family:var(--zh);font-weight:700;color:var(--ink);white-space:nowrap}
+.rr .en{font-size:9px;letter-spacing:.1em;color:var(--dim2)}
+.rr .loc{font-size:10px;color:var(--dim)}
+.rr .cnt{text-align:right;font:700 16px/1 var(--disp);color:var(--ink)}
+.rr.sel{background:rgba(194,255,50,.08)}
+.rr.sel .cnt{color:var(--acid)}
+#s-index .iside{position:absolute;right:48px;top:36px;width:220px;z-index:20;text-align:right}
+#s-index .iside .b{font:700 45px/.9 var(--disp);letter-spacing:-.03em}
+#s-index .iside .b.orange{color:var(--orange)}
+#s-index .iside p{font-size:9px;color:var(--dim);letter-spacing:.14em;line-height:1.8;margin-top:10px}
+#s-index .bot{position:absolute;left:42px;right:48px;bottom:20px;display:flex;justify-content:space-between;font-size:9px;letter-spacing:.18em;color:var(--dim2);z-index:20}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="sig-distort"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.28" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter>
+</svg>
+
+<div class="topbar">
+  <h1>NAHFI<b>//</b>RETRO DIGITAL <span style="color:var(--dim2);font-weight:400">· VISUAL DIRECTION</span></h1>
+  <div class="sub">4 SCREENS / PROCEDURAL NOISE / RGB SPLIT / NO SKEUOMORPHISM</div>
+</div>
+<div class="tabs">
+  <button class="on" data-go="s-network">01 / NETWORK</button>
+  <button data-go="s-subject">02 / SUBJECT</button>
+  <button data-go="s-archive">03 / SIGNAL ARCHIVE</button>
+  <button data-go="s-index">04 / INDEX</button>
+</div>
+
+<!-- ============ 01 NETWORK ============ -->
+<section class="sheet on" id="s-network">
+  <div class="hgrid"></div><div class="dither"></div>
+  <div class="giant">NET<br>WORK</div>
+  <div class="giant solid" style="left:150px;top:236px;opacity:.6">327 / 526</div>
+  <div class="head">
+    <div class="kicker">SYS.01 — RELATION FIELD</div>
+    <div class="title rgb">RELATION<br><span>FIELD</span> / 526</div>
+    <div class="rule"></div>
+    <div class="meta"><span>SUBJECTS 327</span><span>LINKS 526</span><span>WORKS 337</span><span class="acid">● LIVE</span></div>
+  </div>
+
+  <svg class="threads" viewBox="0 0 1400 900" preserveAspectRatio="none">
+    <g fill="none" stroke="#ff4d00">
+      <path d="M640 476 L900 262" stroke-width="1.5" opacity=".95"/>
+      <path d="M640 476 L1084 432" stroke-width="1.5" opacity=".95"/>
+      <path d="M640 476 L958 676" stroke-width="1.5" opacity=".95"/>
+      <path d="M640 476 L326 292" stroke-width="1.5" opacity=".95"/>
+      <path d="M640 476 L306 620" stroke-width="1.5" opacity=".95"/>
+      <path d="M640 476 L690 196" stroke-width="1.5" opacity=".95"/>
+    </g>
+    <g fill="none" stroke="#38dfff" opacity=".34">
+      <path d="M900 262 L1084 432" stroke-width="1" stroke-dasharray="3 7"/>
+      <path d="M306 620 L326 292" stroke-width="1" stroke-dasharray="2 6"/>
+      <path d="M958 676 L1084 432" stroke-width="1" stroke-dasharray="2 6"/>
+    </g>
+    <g fill="#ff4d00">
+      <rect x="762" y="369" width="4" height="4"/><rect x="470" y="601" width="4" height="4"/>
+      <rect x="863" y="537" width="4" height="4" fill="#38dfff"/>
+    </g>
+  </svg>
+
+  <div class="wall">
+    <div class="node sel" style="left:640px;top:476px"><div class="no">002 / SEL</div><div class="frame"><img src="../src/assets/avatars/air.jpg" alt=""></div><div class="lab">艾热 / AIR</div></div>
+    <div class="node" style="left:900px;top:262px"><div class="no">031</div><div class="frame"><img src="../src/assets/avatars/keyng.jpg" alt=""></div><div class="lab">杨和苏KeyNG</div></div>
+    <div class="node" style="left:1084px;top:432px"><div class="no">014</div><div class="frame"><img src="../src/assets/avatars/gali.jpg" alt=""></div><div class="lab">GALI</div></div>
+    <div class="node" style="left:958px;top:676px"><div class="no">011</div><div class="frame"><img src="../src/assets/avatars/hotdog.jpg" alt=""></div><div class="lab">MC HotDog</div></div>
+    <div class="node" style="left:326px;top:292px"><div class="no">013</div><div class="frame"><img src="../src/assets/avatars/tizzyt.jpg" alt=""></div><div class="lab">Tizzy T</div></div>
+    <div class="node" style="left:306px;top:620px"><div class="no">004</div><div class="frame"><img src="../src/assets/avatars/vava.jpg" alt=""></div><div class="lab">VaVa</div></div>
+    <div class="node" style="left:690px;top:196px"><div class="no">012</div><div class="frame"><img src="../src/assets/avatars/vinida.jpg" alt=""></div><div class="lab">万妮达</div></div>
+    <div class="node" style="left:1184px;top:712px"><div class="no">018</div><div class="frame"><img src="../src/assets/avatars/mcjin.jpg" alt=""></div><div class="lab">欧阳靖</div></div>
+    <div class="node" style="left:164px;top:410px"><div class="no">021</div><div class="frame"><img src="../src/assets/avatars/psyp.jpg" alt=""></div><div class="lab">Psy.P</div></div>
+  </div>
+
+  <div class="cross" style="left:640px;top:476px;transform:translate(-50%,-50%);z-index:14"></div>
+  <div class="cross" style="left:900px;top:262px"></div>
+  <div class="cross" style="left:306px;top:620px"></div>
+
+  <div class="focus">
+    <div class="fh"><div class="tag">SELECTED SUBJECT / 002</div><h2 class="rgb-s">AIR <small>艾热</small></h2></div>
+    <div class="body">
+      <div class="stats"><div class="stat"><b>49</b><span>LINKS</span></div><div class="stat"><b>16</b><span>WORKS</span></div><div class="stat"><b>01</b><span>SOURCE</span></div></div>
+      <h3>ACTIVE THREADS / 一代 · 2022</h3>
+      <div class="rel"><i>01</i><span>杨和苏KeyNG</span><em>COLLAB</em></div>
+      <div class="rel"><i>02</i><span>GALI</span><em>COLLAB</em></div>
+      <div class="rel"><i>03</i><span>MC HotDog</span><em>COLLAB</em></div>
+      <div class="rel"><i>04</i><span>Tizzy T / VaVa / 万妮达</span><em>COLLAB</em></div>
+      <div class="src"><b>SOURCE VERIFIED</b><span>Apple Music：艺人目录 · 平台 ID 1233590583</span></div>
+    </div>
+  </div>
+  <div class="legend"><span><i></i>COLLAB 418</span><span><i class="dash"></i>MEMBER 88</span><span><i class="dot"></i>AFFIL 19</span><span><i class="blue"></i>PRODUCTION 01</span></div>
+  <div class="vtext">D1 / RELATION GRAPH / RENDER 07.14 / RGB CHANNELS ACTIVE</div>
+  <div class="pixelblock" style="left:1180px;top:106px;width:5px;height:5px"></div>
+  <div class="pixelblock" style="left:1196px;top:106px;width:5px;height:5px;background:var(--cyan)"></div>
+  <div class="ticker"><span>SYS <b>/</b> GRAPH_ENGINE <b>/</b> 327 NODES <b>/</b> 526 EDGES <b>/</b> 337 SIGNALS</span><span class="live">SIGNAL STABLE</span></div>
+  <div class="scan"></div><div class="noise"></div><div class="vig"></div>
+  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+</section>
+
+<!-- ============ 02 SUBJECT ============ -->
+<section class="sheet" id="s-subject">
+  <div class="hgrid"></div><div class="dither"></div>
+  <div class="giant solid" style="left:0;top:120px;font-size:150px;opacity:.5">SUBJECT</div>
+  <div class="idxmark">SYS.02 — SUBJECT READOUT / ID 002 / KASHGAR</div>
+  <div class="big">
+    <h2 class="rgb">AIR<span>_</span></h2>
+    <div class="cn">艾 热 · 新 疆 喀 什</div>
+    <div class="rule"></div>
+    <div class="line">来自新疆喀什的说唱音乐人。收录与王以太的录音室及现场合作，以及与 GAI 的《永不独行》。</div>
+  </div>
+  <div class="portrait">
+    <div class="pic"><img src="../src/assets/avatars/air.jpg" alt=""><div class="ghost"></div></div>
+    <div class="cnr a"></div><div class="cnr b"></div>
+    <div class="pan"><span>IMG_002 / GRAYSCALE · DITHER 04</span><span class="acid">● VERIFIED</span></div>
+  </div>
+  <div class="footnote"><b>SOURCE / 01</b><span>Apple Music 艺人目录 · music.apple.com/tw/artist/1233590583 — 以平台艺人 ID 校对身份；目录收录不代表与其他艺人同属厂牌。</span></div>
+
+  <div class="readout">
+    <div class="row"><div class="cell"><b>49<i>↗</i></b><span>RELATIONS</span></div><div class="cell"><b>16</b><span>WORKS</span></div><div class="cell"><b>01</b><span>SOURCE</span></div></div>
+    <div class="sect"><h3>WORK DENSITY / BY YEAR <small>2018 — 2026</small></h3>
+      <div class="chart">
+        <div class="col"><div class="v" style="height:50%"></div><small>18</small></div>
+        <div class="col"><div class="v" style="height:34%"></div><small>19</small></div>
+        <div class="col"><div class="v" style="height:50%"></div><small>20</small></div>
+        <div class="col"><div class="v" style="height:50%"></div><small>21</small></div>
+        <div class="col hot"><div class="v" style="height:100%"></div><small>22</small></div>
+        <div class="col"><div class="v" style="height:16%"></div><small>23</small></div>
+        <div class="col"><div class="v" style="height:34%"></div><small>24</small></div>
+        <div class="col"><div class="v" style="height:17%"></div><small>25</small></div>
+        <div class="col"><div class="v" style="height:17%"></div><small>26</small></div>
+      </div>
+    </div>
+    <div class="sect"><h3>RELATION LOG / SAMPLE <small>6 OF 49</small></h3>
+      <div class="rellist">
+        <div class="r"><span class="ix">01</span><span class="who">杨和苏KeyNG</span><span class="what">《一代》· 现场版</span><span class="yr">2022</span></div>
+        <div class="r"><span class="ix">02</span><span class="who">GALI</span><span class="what">《一代》· 现场版</span><span class="yr">2022</span></div>
+        <div class="r"><span class="ix">03</span><span class="who">万妮达</span><span class="what">《一代》· 现场版</span><span class="yr">2022</span></div>
+        <div class="r"><span class="ix">04</span><span class="who">Tizzy T</span><span class="what">《一代》· 现场版</span><span class="yr">2022</span></div>
+        <div class="r"><span class="ix">05</span><span class="who">MC HotDog</span><span class="what">《一代》· 现场版</span><span class="yr">2022</span></div>
+        <div class="r"><span class="ix">06</span><span class="who">王以太</span><span class="what">《Where to go》· 发行版</span><span class="yr">2024</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="ticker"><span>SUBJECT <b>/</b> 002 <b>/</b> 艾热 <b>/</b> KASHGAR <b>/</b> 49 LINKS <b>/</b> 16 WORKS</span><span class="live">DATA VERIFIED</span></div>
+  <div class="scan"></div><div class="noise"></div><div class="vig"></div>
+  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+</section>
+
+<!-- ============ 03 SIGNAL ARCHIVE ============ -->
+<section class="sheet" id="s-archive">
+  <div class="hgrid"></div><div class="dither"></div>
+  <div class="giant solid" style="left:40px;top:270px;font-size:130px;opacity:.35">SIGNAL</div>
+  <div class="ahead"><div><div class="k">SYS.03 — WORKS DATABASE</div><h2 class="rgb">SIGNAL<br>ARCHIVE</h2></div><div class="n">337 RECORDS / SORTED BY YEAR</div></div>
+  <div class="genart"><div class="g1"></div><div class="g2"></div><div class="g3"></div><div class="gl">GEN / 0x3F2A · PROCEDURAL</div></div>
+  <div class="cols">
+    <div class="colhead"><span>YEAR</span><span>TITLE / 作品</span><span>PARTICIPANTS / 参与者</span><span>WAVEFORM / 信号</span><span>VERSION</span></div>
+    <div class="wrow sel"><span class="yr">2022</span><span class="tt">一代 <small>现场版</small></span><span class="who">盛宇 · 杨和苏KeyNG · GAI · 万妮达 · VaVa · 王以太 · 刘聪 · Capper · 早安 · Tizzy T · MC HotDog · Bridge · GALI · 功夫胖 · 艾热</span><span class="wave"><i style="--h:38%"></i><i style="--h:72%"></i><i style="--h:100%"></i><i style="--h:55%"></i><i style="--h:84%"></i><i style="--h:42%"></i><i style="--h:93%"></i><i style="--h:61%"></i><i style="--h:35%"></i><i style="--h:78%"></i><i style="--h:48%"></i><i style="--h:90%"></i><i style="--h:57%"></i><i style="--h:73%"></i><i style="--h:31%"></i><i style="--h:66%"></i><i style="--h:44%"></i><i style="--h:82%"></i><i style="--h:52%"></i><i style="--h:69%"></i><i style="--h:29%"></i><i style="--h:59%"></i></span><span><span class="tag live">LIVE</span></span></div>
+    <div class="wrow"><span class="yr">2020</span><span class="tt">Lose Control <small>feat. KnowKnow</small></span><span class="who">Psy.P · KnowKnow</span><span class="wave"><i style="--h:24%"></i><i style="--h:60%"></i><i style="--h:88%"></i><i style="--h:46%"></i><i style="--h:71%"></i><i style="--h:33%"></i><i style="--h:95%"></i><i style="--h:52%"></i><i style="--h:40%"></i><i style="--h:77%"></i><i style="--h:28%"></i><i style="--h:64%"></i><i style="--h:49%"></i><i style="--h:86%"></i><i style="--h:36%"></i><i style="--h:58%"></i><i style="--h:22%"></i><i style="--h:68%"></i><i style="--h:44%"></i><i style="--h:80%"></i><i style="--h:30%"></i><i style="--h:55%"></i></span><span><span class="tag stu">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2022</span><span class="tt">不得不撒</span><span class="who">VaVa · 万妮达</span><span class="wave"><i style="--h:44%"></i><i style="--h:81%"></i><i style="--h:36%"></i><i style="--h:93%"></i><i style="--h:58%"></i><i style="--h:70%"></i><i style="--h:27%"></i><i style="--h:88%"></i><i style="--h:50%"></i><i style="--h:64%"></i><i style="--h:39%"></i><i style="--h:97%"></i><i style="--h:55%"></i><i style="--h:73%"></i><i style="--h:31%"></i><i style="--h:84%"></i><i style="--h:46%"></i><i style="--h:62%"></i><i style="--h:25%"></i><i style="--h:78%"></i><i style="--h:42%"></i><i style="--h:66%"></i></span><span><span class="tag stu">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2022</span><span class="tt">狂戀</span><span class="who">GALI · 万妮达</span><span class="wave"><i style="--h:62%"></i><i style="--h:29%"></i><i style="--h:84%"></i><i style="--h:47%"></i><i style="--h:99%"></i><i style="--h:38%"></i><i style="--h:72%"></i><i style="--h:51%"></i><i style="--h:33%"></i><i style="--h:90%"></i><i style="--h:57%"></i><i style="--h:75%"></i><i style="--h:26%"></i><i style="--h:68%"></i><i style="--h:43%"></i><i style="--h:86%"></i><i style="--h:35%"></i><i style="--h:60%"></i><i style="--h:48%"></i><i style="--h:94%"></i><i style="--h:31%"></i><i style="--h:53%"></i></span><span><span class="tag stu">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2023</span><span class="tt">冷戰</span><span class="who">Tizzy T · 万妮达</span><span class="wave"><i style="--h:35%"></i><i style="--h:74%"></i><i style="--h:52%"></i><i style="--h:91%"></i><i style="--h:41%"></i><i style="--h:66%"></i><i style="--h:28%"></i><i style="--h:83%"></i><i style="--h:59%"></i><i style="--h:45%"></i><i style="--h:96%"></i><i style="--h:37%"></i><i style="--h:71%"></i><i style="--h:54%"></i><i style="--h:30%"></i><i style="--h:79%"></i><i style="--h:49%"></i><i style="--h:88%"></i><i style="--h:33%"></i><i style="--h:63%"></i><i style="--h:27%"></i><i style="--h:56%"></i></span><span><span class="tag stu">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2019</span><span class="tt">永不独行</span><span class="who">GAI · 艾热</span><span class="wave"><i style="--h:48%"></i><i style="--h:86%"></i><i style="--h:32%"></i><i style="--h:69%"></i><i style="--h:95%"></i><i style="--h:44%"></i><i style="--h:77%"></i><i style="--h:55%"></i><i style="--h:26%"></i><i style="--h:82%"></i><i style="--h:61%"></i><i style="--h:39%"></i><i style="--h:90%"></i><i style="--h:50%"></i><i style="--h:73%"></i><i style="--h:34%"></i><i style="--h:65%"></i><i style="--h:42%"></i><i style="--h:98%"></i><i style="--h:57%"></i><i style="--h:29%"></i><i style="--h:70%"></i></span><span><span class="tag stu">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2021</span><span class="tt">别怕变老</span><span class="who">王以太 · 艾热</span><span class="wave"><i style="--h:57%"></i><i style="--h:33%"></i><i style="--h:79%"></i><i style="--h:46%"></i><i style="--h:62%"></i><i style="--h:92%"></i><i style="--h:38%"></i><i style="--h:71%"></i><i style="--h:25%"></i><i style="--h:85%"></i><i style="--h:53%"></i><i style="--h:67%"></i><i style="--h:31%"></i><i style="--h:96%"></i><i style="--h:49%"></i><i style="--h:74%"></i><i style="--h:36%"></i><i style="--h:81%"></i><i style="--h:44%"></i><i style="--h:59%"></i><i style="--h:28%"></i><i style="--h:66%"></i></span><span><span class="tag stu">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2025</span><span class="tt">龍Loong <small>Live</small></span><span class="who">GAI · Bridge · VaVa · 盛宇 · 欧阳靖 · 早安 · 艾热</span><span class="wave"><i style="--h:41%"></i><i style="--h:78%"></i><i style="--h:55%"></i><i style="--h:94%"></i><i style="--h:36%"></i><i style="--h:68%"></i><i style="--h:23%"></i><i style="--h:87%"></i><i style="--h:60%"></i><i style="--h:48%"></i><i style="--h:99%"></i><i style="--h:42%"></i><i style="--h:75%"></i><i style="--h:52%"></i><i style="--h:29%"></i><i style="--h:83%"></i><i style="--h:45%"></i><i style="--h:91%"></i><i style="--h:34%"></i><i style="--h:64%"></i><i style="--h:26%"></i><i style="--h:58%"></i></span><span><span class="tag live">LIVE</span></span></div>
+    <div class="wrow"><span class="yr">2022</span><span class="tt">人來瘋 <small>Live</small></span><span class="who">杨和苏KeyNG · 王以太 · 早安 · 艾热</span><span class="wave"><i style="--h:53%"></i><i style="--h:88%"></i><i style="--h:31%"></i><i style="--h:67%"></i><i style="--h:92%"></i><i style="--h:45%"></i><i style="--h:76%"></i><i style="--h:58%"></i><i style="--h:24%"></i><i style="--h:81%"></i><i style="--h:63%"></i><i style="--h:38%"></i><i style="--h:96%"></i><i style="--h:49%"></i><i style="--h:71%"></i><i style="--h:33%"></i><i style="--h:85%"></i><i style="--h:56%"></i><i style="--h:42%"></i><i style="--h:79%"></i><i style="--h:27%"></i><i style="--h:61%"></i></span><span><span class="tag live">LIVE</span></span></div>
+    <div class="wrow"><span class="yr">2024</span><span class="tt">Where to go</span><span class="who">王以太 · 艾热</span><span class="wave"><i style="--h:29%"></i><i style="--h:65%"></i><i style="--h:47%"></i><i style="--h:89%"></i><i style="--h:38%"></i><i style="--h:72%"></i><i style="--h:54%"></i><i style="--h:95%"></i><i style="--h:43%"></i><i style="--h:68%"></i><i style="--h:26%"></i><i style="--h:83%"></i><i style="--h:59%"></i><i style="--h:74%"></i><i style="--h:35%"></i><i style="--h:91%"></i><i style="--h:51%"></i><i style="--h:64%"></i><i style="--h:30%"></i><i style="--h:77%"></i><i style="--h:46%"></i><i style="--h:57%"></i></span><span><span class="tag stu">STUDIO</span></span></div>
+  </div>
+  <div class="abottom"><span>DATABASE / 337 RECORDS / DISPLAY 10 / SORT: YEAR DESC</span><div class="abar"></div><span class="acid">SIGNAL LOCKED</span></div>
+  <div class="ticker"><span>WORKS <b>/</b> 337 <b>/</b> 现场版 59 <b>/</b> 录音室版 6 <b>/</b> 发行版 272</span><span class="live">INDEX READY</span></div>
+  <div class="scan"></div><div class="noise"></div><div class="vig"></div>
+  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+</section>
+
+<!-- ============ 04 INDEX ============ -->
+<section class="sheet" id="s-index">
+  <div class="hgrid"></div><div class="dither"></div>
+  <div class="ihead"><div class="s">SYS.04 — SUBJECT INDEX / 327 ENTRIES</div><h2 class="rgb">SUBJECT<br>INDEX<span class="orange">_</span></h2></div>
+  <div class="iside"><div class="b orange">327</div><p>ACTIVE SUBJECTS<br>24 WITH PORTRAIT<br>99 UNLOCATED</p></div>
+  <div class="rails">
+    <div class="provs">
+      <h3>REGION / 分区</h3>
+      <div class="prov on"><span class="n">01</span><span>未标注</span><span class="c">99</span></div>
+      <div class="prov"><span class="n">02</span><span>中国台湾</span><span class="c">36</span></div>
+      <div class="prov"><span class="n">03</span><span>成都</span><span class="c">20</span></div>
+      <div class="prov"><span class="n">04</span><span>广东</span><span class="c">17</span></div>
+      <div class="prov"><span class="n">05</span><span>中国香港</span><span class="c">17</span></div>
+      <div class="prov"><span class="n">06</span><span>四川</span><span class="c">15</span></div>
+      <div class="prov"><span class="n">07</span><span>北京</span><span class="c">15</span></div>
+      <div class="prov"><span class="n">08</span><span>重庆</span><span class="c">11</span></div>
+      <div class="prov"><span class="n">09</span><span>西安</span><span class="c">10</span></div>
+      <div class="prov"><span class="n">10</span><span>新疆</span><span class="c">10</span></div>
+      <div class="prov"><span class="n">11</span><span>上海</span><span class="c">9</span></div>
+      <div class="prov"><span class="n">12</span><span>湖南</span><span class="c">7</span></div>
+      <div style="margin-top:14px;font-size:8px;letter-spacing:.18em;color:var(--dim2);line-height:1.8">FILTER BY REGION<br>DATA FIELD: province || city<br>NO INFERENCE APPLIED</div>
+    </div>
+    <div class="roster-wrap">
+      <h3>ROSTER / 名录</h3>
+      <div class="rtop"><span>DISPLAY 12 / 327</span><span><b>◆</b> SELECTED &nbsp; <b style="color:var(--acid)">◆</b> VERIFIED</span></div>
+      <div class="rtable">
+        <div class="rr sel"><span class="ix">002</span><img src="../src/assets/avatars/air.jpg" alt=""><span class="name">艾热</span><span class="en">AIR</span><span class="loc">新疆 · 喀什</span><span class="cnt">49</span></div>
+        <div class="rr"><span class="ix">031</span><img src="../src/assets/avatars/vava.jpg" alt=""><span class="name">VaVa</span><span class="en">VAVA</span><span class="loc">四川 · 成都</span><span class="cnt">36</span></div>
+        <div class="rr"><span class="ix">014</span><img src="../src/assets/avatars/keyng.jpg" alt=""><span class="name">杨和苏KeyNG</span><span class="en">KEYNG</span><span class="loc">四川 · 成都</span><span class="cnt">35</span></div>
+        <div class="rr"><span class="ix">011</span><img src="../src/assets/avatars/hotdog.jpg" alt=""><span class="name">MC HotDog</span><span class="en">HOTDOG</span><span class="loc">中国台湾</span><span class="cnt">34</span></div>
+        <div class="rr"><span class="ix">012</span><img src="../src/assets/avatars/vinida.jpg" alt=""><span class="name">万妮达</span><span class="en">VINIDA</span><span class="loc">福建 · 福州</span><span class="cnt">31</span></div>
+        <div class="rr"><span class="ix">013</span><img src="../src/assets/avatars/tizzyt.jpg" alt=""><span class="name">Tizzy T</span><span class="en">TIZZYT</span><span class="loc">广东</span><span class="cnt">28</span></div>
+        <div class="rr"><span class="ix">004</span><img src="../src/assets/avatars/gali.jpg" alt=""><span class="name">GALI</span><span class="en">GALI</span><span class="loc">上海</span><span class="cnt">27</span></div>
+        <div class="rr"><span class="ix">021</span><img src="../src/assets/avatars/ice.jpg" alt=""><span class="name">ICE杨长青</span><span class="en">ICE</span><span class="loc">四川</span><span class="cnt">16</span></div>
+        <div class="rr"><span class="ix">018</span><img src="../src/assets/avatars/pact.jpg" alt=""><span class="name">派克特</span><span class="en">PACT</span><span class="loc">陕西 · 西安</span><span class="cnt">15</span></div>
+        <div class="rr"><span class="ix">019</span><img src="../src/assets/avatars/knowknow.jpg" alt=""><span class="name">KnowKnow</span><span class="en">KNOWKNOW</span><span class="loc">江苏</span><span class="cnt">13</span></div>
+        <div class="rr"><span class="ix">020</span><img src="../src/assets/avatars/mcjin.jpg" alt=""><span class="name">欧阳靖</span><span class="en">MCJIN</span><span class="loc">中国香港</span><span class="cnt">12</span></div>
+        <div class="rr"><span class="ix">022</span><img src="../src/assets/avatars/guangguang.jpg" alt=""><span class="name">MC光光</span><span class="en">GUANGGUANG</span><span class="loc">上海</span><span class="cnt">9</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="bot"><span>INDEX ENGINE / QUERY: ALL / SORT: RELATIONS DESC</span><span class="acid">● SUBJECTS ONLINE</span></div>
+  <div class="scan"></div><div class="noise"></div><div class="vig"></div>
+  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+</section>
+
+<script>
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.sheet').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  const el=document.getElementById(b.dataset.go);
+  el.classList.remove('on');void el.offsetWidth;el.classList.add('on');
+  history.replaceState(null,'','#'+b.dataset.go);
+}));
+</script>
+</body>
+</html>

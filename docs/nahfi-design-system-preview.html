@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NAHFI · RETRO DIGITAL DESIGN SYSTEM</title>
+<style>
+/* ═══════════════ NAHFI RETRO DIGITAL · TOKENS (from skill) ═══════════════ */
+:root{
+  --nahfi-void:#0A0A0A; --nahfi-black:#111111; --nahfi-panel:#171717; --nahfi-elevated:#202020;
+  --nahfi-line:#343434; --nahfi-line-strong:#555555;
+  --nahfi-text:#E5E0D8; --nahfi-muted:#96918A; --nahfi-dim:#66615C;
+  --nahfi-orange:#D85A30; --nahfi-orange-hot:#F06A3A; --nahfi-orange-dim:#8D3D26;
+  --nahfi-acid:#D6FF00; /* optional, rare */
+
+  /* locally available equivalents — no network font dependency */
+  --font-display:Impact,"Arial Narrow","Bahnschrift Condensed",sans-serif;
+  --font-ui:Bahnschrift,"Segoe UI",system-ui,sans-serif;
+  --font-zh:"Noto Sans SC","Microsoft YaHei",sans-serif;
+  --font-mono:Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#050505;color:var(--nahfi-text)}
+body{padding:24px 0 60px;font-family:var(--font-ui)}
+.topbar{width:1440px;margin:0 auto 14px;display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--nahfi-line-strong);padding-bottom:10px}
+.topbar h1{font:700 19px/1 var(--font-display);letter-spacing:.13em;text-transform:uppercase}
+.topbar h1 b{color:var(--nahfi-orange)}
+.topbar .sub{font:10px/1 var(--font-mono);letter-spacing:.1em;color:var(--nahfi-dim)}
+.tabs{width:1440px;margin:0 auto 16px;display:flex;gap:3px;flex-wrap:wrap}
+.tabs button{background:transparent;border:1px solid var(--nahfi-line);color:var(--nahfi-muted);font:11px/1 var(--font-mono);letter-spacing:.1em;padding:9px 12px;cursor:pointer;transition:background .16s steps(2),color .16s steps(2)}
+.tabs button:hover{color:var(--nahfi-text);border-color:var(--nahfi-line-strong)}
+.tabs button.on{background:var(--nahfi-orange);border-color:var(--nahfi-orange);color:#fff;font-weight:700}
+.tabs button:focus-visible{outline:2px solid var(--nahfi-acid);outline-offset:2px}
+
+/* ── sheet + shared texture layers ─────────────────────────────────── */
+.sheet{width:1440px;height:900px;margin:0 auto;position:relative;overflow:hidden;background:var(--nahfi-void);border:1px solid var(--nahfi-line);display:none}
+.sheet.on{display:block;animation:enter .42s steps(3)}
+@keyframes enter{from{opacity:.4;clip-path:inset(0 0 6% 0)}to{opacity:1;clip-path:none}}
+/* noise tiles carry an explicit pixel size, so the browser can never stretch them */
+:root{
+  --noise-mottle:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.3' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  --noise-fine:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --noise-dust:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='96' height='96' filter='url(%23n)'/%3E%3C/svg%3E");
+  --noise-erode:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='e'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='1 1 1 1 1 0.8 0 0'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23e)'/%3E%3C/svg%3E");
+}
+.grain-mottle,.grain-fine,.grain-dust,.scanlines,.halftone{position:absolute;inset:0;pointer-events:none}
+.grain-mottle{z-index:88;opacity:.55;mix-blend-mode:overlay;background-image:var(--noise-mottle);background-size:300px 300px}
+.grain-fine{z-index:90;opacity:.72;mix-blend-mode:overlay;background-image:var(--noise-fine);background-size:160px 160px}
+.grain-dust{z-index:91;opacity:.78;mix-blend-mode:overlay;background-image:var(--noise-dust);background-size:96px 96px}
+.scanlines{z-index:92;opacity:.085;background:repeating-linear-gradient(0deg,rgba(0,0,0,.8) 0 1px,transparent 1px 3px)}
+.halftone{z-index:5;opacity:.55;background-image:var(--noise-dust);background-size:96px 96px;mix-blend-mode:overlay}
+.ink-erode{mask-image:var(--noise-erode);-webkit-mask-image:var(--noise-erode);mask-size:150px 150px;mask-repeat:repeat}
+#s-map .heading h1,#s-system .hdr h2,#s-artists .pagehead h1,#s-works .pagehead h1,.drawer .dh h2{mask-image:var(--noise-erode);-webkit-mask-image:var(--noise-erode);mask-size:150px 150px;mask-repeat:repeat}
+.vig{z-index:89;pointer-events:none;position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 55%,rgba(0,0,0,.45) 100%)}
+
+/* ── shared atoms ──────────────────────────────────────────────────── */
+.eyebrow{font:11px/1 var(--font-mono);letter-spacing:.24em;color:var(--nahfi-orange);text-transform:uppercase}
+.data{font:11px/1 var(--font-mono);letter-spacing:.1em;color:var(--nahfi-muted)}
+.section-title{font-family:var(--font-display);font-weight:400;text-transform:uppercase;letter-spacing:-.01em}
+.rule{height:1px;background:var(--nahfi-line)}
+.cross{position:absolute;width:9px;height:9px;pointer-events:none;z-index:6}
+.cross:before,.cross:after{content:"";position:absolute;background:var(--nahfi-line-strong)}
+.cross:before{width:9px;height:1px;top:4px}.cross:after{height:9px;width:1px;left:4px}
+.sq{width:8px;height:8px;background:var(--nahfi-orange);display:inline-block}
+
+/* ══ SCREEN 00 · SYSTEM ══════════════════════════════════════════════ */
+#s-system{height:820px}
+#s-system .pad{position:absolute;inset:0;padding:48px 64px;z-index:96;overflow:hidden}
+#s-system .hdr{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--nahfi-line-strong);padding-bottom:18px}
+#s-system .hdr h2{font:400 62px/.88 var(--font-display);letter-spacing:-.02em;text-transform:uppercase}
+#s-system .hdr h2 em{font-style:normal;color:var(--nahfi-orange)}
+#s-system .hdr .note{font:10px/1.7 var(--font-mono);color:var(--nahfi-dim);text-align:right;letter-spacing:.08em}
+#s-system .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:44px;margin-top:34px}
+#s-system .block h3{font:11px/1 var(--font-mono);letter-spacing:.22em;color:var(--nahfi-orange);text-transform:uppercase;margin-bottom:16px;padding-bottom:9px;border-bottom:1px solid var(--nahfi-line)}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.sw{height:84px;position:relative;border:1px solid rgba(255,255,255,.06)}
+.sw span{position:absolute;bottom:5px;left:5px;font:9px/1 var(--font-mono);color:#EDE8DF;letter-spacing:.02em;z-index:2;background:rgba(0,0,0,.62);padding:3px 4px}
+.pairrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.pairrow .sw{width:62px}
+.type-sample{margin-bottom:19px}
+.type-sample .lab{font:9px/1 var(--font-mono);color:var(--nahfi-dim);letter-spacing:.12em;margin-bottom:6px}
+.type-sample .ex{color:var(--nahfi-text)}
+.ts-display{font:400 44px/.95 var(--font-display);letter-spacing:-.01em;text-transform:uppercase}
+.ts-ui{font:400 17px/1.35 var(--font-ui)}
+.ts-zh{font:700 17px/1.4 var(--font-zh)}
+.ts-mono{font:11px/1.5 var(--font-mono);letter-spacing:.1em;color:var(--nahfi-muted)}
+.tex-row{height:78px;margin-bottom:8px;border:1px solid var(--nahfi-line);position:relative;overflow:hidden;background:var(--nahfi-black)}
+.tex-row .t{position:absolute;left:10px;top:8px;font:9px/1 var(--font-mono);letter-spacing:.16em;color:var(--nahfi-muted);z-index:3}
+.tex-row .t b{color:var(--nahfi-orange);font-weight:400}
+.tex-grain:after{content:"";position:absolute;inset:0;opacity:.95;mix-blend-mode:overlay;background-image:var(--noise-fine);background-size:560px 560px}
+.tex-scan:after{content:"";position:absolute;inset:0;opacity:.3;background:repeating-linear-gradient(0deg,#000 0 1px,transparent 1px 4px)}
+.tex-erode:after{content:"NAHFI";position:absolute;right:16px;top:10px;font:400 52px/.95 var(--font-display);letter-spacing:.03em;color:var(--nahfi-text);opacity:.92;mask-image:var(--noise-erode);-webkit-mask-image:var(--noise-erode);mask-size:150px 150px}
+.tex-rgb .t{text-shadow:-1px 0 0 rgba(216,90,48,.85),1px 0 0 rgba(150,160,170,.7)}
+#s-system .tokens-row{position:absolute;left:64px;right:64px;bottom:44px;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);gap:44px;border-top:1px solid var(--nahfi-line);padding-top:18px}
+.pillrow{display:flex;gap:6px;flex-wrap:wrap}
+.pill{border:1px solid var(--nahfi-line-strong);padding:6px 10px;font:10px/1 var(--font-mono);color:var(--nahfi-muted);letter-spacing:.08em}
+.pill.orange{border-color:var(--nahfi-orange);color:var(--nahfi-orange)}
+.pill.acid{border-color:var(--nahfi-acid);color:var(--nahfi-acid)}
+.no-list{font:10px/1.9 var(--font-mono);color:var(--nahfi-dim);letter-spacing:.04em}
+.no-list b{color:var(--nahfi-orange);font-weight:400}
+
+/* ══ SCREEN 01 · MAP ═════════════════════════════════════════════════ */
+.site-header{position:absolute;left:0;right:0;top:0;height:76px;background:var(--nahfi-black);border-bottom:1px solid var(--nahfi-line);z-index:30;display:flex;align-items:center;padding:0 48px;gap:40px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--nahfi-text)}
+.brand .mark{width:24px;height:24px;background:var(--nahfi-orange);position:relative;mask-image:var(--noise-erode);-webkit-mask-image:var(--noise-erode);mask-size:60px 60px}
+.brand .mark:after{content:"";position:absolute;inset:7px;background:var(--nahfi-black)}
+.brand strong{font:400 25px/1 var(--font-display);letter-spacing:.06em}
+.brand small{font:9px/1.4 var(--font-mono);letter-spacing:.18em;color:var(--nahfi-dim);display:block;margin-top:3px}
+.site-nav{display:flex;height:100%;gap:4px}
+.site-nav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--nahfi-muted);font:14px/1 var(--font-zh);padding:0 18px;cursor:pointer;letter-spacing:.1em}
+.site-nav button.active{color:var(--nahfi-text);border-bottom-color:var(--nahfi-orange)}
+.site-nav button:focus-visible{outline:2px solid var(--nahfi-acid);outline-offset:-4px}
+.header-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.outline-action{background:transparent;border:1px solid var(--nahfi-line-strong);color:var(--nahfi-text);font:12px/1 var(--font-zh);padding:10px 16px;cursor:pointer;transition:border-color .18s,color .18s}
+.outline-action:hover{border-color:var(--nahfi-orange);color:var(--nahfi-orange)}
+.signal-button{background:var(--nahfi-orange);border:1px solid var(--nahfi-orange);color:#fff;font:12px/1 var(--font-zh);padding:10px 16px;cursor:pointer}
+.signal-button:hover{background:var(--nahfi-orange-hot)}
+
+#s-map .heading{position:absolute;left:48px;right:48px;top:105px;z-index:20;display:flex;align-items:flex-end;justify-content:space-between}
+#s-map .heading h1{font:400 74px/.82 var(--font-display);letter-spacing:-.015em;text-transform:uppercase;margin-top:10px}
+#s-map .heading h1 span{color:var(--nahfi-dim)}
+#s-map .heading .lede{font:12px/1.7 var(--font-zh);color:var(--nahfi-muted);max-width:390px;margin-top:14px}
+#s-map .kpis{display:flex;gap:34px;text-align:right}
+#s-map .kpi b{font:400 46px/.95 var(--font-display);display:block;letter-spacing:-.01em;color:var(--nahfi-text)}
+#s-map .kpi b.orange{color:var(--nahfi-orange)}
+#s-map .kpi small{font:9px/1 var(--font-mono);letter-spacing:.2em;color:var(--nahfi-dim);display:block;margin-top:8px}
+
+.toolbar{position:absolute;left:48px;right:48px;top:300px;z-index:25;height:44px;display:flex;align-items:center;gap:6px;border-top:1px solid var(--nahfi-line);border-bottom:1px solid var(--nahfi-line)}
+.toolbar button{background:transparent;border:0;color:var(--nahfi-muted);font:11px/1 var(--font-mono);letter-spacing:.08em;padding:0 14px;height:100%;cursor:pointer;border-right:1px solid var(--nahfi-line)}
+.toolbar button.active{color:var(--nahfi-orange)}
+.toolbar .search{margin-left:auto;display:flex;align-items:center;gap:8px;padding:0 12px}
+.toolbar .search span{font:11px/1 var(--font-mono);color:var(--nahfi-dim)}
+
+#s-map .stage{position:absolute;left:48px;right:48px;top:352px;bottom:58px;border:1px solid var(--nahfi-line);background:var(--nahfi-black);overflow:hidden}
+#s-map .grid-bg{position:absolute;inset:0;z-index:1;background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:48px 48px}
+.zone{position:absolute;border:1px solid rgba(229,224,216,.17);z-index:3;background:rgba(23,23,23,.4)}
+.zone.hot{border-color:var(--nahfi-orange-dim)}
+.zone .zt{position:absolute;top:-1px;left:-1px;background:var(--nahfi-orange);color:#fff;font:9px/1 var(--font-mono);letter-spacing:.12em;padding:4px 7px}
+.zone .zt.mute{background:var(--nahfi-elevated);color:var(--nahfi-muted)}
+.zone .zn{position:absolute;right:6px;bottom:5px;font:9px/1 var(--font-mono);color:var(--nahfi-dim)}
+.threads{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
+.node{position:absolute;width:62px;transform:translate(-50%,-50%);z-index:8}
+.node .f{width:52px;height:52px;border:1px solid var(--nahfi-line-strong);background:var(--nahfi-panel);position:relative;overflow:hidden}
+.node img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.45) brightness(1.02);display:block;image-rendering:pixelated}
+.node .f:after{content:"";position:absolute;inset:0;background-image:var(--noise-fine);background-size:160px 160px;opacity:.75;mix-blend-mode:overlay;pointer-events:none}
+.node .nm{font:10px/1.3 var(--font-zh);color:var(--nahfi-muted);text-align:center;margin-top:5px;white-space:nowrap}
+.node.sel .f{border:2px solid var(--nahfi-orange)}
+.node.sel img{filter:grayscale(.4) contrast(1.35) brightness(1)}
+.node.sel .nm{color:var(--nahfi-text);font-weight:700}
+.node.sel .f:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--nahfi-orange);z-index:2}
+.node.hov .f{border-color:var(--nahfi-text)}
+.folded{position:absolute;z-index:4;border-left:1px solid rgba(229,224,216,.17);padding-left:12px}
+.folded .fl{font:9px/1 var(--font-mono);letter-spacing:.18em;color:var(--nahfi-orange)}
+.folded .fv{font:9px/1.75 var(--font-mono);color:var(--nahfi-muted);margin-top:7px}
+.folded .fz{font:9px/1 var(--font-mono);color:var(--nahfi-dim);margin-top:7px;letter-spacing:.1em}
+.map-caption{position:absolute;left:14px;bottom:10px;font:9px/1 var(--font-mono);letter-spacing:.12em;color:var(--nahfi-dim);z-index:20}
+.map-zoom{position:absolute;right:14px;bottom:10px;display:flex;gap:4px;z-index:20}
+.map-zoom button{width:30px;height:30px;border:1px solid var(--nahfi-line-strong);background:var(--nahfi-panel);color:var(--nahfi-text);font:16px/1 var(--font-mono);cursor:pointer}
+#s-map .foot{position:absolute;left:48px;right:48px;bottom:16px;z-index:20;display:flex;justify-content:space-between;align-items:center}
+.legend{display:flex;gap:22px;font:9px/1 var(--font-mono);letter-spacing:.1em;color:var(--nahfi-muted)}
+.legend i{display:inline-block;width:22px;height:1px;background:var(--nahfi-text);vertical-align:middle;margin-right:6px}
+.legend i.dash{background:repeating-linear-gradient(90deg,var(--nahfi-muted) 0 4px,transparent 4px 8px)}
+.legend i.dot{background:repeating-linear-gradient(90deg,var(--nahfi-dim) 0 2px,transparent 2px 5px)}
+.legend i.hot{background:var(--nahfi-orange);height:2px}
+.coord{font:9px/1 var(--font-mono);letter-spacing:.14em;color:var(--nahfi-dim)}
+
+/* ══ SCREEN 02 · SUBJECT ═════════════════════════════════════════════ */
+#s-subject .stage{position:absolute;left:48px;right:360px;top:150px;bottom:54px;border:1px solid var(--nahfi-line);background:var(--nahfi-black);overflow:hidden}
+#s-subject .stage .dimming{position:absolute;inset:0;background:radial-gradient(ellipse at 48% 50%,rgba(10,10,10,.2) 0%,rgba(10,10,10,.72) 68%);z-index:9}
+#s-subject .stage .node{opacity:.62}
+#s-subject .stage .node.sel{opacity:1}
+#s-subject .st-lines{position:absolute;inset:0;width:100%;height:100%;z-index:8;opacity:.55}
+#s-subject .leftnote{position:absolute;left:48px;top:100px;z-index:20}
+#s-subject .leftnote h1{font:400 44px/.9 var(--font-display);text-transform:uppercase;letter-spacing:-.01em;margin-top:8px}
+.drawer{position:absolute;right:0;top:76px;bottom:0;width:344px;background:var(--nahfi-panel);border-left:1px solid var(--nahfi-line-strong);z-index:30;overflow:hidden}
+.drawer .dh{padding:22px 24px 18px;border-bottom:1px solid var(--nahfi-line)}
+.drawer .dh .tag{font:9px/1 var(--font-mono);letter-spacing:.24em;color:var(--nahfi-orange)}
+.drawer .dh h2{font:400 58px/.9 var(--font-display);text-transform:uppercase;margin-top:12px;letter-spacing:-.01em}
+.drawer .dh h2 small{font:700 20px/1 var(--font-zh);color:var(--nahfi-muted);margin-left:10px;letter-spacing:.06em}
+.drawer .db{padding:20px 24px}
+.portrait{position:relative;width:100%;height:176px;overflow:hidden;border:1px solid var(--nahfi-line);background:var(--nahfi-black)}
+.portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:grayscale(1) contrast(1.4) brightness(.95);image-rendering:pixelated}
+.portrait:after{content:"";position:absolute;inset:0;background-image:var(--noise-fine),var(--noise-mottle);background-size:160px 160px,300px 300px;opacity:.3;mix-blend-mode:overlay}
+.portrait .pl{position:absolute;left:0;right:0;bottom:0;z-index:3;font:9px/1 var(--font-mono);letter-spacing:.14em;color:var(--nahfi-text);background:rgba(10,10,10,.78);padding:5px 8px}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--nahfi-line);margin-top:14px}
+.stat3 div{padding:12px 8px;border-right:1px solid var(--nahfi-line)}
+.stat3 div:last-child{border:0}
+.stat3 b{font:400 32px/1 var(--font-display);display:block;color:var(--nahfi-text)}
+.stat3 b.o{color:var(--nahfi-orange)}
+.stat3 small{font:8px/1 var(--font-mono);letter-spacing:.14em;color:var(--nahfi-dim);display:block;margin-top:7px}
+.drawer h3{font:10px/1 var(--font-mono);letter-spacing:.2em;color:var(--nahfi-orange);margin:13px 0 8px;text-transform:uppercase}
+.yearbars{display:flex;align-items:flex-end;gap:5px;height:58px;border-bottom:1px solid var(--nahfi-line)}
+.yearbars i{flex:1;background:var(--nahfi-elevated);height:var(--h);display:block}
+.yearbars i.on{background:var(--nahfi-orange)}
+.drel{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--nahfi-line);font:11px/1.4 var(--font-zh);color:var(--nahfi-text)}
+.drel span{color:var(--nahfi-orange);font:9px/1 var(--font-mono);width:16px;padding-top:2px}
+.drel em{margin-left:auto;font:9px/1 var(--font-mono);color:var(--nahfi-dim);font-style:normal}
+.source{border-left:2px solid var(--nahfi-acid);background:rgba(214,255,0,.04);padding:8px 10px;margin-top:12px}
+.source b{font:9px/1 var(--font-mono);letter-spacing:.14em;color:var(--nahfi-acid)}
+.source p{font:10px/1.6 var(--font-mono);color:var(--nahfi-muted);margin-top:6px;word-break:break-all}
+
+/* ══ SCREEN 03 · ARTISTS ═════════════════════════════════════════════ */
+#s-artists .pagehead{position:absolute;left:48px;right:48px;top:112px;z-index:20;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--nahfi-line-strong);padding-bottom:20px}
+#s-artists .pagehead h1{font:400 92px/.82 var(--font-display);text-transform:uppercase;letter-spacing:-.02em;margin-top:10px}
+#s-artists .pagehead h1 span{color:transparent;-webkit-text-stroke:1.2px var(--nahfi-orange)}
+#s-artists .pagehead .meta{font:10px/1.8 var(--font-mono);color:var(--nahfi-dim);letter-spacing:.1em;text-align:right}
+#s-artists .cols{position:absolute;left:48px;right:48px;top:262px;bottom:38px;z-index:20;display:grid;grid-template-columns:240px 1fr;gap:40px}
+.pindex h3,.roster h3{font:10px/1 var(--font-mono);letter-spacing:.22em;color:var(--nahfi-orange);text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid var(--nahfi-line-strong);margin-bottom:6px}
+.pi{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--nahfi-line);font:12px/1 var(--font-zh);color:var(--nahfi-muted)}
+.pi.on{background:rgba(216,90,48,.12);color:var(--nahfi-text)}
+.pi .ix{font:10px/1 var(--font-mono);color:var(--nahfi-dim);width:20px}
+.pi.on .ix{color:var(--nahfi-orange)}
+.pi .ct{margin-left:auto;font:11px/1 var(--font-mono);color:var(--nahfi-dim)}
+.pi.on .ct{color:var(--nahfi-orange)}
+.rhead,.rrow{display:grid;grid-template-columns:56px 46px 1fr 170px 90px 76px;align-items:center;gap:12px;padding:7px 8px}
+.rhead{border-bottom:1px solid var(--nahfi-line-strong);font:9px/1 var(--font-mono);letter-spacing:.16em;color:var(--nahfi-dim)}
+.rrow{border-bottom:1px solid var(--nahfi-line);transition:background .16s steps(2),transform .16s steps(2)}
+.rrow:hover{background:rgba(216,90,48,.08);transform:translateX(3px)}
+.rrow.sel{background:rgba(216,90,48,.12)}
+.rrow .no{font:10px/1 var(--font-mono);color:var(--nahfi-orange)}
+.rrow img{width:38px;height:38px;object-fit:cover;filter:grayscale(1) contrast(1.2);image-rendering:pixelated;border:1px solid var(--nahfi-line-strong);display:block}
+.rrow .nm{font:700 14px/1 var(--font-zh);color:var(--nahfi-text)}
+.rrow .en{font:10px/1 var(--font-mono);letter-spacing:.12em;color:var(--nahfi-dim)}
+.rrow .loc{font:11px/1 var(--font-zh);color:var(--nahfi-muted)}
+.rrow .cnt{font:400 22px/1 var(--font-display);text-align:right;color:var(--nahfi-text)}
+.rrow.sel .cnt{color:var(--nahfi-orange)}
+.rrow .ar{text-align:right;color:var(--nahfi-dim)}
+
+/* ══ SCREEN 04 · WORKS ═══════════════════════════════════════════════ */
+#s-works .pagehead{position:absolute;left:48px;right:48px;top:112px;z-index:20;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--nahfi-line-strong);padding-bottom:20px}
+#s-works .pagehead h1{font:400 92px/.82 var(--font-display);text-transform:uppercase;letter-spacing:-.02em;margin-top:10px}
+#s-works .pagehead h1 span{color:var(--nahfi-dim)}
+#s-works .gen{position:relative;width:250px;height:104px;border:1px solid var(--nahfi-line);overflow:hidden;background:var(--nahfi-black)}
+#s-works .gen .g1{position:absolute;inset:0;background:conic-gradient(from 200deg at 42% 50%,var(--nahfi-black) 0deg,var(--nahfi-orange-dim) 44deg,var(--nahfi-black) 80deg,var(--nahfi-elevated) 170deg,var(--nahfi-black) 230deg,var(--nahfi-orange) 290deg,var(--nahfi-black) 340deg);filter:contrast(150%) saturate(60%);opacity:.7}
+#s-works .gen .g2{position:absolute;inset:0;background:repeating-linear-gradient(112deg,transparent 0 3px,rgba(10,10,10,.85) 3px 5px);mix-blend-mode:multiply}
+#s-works .gen .g3{position:absolute;inset:0;background-image:var(--noise-fine);background-size:160px 160px;opacity:.4;mix-blend-mode:overlay}
+#s-works .gen .gl{position:absolute;left:8px;bottom:6px;font:9px/1 var(--font-mono);letter-spacing:.1em;color:var(--nahfi-text);z-index:4}
+#s-works .table{position:absolute;left:48px;right:48px;top:262px;bottom:40px;z-index:20}
+.thead,.wrow{display:grid;grid-template-columns:76px 1.05fr 1fr 250px 92px;align-items:center;gap:14px;padding:8px 10px}
+.thead{border-top:1px solid var(--nahfi-line-strong);border-bottom:1px solid var(--nahfi-line-strong);font:9px/1 var(--font-mono);letter-spacing:.16em;color:var(--nahfi-dim)}
+.wrow{border-bottom:1px solid var(--nahfi-line);min-height:52px;transition:background .16s steps(2)}
+.wrow:hover{background:rgba(216,90,48,.06)}
+.wrow.sel{background:rgba(216,90,48,.12);box-shadow:inset 3px 0 0 var(--nahfi-orange)}
+.wrow .yr{font:400 23px/1 var(--font-display);color:var(--nahfi-dim)}
+.wrow.sel .yr{color:var(--nahfi-orange)}
+.wrow .tt{font:700 16px/1.2 var(--font-zh);color:var(--nahfi-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrow .tt small{font:10px/1 var(--font-mono);color:var(--nahfi-dim);margin-left:8px}
+.wrow .who{font:11px/1.4 var(--font-zh);color:var(--nahfi-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wave{display:flex;align-items:center;gap:2px;height:26px}
+.wave i{width:3px;height:var(--h);background:var(--nahfi-line-strong);display:block}
+.wrow.sel .wave i{background:var(--nahfi-orange)}
+.wave i:nth-child(3n){background:var(--nahfi-elevated)}
+.wrow.sel .wave i:nth-child(3n){background:var(--nahfi-orange-dim)}
+.vtag{font:9px/1 var(--font-mono);letter-spacing:.08em;border:1px solid var(--nahfi-line-strong);padding:5px 7px;color:var(--nahfi-muted);display:inline-block}
+.vtag.live{border-color:var(--nahfi-orange-dim);color:var(--nahfi-orange)}
+#s-works .footbar{position:absolute;left:48px;right:48px;bottom:12px;z-index:20;display:flex;justify-content:space-between;font:9px/1 var(--font-mono);letter-spacing:.14em;color:var(--nahfi-dim)}
+
+/* ══ SCREEN 05 · MOBILE ══════════════════════════════════════════════ */
+#s-mobile{width:390px;height:844px}
+#s-mobile .mhead{position:absolute;left:0;right:0;top:0;height:60px;background:var(--nahfi-black);border-bottom:1px solid var(--nahfi-line);z-index:30;display:flex;align-items:center;padding:0 20px;gap:12px}
+#s-mobile .mhead .brand strong{font-size:21px}
+#s-mobile .mnav{margin-left:auto;display:flex;gap:4px}
+#s-mobile .mnav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--nahfi-muted);font:13px/1 var(--font-zh);padding:0 7px;height:60px;cursor:pointer}
+#s-mobile .mnav button.on{color:var(--nahfi-text);border-bottom-color:var(--nahfi-orange)}
+#s-mobile .mtitle{position:absolute;left:20px;top:78px;z-index:20}
+#s-mobile .mtitle h1{font:400 48px/.85 var(--font-display);text-transform:uppercase;margin-top:7px;letter-spacing:-.01em}
+#s-mobile .mstage{position:absolute;left:14px;right:14px;top:182px;bottom:196px;border:1px solid var(--nahfi-line);background:var(--nahfi-black);overflow:hidden}
+#s-mobile .mstage .zone{border-color:var(--nahfi-line)}
+#s-mobile .mstage .node{width:46px}
+#s-mobile .mstage .node .f{width:40px;height:40px}
+#s-mobile .mstage .node .nm{font-size:8px}
+#s-mobile .sheet2{position:absolute;left:0;right:0;bottom:0;height:190px;background:var(--nahfi-panel);border-top:2px solid var(--nahfi-orange);z-index:30;padding:14px 20px}
+#s-mobile .grip{width:32px;height:3px;background:var(--nahfi-line-strong);margin:0 auto 12px}
+#s-mobile .sheet2 .row{display:flex;gap:12px;align-items:center}
+#s-mobile .sheet2 img{width:52px;height:52px;object-fit:cover;filter:grayscale(1) contrast(1.2);image-rendering:pixelated;border:1px solid var(--nahfi-line-strong)}
+#s-mobile .sheet2 h2{font:700 19px/1 var(--font-zh)}
+#s-mobile .sheet2 .sub{font:10px/1 var(--font-mono);letter-spacing:.1em;color:var(--nahfi-dim);margin-top:6px}
+#s-mobile .sheet2 .nums{display:flex;gap:18px;margin-top:14px;padding-top:12px;border-top:1px solid var(--nahfi-line)}
+#s-mobile .sheet2 .nums b{font:400 26px/1 var(--font-display);display:block}
+#s-mobile .sheet2 .nums b.o{color:var(--nahfi-orange)}
+#s-mobile .sheet2 .nums small{font:8px/1 var(--font-mono);letter-spacing:.14em;color:var(--nahfi-dim);display:block;margin-top:5px}
+#s-mobile .mzoom{position:absolute;right:20px;bottom:204px;z-index:30;display:flex;gap:4px}
+#s-mobile .mzoom button{width:32px;height:32px;background:var(--nahfi-panel);border:1px solid var(--nahfi-line-strong);color:var(--nahfi-text);font:16px/1 var(--font-mono);cursor:pointer}
+#s-mobile .mfoot{position:absolute;left:20px;bottom:200px;font:9px/1 var(--font-mono);letter-spacing:.1em;color:var(--nahfi-dim);z-index:20}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>NAHFI<b>//</b>RETRO DIGITAL <span style="color:var(--nahfi-dim);font-weight:400">· DESIGN SYSTEM APPLIED</span></h1>
+  <div class="sub">TOKENS · GRAIN · TYPE · LAYOUT · MOTION · INTERACTION / 6 SCREENS</div>
+</div>
+<div class="tabs">
+  <button class="on" data-go="s-system">00 / SYSTEM</button>
+  <button data-go="s-map">01 / MAP</button>
+  <button data-go="s-subject">02 / SUBJECT</button>
+  <button data-go="s-artists">03 / ARTISTS</button>
+  <button data-go="s-works">04 / WORKS</button>
+  <button data-go="s-mobile">05 / MOBILE</button>
+</div>
+
+<!-- ══ 00 SYSTEM ══ -->
+<section class="sheet on" id="s-system">
+  <div class="grain-mottle"></div><div class="grain-fine"></div><div class="grain-dust"></div><div class="scanlines"></div>
+  <div class="pad">
+    <div class="hdr">
+      <div><div class="eyebrow">NAHFI / VISUAL IDENTITY / v1.0</div><h2>Retro <em>Digital</em><br>Design System</h2></div>
+      <div class="note">DARK CHARCOAL × COARSE GRAIN × BURNT ORANGE<br>DIGITAL AESTHETIC — NO PHYSICAL MATERIAL<br>IMPACT / BAHNSCHRIFT / NOTO SANS SC / CONSOLAS</div>
+    </div>
+    <div class="cols">
+      <div class="block">
+        <h3>01 / Color tokens</h3>
+        <div class="swatches">
+          <div class="sw" style="background:var(--nahfi-void)"><span>VOID</span></div>
+          <div class="sw" style="background:var(--nahfi-black)"><span>BLACK</span></div>
+          <div class="sw" style="background:var(--nahfi-panel)"><span>PANEL</span></div>
+          <div class="sw" style="background:var(--nahfi-elevated)"><span>ELEVATED</span></div>
+          <div class="sw" style="background:var(--nahfi-line)"><span>LINE</span></div>
+          <div class="sw" style="background:var(--nahfi-line-strong)"><span>LINE STR</span></div>
+          <div class="sw" style="background:var(--nahfi-text)"><span>TEXT</span></div>
+          <div class="sw" style="background:var(--nahfi-muted)"><span>MUTED</span></div>
+          <div class="sw" style="background:var(--nahfi-dim)"><span>DIM</span></div>
+          <div class="sw" style="background:var(--nahfi-orange)"><span>ORANGE</span></div>
+          <div class="sw" style="background:var(--nahfi-orange-hot)"><span>HOT</span></div>
+          <div class="sw" style="background:var(--nahfi-orange-dim)"><span>ORANGE DM</span></div>
+        </div>
+        <div class="pairrow">
+          <div class="sw" style="background:var(--nahfi-acid)"><span>ACID</span></div>
+        </div>
+        <p class="no-list" style="margin-top:14px">70% DARK SURFACE / 20% NEUTRAL / 10% ACCENT<br>ORANGE = SIGNAL ONLY — ACTIVE NAV, SELECTED NODE,<br>SMALL LABEL, PRIMARY ACTION. NEVER DECORATIVE.</p>
+      </div>
+      <div class="block">
+        <h3>02 / Typography</h3>
+        <div class="type-sample"><div class="lab">DISPLAY · IMPACT · 400 · 38PX</div><div class="ex ts-display">RELATION FIELD</div></div>
+        <div class="type-sample"><div class="lab">UI · BAHNSCHRIFT · 400 · 17PX</div><div class="ex ts-ui">人物 · 作品 · 关系考据</div></div>
+        <div class="type-sample"><div class="lab">CHINESE · NOTO SANS SC · 700 · 17PX</div><div class="ex ts-zh">地下说唱聚落档案</div></div>
+        <div class="type-sample"><div class="lab">META · CONSOLAS · 11PX · TRACKED</div><div class="ex ts-mono">327 SUBJECTS / 526 LINKS / 337 WORKS</div></div>
+        <p class="no-list" style="margin-top:16px">LARGE DISPLAY ↔ TINY META. NO MIDDLE SIZES.<br>UPPERCASE FOR ENGLISH LABELS ONLY — NEVER 中文.</p>
+      </div>
+      <div class="block">
+        <h3>03 / Texture layers</h3>
+        <div class="tex-row tex-grain"><span class="t"><b>FINE</b> GRAIN / SHOWN 3.5× · 1PX DUST AT 100%</span></div>
+        <div class="tex-row tex-scan"><span class="t"><b>SCANLINES</b> / low-contrast CRT</span></div>
+        <div class="tex-row tex-erode"><span class="t"><b>INK EROSION</b> / display type only</span></div>
+        <div class="tex-row tex-rgb"><span class="t"><b>RGB SPLIT</b> / hover &amp; transition only</span></div>
+        <p class="no-list" style="margin-top:12px">STATIC OVERLAYS · POINTER-EVENTS:NONE<br>SEPARATE FROM CONTENT · NO FULL-VIEWPORT REDRAW<br>DISABLE ON MOBILE / PREFERS-REDUCED-MOTION</p>
+      </div>
+    </div>
+    <div class="tokens-row">
+      <div><h3 style="font:10px/1 var(--font-mono);letter-spacing:.2em;color:var(--nahfi-orange);margin-bottom:12px">04 / Layout</h3><p class="no-list">1440PX MAX · 48–64PX GUTTER<br>12-COLUMN GRID · 0–4PX RADIUS<br>THIN RULES + INDEX + CROSSHAIR</p></div>
+      <div><h3 style="font:10px/1 var(--font-mono);letter-spacing:.2em;color:var(--nahfi-orange);margin-bottom:12px">05 / Motion</h3><div class="pillrow"><span class="pill">120–240MS MICRO</span><span class="pill">300–700MS REVEAL</span><span class="pill orange">REDUCED-MOTION</span></div></div>
+      <div><h3 style="font:10px/1 var(--font-mono);letter-spacing:.2em;color:var(--nahfi-orange);margin-bottom:12px">06 / Interaction</h3><div class="pillrow"><span class="pill">FOCUS-VISIBLE</span><span class="pill">KEYBOARD</span><span class="pill">44PX TOUCH</span></div></div>
+      <div><h3 style="font:10px/1 var(--font-mono);letter-spacing:.2em;color:var(--nahfi-orange);margin-bottom:12px">07 / Never</h3><p class="no-list"><b>×</b> PAPER / CORK / PINS / SCRAPBOOK<br><b>×</b> SAAS DASHBOARD / GLASS / NEON GLOW<br><b>×</b> PURPLE-BLUE AI GRADIENT / PILLS</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 01 MAP ══ -->
+<section class="sheet" id="s-map">
+  <header class="site-header">
+    <a class="brand"><span class="mark"></span><span><strong>NAHFI</strong><small>RAP NETWORK / ARCHIVE</small></span></a>
+    <nav class="site-nav"><button class="active">地图</button><button>人物</button><button>作品</button></nav>
+    <div class="header-actions"><button class="outline-action">+ 投稿人物</button><button class="signal-button">关系投稿</button></div>
+  </header>
+  <div class="heading">
+    <div><div class="eyebrow">01 / RELATION FIELD — 关系场</div><h1>RELATION<br><span>FIELD / 526</span></h1><p class="lede">以省份为坐标，追踪说唱音乐人之间的协作、成员与厂牌关系。每条连线均可回溯至公开来源。</p></div>
+    <div class="kpis"><div class="kpi"><b>327</b><small>SUBJECTS</small></div><div class="kpi"><b class="orange">526</b><small>LINKS</small></div><div class="kpi"><b>337</b><small>WORKS</small></div></div>
+  </div>
+  <div class="toolbar"><button class="active">全部关系</button><button>协作 418</button><button>成员 88</button><button>厂牌 19</button><button>制作 01</button><div class="search"><span>⌕ SEARCH SUBJECT</span></div></div>
+  <div class="stage">
+    <div class="grid-bg"></div><div class="halftone"></div>
+    <div class="zone hot" style="left:52px;top:44px;width:320px;height:250px"><span class="zt">SC / 成都 · 20</span><span class="zn">20 SUBJECTS</span></div>
+    <div class="zone" style="left:418px;top:44px;width:300px;height:180px"><span class="zt mute">TW / 中国台湾 · 36</span><span class="zn">36 SUBJECTS</span></div>
+    <div class="zone" style="left:760px;top:44px;width:280px;height:250px"><span class="zt mute">GD / 广东 · 17</span><span class="zn">17 SUBJECTS</span></div>
+    <div class="zone" style="left:52px;top:326px;width:392px;height:196px"><span class="zt mute">UN / 未标注 · 99</span><span class="zn">99 SUBJECTS</span></div>
+    <div class="zone" style="left:484px;top:256px;width:330px;height:266px"><span class="zt">XJ / 新疆喀什 · 10</span><span class="zn">10 SUBJECTS</span></div>
+    <svg class="threads" viewBox="0 0 1344 464" preserveAspectRatio="none">
+      <g fill="none" stroke="#8D3D26" stroke-width="1"><path d="M620 262 L300 150"/><path d="M620 262 L930 130"/><path d="M620 262 L1000 350"/><path d="M620 262 L360 380"/></g>
+      <g fill="none" stroke="#D85A30" stroke-width="1.5"><path d="M620 262 L790 160"/><path d="M620 262 L840 380"/><path d="M620 262 L470 120"/></g>
+      <g fill="#D85A30"><rect x="705" y="212" width="3" height="3"/><rect x="725" y="324" width="3" height="3"/></g>
+    </svg>
+    <div class="node" style="left:300px;top:150px;position:absolute"><div class="f"><img src="../src/assets/avatars/vava.jpg" alt=""></div><div class="nm">VaVa</div></div>
+    <div class="node" style="left:930px;top:130px;position:absolute"><div class="f"><img src="../src/assets/avatars/hotdog.jpg" alt=""></div><div class="nm">MC HotDog</div></div>
+    <div class="node" style="left:1000px;top:350px;position:absolute"><div class="f"><img src="../src/assets/avatars/tizzyt.jpg" alt=""></div><div class="nm">Tizzy T</div></div>
+    <div class="node" style="left:360px;top:380px;position:absolute"><div class="f"><img src="../src/assets/avatars/psyp.jpg" alt=""></div><div class="nm">Psy.P</div></div>
+    <div class="node sel" style="left:620px;top:262px;position:absolute"><div class="f"><img src="../src/assets/avatars/air.jpg" alt=""></div><div class="nm">艾热 / AIR</div></div>
+    <div class="node" style="left:790px;top:160px;position:absolute"><div class="f"><img src="../src/assets/avatars/keyng.jpg" alt=""></div><div class="nm">杨和苏KeyNG</div></div>
+    <div class="node" style="left:840px;top:380px;position:absolute"><div class="f"><img src="../src/assets/avatars/gali.jpg" alt=""></div><div class="nm">GALI</div></div>
+    <div class="node" style="left:470px;top:120px;position:absolute"><div class="f"><img src="../src/assets/avatars/vinida.jpg" alt=""></div><div class="nm">万妮达</div></div>
+    <div class="folded" style="left:1058px;top:286px;width:250px">
+      <div class="fl">其余 32 区 / FOLDED</div>
+      <div class="fv">北京 15 · 重庆 11 · 西安 10<br>上海 9 · 湖南 7 · 长沙 5 · 南京 5<br>乌鲁木齐 5 · 湖北 4 · 浙江 4</div>
+      <div class="fz">+ 23 区 / 展开索引</div>
+    </div>
+    <div class="cross" style="left:620px;top:262px;transform:translate(-50%,-50%)"></div>
+    <div class="map-caption">CANVAS / 37 REGIONS · 5 PINNED · DRAG TO PAN · SCROLL TO ZOOM</div>
+    <div class="map-zoom"><button>−</button><button>+</button></div>
+  </div>
+  <div class="foot"><div class="legend"><span><i class="hot"></i>COLLAB 418</span><span><i></i>MEMBER 88</span><span><i class="dash"></i>AFFIL 19</span><span><i class="dot"></i>PRODUCTION 01</span></div><div class="coord">GRID 48PX / SCALE 1.0 / 327·526·337</div></div>
+  <div class="grain-mottle"></div><div class="grain-fine"></div><div class="grain-dust"></div><div class="scanlines"></div><div class="vig"></div>
+</section>
+
+<!-- ══ 02 SUBJECT ══ -->
+<section class="sheet" id="s-subject">
+  <header class="site-header">
+    <a class="brand"><span class="mark"></span><span><strong>NAHFI</strong><small>RAP NETWORK / ARCHIVE</small></span></a>
+    <nav class="site-nav"><button class="active">地图</button><button>人物</button><button>作品</button></nav>
+    <div class="header-actions"><button class="outline-action">+ 投稿人物</button><button class="signal-button">关系投稿</button></div>
+  </header>
+  <div class="leftnote"><div class="eyebrow">SELECTED SUBJECT / ?P=AIR</div><h1>SUBJECT READOUT</h1></div>
+  <div class="stage"><div class="grid-bg"></div><div class="halftone"></div><div class="dimming"></div>
+    <svg class="st-lines" viewBox="0 0 1032 696" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M496 348 L268 181" fill="none" stroke="#D85A30" stroke-width="1"/>
+      <path d="M496 348 L681 209" fill="none" stroke="#D85A30" stroke-width="1"/>
+      <path d="M496 348 L392 501" fill="none" stroke="#D85A30" stroke-width="1"/>
+      <path d="M496 348 L764 445" fill="none" stroke="#D85A30" stroke-width="1"/>
+      <path d="M496 348 L186 404" fill="none" stroke="#D85A30" stroke-width="1" stroke-dasharray="6 5"/>
+    </svg>
+    <div class="node" style="left:26%;top:26%;position:absolute"><div class="f"><img src="../src/assets/avatars/vinida.jpg" alt=""></div><div class="nm">万妮达</div></div>
+    <div class="node" style="left:66%;top:30%;position:absolute"><div class="f"><img src="../src/assets/avatars/keyng.jpg" alt=""></div><div class="nm">杨和苏</div></div>
+    <div class="node" style="left:38%;top:72%;position:absolute"><div class="f"><img src="../src/assets/avatars/gali.jpg" alt=""></div><div class="nm">GALI</div></div>
+    <div class="node" style="left:74%;top:64%;position:absolute"><div class="f"><img src="../src/assets/avatars/hotdog.jpg" alt=""></div><div class="nm">MC HotDog</div></div>
+    <div class="node" style="left:18%;top:58%;position:absolute"><div class="f"><img src="../src/assets/avatars/tizzyt.jpg" alt=""></div><div class="nm">Tizzy T</div></div>
+    <div class="node sel" style="left:48%;top:50%;position:absolute"><div class="f"><img src="../src/assets/avatars/air.jpg" alt=""></div><div class="nm">艾热 / AIR</div></div>
+  </div>
+  <aside class="drawer">
+    <div class="dh"><div class="tag">SUBJECT 002 / VERIFIED</div><h2>AIR<small>艾热</small></h2></div>
+    <div class="db">
+      <div class="portrait"><img src="../src/assets/avatars/air.jpg" alt=""><span class="pl">IMG 002 / GRAYSCALE + GRAIN</span></div>
+      <div class="stat3"><div><b class="o">49</b><small>LINKS</small></div><div><b>16</b><small>WORKS</small></div><div><b>01</b><small>SOURCE</small></div></div>
+      <h3>WORK DENSITY / YEAR</h3>
+      <div class="yearbars"><i style="--h:50%"></i><i style="--h:34%"></i><i style="--h:50%"></i><i style="--h:50%"></i><i class="on" style="--h:100%"></i><i style="--h:16%"></i><i style="--h:34%"></i><i style="--h:17%"></i><i style="--h:17%"></i></div>
+      <h3>RELATION LOG / SAMPLE</h3>
+      <div class="drel"><span>01</span>杨和苏KeyNG<em>2022</em></div>
+      <div class="drel"><span>02</span>GALI<em>2022</em></div>
+      <div class="drel"><span>03</span>万妮达<em>2022</em></div>
+      <div class="drel"><span>04</span>MC HotDog<em>2022</em></div>
+      <div class="source"><b>SOURCE / 01 — VERIFIED</b><p>Apple Music 艺人目录 · ID 1233590583<br>目录收录不代表与其他艺人同属厂牌</p></div>
+      <h3>RELATED WORKS / 02</h3>
+      <div class="drel"><span>01</span>一代（Live）<em>2025</em></div>
+      <div class="drel"><span>02</span>Lose Control<em>2023</em></div>
+    </div>
+  </aside>
+  <div class="grain-mottle"></div><div class="grain-fine"></div><div class="grain-dust"></div><div class="scanlines"></div><div class="vig"></div>
+</section>
+
+<!-- ══ 03 ARTISTS ══ -->
+<section class="sheet" id="s-artists">
+  <header class="site-header">
+    <a class="brand"><span class="mark"></span><span><strong>NAHFI</strong><small>RAP NETWORK / ARCHIVE</small></span></a>
+    <nav class="site-nav"><button>地图</button><button class="active">人物</button><button>作品</button></nav>
+    <div class="header-actions"><button class="outline-action">+ 投稿人物</button><button class="signal-button">关系投稿</button></div>
+  </header>
+  <div class="pagehead"><div><div class="eyebrow">02 / SUBJECT INDEX — 人物名录</div><h1>THE <span>ROSTER</span></h1></div><div class="meta">327 SUBJECTS / 24 WITH PORTRAIT<br>INDEXED BY PROVINCE · SORTED BY LINKS</div></div>
+  <div class="cols">
+    <div class="pindex"><h3>REGION / 分区</h3>
+      <div class="pi on"><span class="ix">01</span>全部<span class="ct">327</span></div>
+      <div class="pi"><span class="ix">02</span>未标注<span class="ct">99</span></div>
+      <div class="pi"><span class="ix">03</span>中国台湾<span class="ct">36</span></div>
+      <div class="pi"><span class="ix">04</span>成都<span class="ct">20</span></div>
+      <div class="pi"><span class="ix">05</span>广东<span class="ct">17</span></div>
+      <div class="pi"><span class="ix">06</span>中国香港<span class="ct">17</span></div>
+      <div class="pi"><span class="ix">07</span>四川<span class="ct">15</span></div>
+      <div class="pi"><span class="ix">08</span>北京<span class="ct">15</span></div>
+      <div class="pi"><span class="ix">09</span>重庆<span class="ct">11</span></div>
+      <div class="pi"><span class="ix">10</span>新疆<span class="ct">10</span></div>
+    </div>
+    <div class="roster"><h3>ROSTER / 名录</h3>
+      <div class="rhead"><span>NO.</span><span>IMG</span><span>NAME</span><span>ALIAS</span><span>REGION</span><span>LINKS</span></div>
+      <div class="rrow sel"><span class="no">002</span><img src="../src/assets/avatars/air.jpg" alt=""><span class="nm">艾热</span><span class="en">AIR</span><span class="loc">新疆 · 喀什</span><span class="cnt">49</span></div>
+      <div class="rrow"><span class="no">004</span><img src="../src/assets/avatars/vava.jpg" alt=""><span class="nm">VaVa</span><span class="en">VAVA</span><span class="loc">四川 · 成都</span><span class="cnt">36</span></div>
+      <div class="rrow"><span class="no">031</span><img src="../src/assets/avatars/keyng.jpg" alt=""><span class="nm">杨和苏KeyNG</span><span class="en">KEYNG</span><span class="loc">四川 · 成都</span><span class="cnt">35</span></div>
+      <div class="rrow"><span class="no">011</span><img src="../src/assets/avatars/hotdog.jpg" alt=""><span class="nm">MC HotDog</span><span class="en">HOTDOG</span><span class="loc">中国台湾</span><span class="cnt">34</span></div>
+      <div class="rrow"><span class="no">012</span><img src="../src/assets/avatars/vinida.jpg" alt=""><span class="nm">万妮达</span><span class="en">VINIDA</span><span class="loc">福建 · 福州</span><span class="cnt">31</span></div>
+      <div class="rrow"><span class="no">013</span><img src="../src/assets/avatars/tizzyt.jpg" alt=""><span class="nm">Tizzy T</span><span class="en">TIZZYT</span><span class="loc">广东</span><span class="cnt">28</span></div>
+      <div class="rrow"><span class="no">014</span><img src="../src/assets/avatars/gali.jpg" alt=""><span class="nm">GALI</span><span class="en">GALI</span><span class="loc">上海</span><span class="cnt">27</span></div>
+      <div class="rrow"><span class="no">021</span><img src="../src/assets/avatars/ice.jpg" alt=""><span class="nm">ICE杨长青</span><span class="en">ICE</span><span class="loc">四川</span><span class="cnt">16</span></div>
+      <div class="rrow"><span class="no">018</span><img src="../src/assets/avatars/pact.jpg" alt=""><span class="nm">派克特</span><span class="en">PACT</span><span class="loc">陕西 · 西安</span><span class="cnt">15</span></div>
+      <div class="rrow"><span class="no">019</span><img src="../src/assets/avatars/knowknow.jpg" alt=""><span class="nm">KnowKnow</span><span class="en">KNOWKNOW</span><span class="loc">江苏</span><span class="cnt">13</span></div>
+      <div class="rrow"><span class="no">020</span><img src="../src/assets/avatars/mcjin.jpg" alt=""><span class="nm">欧阳靖</span><span class="en">MCJIN</span><span class="loc">中国香港</span><span class="cnt">12</span></div>
+    </div>
+  </div>
+  <div class="grain-mottle"></div><div class="grain-fine"></div><div class="grain-dust"></div><div class="scanlines"></div><div class="vig"></div>
+</section>
+
+<!-- ══ 04 WORKS ══ -->
+<section class="sheet" id="s-works">
+  <header class="site-header">
+    <a class="brand"><span class="mark"></span><span><strong>NAHFI</strong><small>RAP NETWORK / ARCHIVE</small></span></a>
+    <nav class="site-nav"><button>地图</button><button>人物</button><button class="active">作品</button></nav>
+    <div class="header-actions"><button class="outline-action">+ 投稿人物</button><button class="signal-button">关系投稿</button></div>
+  </header>
+  <div class="pagehead"><div><div class="eyebrow">03 / WORK ARCHIVE — 作品库</div><h1>WORK <span>ARCHIVE</span></h1></div><div class="gen"><div class="g1"></div><div class="g2"></div><div class="g3"></div><span class="gl">GEN / 0x3F2A</span></div></div>
+  <div class="table">
+    <div class="thead"><span>YEAR</span><span>TITLE / 作品</span><span>CREDITED / 参与者</span><span>SIGNAL / 波形</span><span>VERSION</span></div>
+    <div class="wrow sel"><span class="yr">2022</span><span class="tt">一代 <small>LIVE</small></span><span class="who">盛宇 · 杨和苏KeyNG · GAI · 万妮达 · VaVa · 王以太 · 刘聪 · Capper · 早安 · Tizzy T · MC HotDog · Bridge · GALI · 功夫胖 · 艾热</span><span class="wave"><i style="--h:38%"></i><i style="--h:72%"></i><i style="--h:100%"></i><i style="--h:55%"></i><i style="--h:84%"></i><i style="--h:42%"></i><i style="--h:93%"></i><i style="--h:61%"></i><i style="--h:35%"></i><i style="--h:78%"></i><i style="--h:48%"></i><i style="--h:90%"></i><i style="--h:57%"></i><i style="--h:73%"></i><i style="--h:31%"></i><i style="--h:66%"></i><i style="--h:44%"></i><i style="--h:82%"></i><i style="--h:52%"></i><i style="--h:69%"></i></span><span><span class="vtag live">LIVE</span></span></div>
+    <div class="wrow"><span class="yr">2020</span><span class="tt">Lose Control <small>FT. KNOWKNOW</small></span><span class="who">Psy.P · KnowKnow</span><span class="wave"><i style="--h:24%"></i><i style="--h:60%"></i><i style="--h:88%"></i><i style="--h:46%"></i><i style="--h:71%"></i><i style="--h:33%"></i><i style="--h:95%"></i><i style="--h:52%"></i><i style="--h:40%"></i><i style="--h:77%"></i><i style="--h:28%"></i><i style="--h:64%"></i><i style="--h:49%"></i><i style="--h:86%"></i><i style="--h:36%"></i><i style="--h:58%"></i><i style="--h:22%"></i><i style="--h:68%"></i><i style="--h:44%"></i><i style="--h:80%"></i></span><span><span class="vtag">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2022</span><span class="tt">不得不撒</span><span class="who">VaVa · 万妮达</span><span class="wave"><i style="--h:44%"></i><i style="--h:81%"></i><i style="--h:36%"></i><i style="--h:93%"></i><i style="--h:58%"></i><i style="--h:70%"></i><i style="--h:27%"></i><i style="--h:88%"></i><i style="--h:50%"></i><i style="--h:64%"></i><i style="--h:39%"></i><i style="--h:97%"></i><i style="--h:55%"></i><i style="--h:73%"></i><i style="--h:31%"></i><i style="--h:84%"></i><i style="--h:46%"></i><i style="--h:62%"></i><i style="--h:25%"></i><i style="--h:78%"></i></span><span><span class="vtag">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2022</span><span class="tt">狂戀</span><span class="who">GALI · 万妮达</span><span class="wave"><i style="--h:62%"></i><i style="--h:29%"></i><i style="--h:84%"></i><i style="--h:47%"></i><i style="--h:99%"></i><i style="--h:38%"></i><i style="--h:72%"></i><i style="--h:51%"></i><i style="--h:33%"></i><i style="--h:90%"></i><i style="--h:57%"></i><i style="--h:75%"></i><i style="--h:26%"></i><i style="--h:68%"></i><i style="--h:43%"></i><i style="--h:86%"></i><i style="--h:35%"></i><i style="--h:60%"></i><i style="--h:48%"></i><i style="--h:94%"></i></span><span><span class="vtag">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2023</span><span class="tt">冷戰</span><span class="who">Tizzy T · 万妮达</span><span class="wave"><i style="--h:35%"></i><i style="--h:74%"></i><i style="--h:52%"></i><i style="--h:91%"></i><i style="--h:41%"></i><i style="--h:66%"></i><i style="--h:28%"></i><i style="--h:83%"></i><i style="--h:59%"></i><i style="--h:45%"></i><i style="--h:96%"></i><i style="--h:37%"></i><i style="--h:71%"></i><i style="--h:54%"></i><i style="--h:30%"></i><i style="--h:79%"></i><i style="--h:49%"></i><i style="--h:88%"></i><i style="--h:33%"></i><i style="--h:63%"></i></span><span><span class="vtag">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2019</span><span class="tt">永不独行</span><span class="who">GAI · 艾热</span><span class="wave"><i style="--h:48%"></i><i style="--h:86%"></i><i style="--h:32%"></i><i style="--h:69%"></i><i style="--h:95%"></i><i style="--h:44%"></i><i style="--h:77%"></i><i style="--h:55%"></i><i style="--h:26%"></i><i style="--h:82%"></i><i style="--h:61%"></i><i style="--h:39%"></i><i style="--h:90%"></i><i style="--h:50%"></i><i style="--h:73%"></i><i style="--h:34%"></i><i style="--h:65%"></i><i style="--h:42%"></i><i style="--h:98%"></i><i style="--h:57%"></i></span><span><span class="vtag">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2021</span><span class="tt">别怕变老</span><span class="who">王以太 · 艾热</span><span class="wave"><i style="--h:57%"></i><i style="--h:33%"></i><i style="--h:79%"></i><i style="--h:46%"></i><i style="--h:62%"></i><i style="--h:92%"></i><i style="--h:38%"></i><i style="--h:71%"></i><i style="--h:25%"></i><i style="--h:85%"></i><i style="--h:53%"></i><i style="--h:67%"></i><i style="--h:31%"></i><i style="--h:96%"></i><i style="--h:49%"></i><i style="--h:74%"></i><i style="--h:36%"></i><i style="--h:81%"></i><i style="--h:44%"></i><i style="--h:59%"></i></span><span><span class="vtag">STUDIO</span></span></div>
+    <div class="wrow"><span class="yr">2025</span><span class="tt">龍Loong <small>LIVE</small></span><span class="who">GAI · Bridge · VaVa · 盛宇 · 欧阳靖 · 早安 · 艾热</span><span class="wave"><i style="--h:41%"></i><i style="--h:78%"></i><i style="--h:55%"></i><i style="--h:94%"></i><i style="--h:36%"></i><i style="--h:68%"></i><i style="--h:23%"></i><i style="--h:87%"></i><i style="--h:60%"></i><i style="--h:48%"></i><i style="--h:99%"></i><i style="--h:42%"></i><i style="--h:75%"></i><i style="--h:52%"></i><i style="--h:29%"></i><i style="--h:83%"></i><i style="--h:45%"></i><i style="--h:91%"></i><i style="--h:34%"></i><i style="--h:64%"></i></span><span><span class="vtag live">LIVE</span></span></div>
+    <div class="wrow"><span class="yr">2024</span><span class="tt">Where to go</span><span class="who">王以太 · 艾热</span><span class="wave"><i style="--h:29%"></i><i style="--h:65%"></i><i style="--h:47%"></i><i style="--h:89%"></i><i style="--h:38%"></i><i style="--h:72%"></i><i style="--h:54%"></i><i style="--h:95%"></i><i style="--h:43%"></i><i style="--h:68%"></i><i style="--h:26%"></i><i style="--h:83%"></i><i style="--h:59%"></i><i style="--h:74%"></i><i style="--h:35%"></i><i style="--h:91%"></i><i style="--h:51%"></i><i style="--h:64%"></i><i style="--h:30%"></i><i style="--h:77%"></i></span><span><span class="vtag">STUDIO</span></span></div>
+  </div>
+  <div class="footbar"><span>337 RECORDS / 现场版 59 · 录音室版 6 · 发行版 272</span><span>SORT: YEAR DESC / SIGNAL LOCKED</span></div>
+  <div class="grain-mottle"></div><div class="grain-fine"></div><div class="grain-dust"></div><div class="scanlines"></div><div class="vig"></div>
+</section>
+
+<!-- ══ 05 MOBILE ══ -->
+<section class="sheet" id="s-mobile">
+  <header class="mhead"><a class="brand"><span class="mark"></span><strong>NAHFI</strong></a><nav class="mnav"><button class="on">地图</button><button>人物</button><button>作品</button></nav></header>
+  <div class="mtitle"><div class="eyebrow">01 / RELATION FIELD</div><h1>RELATION<br>FIELD</h1></div>
+  <div class="mstage">
+    <div class="grid-bg"></div><div class="halftone"></div>
+    <svg class="threads" viewBox="0 0 362 466" preserveAspectRatio="none">
+      <g fill="none" stroke="#D85A30" stroke-width="1.4">
+        <path d="M175 250 L78 92"/><path d="M175 250 L268 108"/><path d="M175 250 L262 372"/><path d="M175 250 L92 396"/>
+      </g>
+    </svg>
+    <div class="zone hot" style="left:12px;top:14px;width:152px;height:150px"><span class="zt">SC / 成都</span></div>
+    <div class="zone" style="left:180px;top:14px;width:168px;height:124px"><span class="zt mute">GD / 广东</span></div>
+    <div class="zone" style="left:12px;top:312px;width:336px;height:140px"><span class="zt mute">UN / 未标注</span></div>
+    <div class="node" style="left:78px;top:92px;position:absolute"><div class="f"><img src="../src/assets/avatars/vava.jpg" alt=""></div><div class="nm">VaVa</div></div>
+    <div class="node" style="left:268px;top:108px;position:absolute"><div class="f"><img src="../src/assets/avatars/tizzyt.jpg" alt=""></div><div class="nm">Tizzy T</div></div>
+    <div class="node sel" style="left:175px;top:250px;position:absolute"><div class="f"><img src="../src/assets/avatars/air.jpg" alt=""></div><div class="nm">艾热</div></div>
+    <div class="node" style="left:262px;top:372px;position:absolute"><div class="f"><img src="../src/assets/avatars/gali.jpg" alt=""></div><div class="nm">GALI</div></div>
+    <div class="node" style="left:92px;top:396px;position:absolute"><div class="f"><img src="../src/assets/avatars/psyp.jpg" alt=""></div><div class="nm">Psy.P</div></div>
+    <div class="map-caption">7 ACTIVE ZONES / TAP TO FOCUS</div>
+  </div>
+  <div class="mzoom"><button>−</button><button>+</button></div>
+  <div class="sheet2">
+    <div class="grip"></div>
+    <div class="row"><img src="../src/assets/avatars/air.jpg" alt=""><div><h2>艾热 / AIR</h2><div class="sub">SUBJECT 002 · VERIFIED · 新疆喀什</div></div></div>
+    <div class="nums"><div><b class="o">49</b><small>LINKS</small></div><div><b>16</b><small>WORKS</small></div><div><b>01</b><small>SOURCE</small></div></div>
+  </div>
+  <div class="grain-fine"></div><div class="grain-dust"></div><div class="scanlines"></div><div class="vig"></div>
+</section>
+
+<script>
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.sheet').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  const el=document.getElementById(b.dataset.go);
+  el.classList.remove('on');void el.offsetWidth;el.classList.add('on');
+  history.replaceState(null,'','#'+b.dataset.go);
+}));
+</script>
+</body>
+</html>

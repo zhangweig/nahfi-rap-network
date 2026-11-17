@@ -1,0 +1,107 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   FLOWLINE · ASCII visual layer
+   纯新增美术层。整文件删除即可完全回退，不触碰任何现有样式规则。
+   全部为静态 SVG 瓦片，无动画、无 canvas 逐帧重绘（4K 性能）。
+   ═══════════════════════════════════════════════════════════════════════ */
+:root{
+  --ascii-tile:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2784%27 height=%2742%27%3E%3Ctext font-family=%27monospace%27 font-size=%277%27 fill=%27%23e4572e%27 fill-opacity=%270.13%27 xml:space=%27preserve%27%3E%3Ctspan x=%270%27 y=%277%27%3E·:-=+*#%@·:-=%3C/tspan%3E%3Ctspan x=%270%27 y=%2714%27%3E=+*#%@·:-=+*%3C/tspan%3E%3Ctspan x=%270%27 y=%2721%27%3E*#%@·:-=+*#%%3C/tspan%3E%3Ctspan x=%270%27 y=%2728%27%3E%@·:-=+*#%@·%3C/tspan%3E%3Ctspan x=%270%27 y=%2735%27%3E-=+*#%@·:-=+%3C/tspan%3E%3Ctspan x=%270%27 y=%2742%27%3E+*#%@·:-=+*#%3C/tspan%3E%3C/text%3E%3C/svg%3E");
+  --ascii-dither:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%278%27 height=%278%27%3E%3Crect x=%270%27 y=%270%27 width=%271%27 height=%271%27 fill=%27%23ffffff%27 fill-opacity=%270.75%27/%3E%3Crect x=%274%27 y=%270%27 width=%271%27 height=%271%27 fill=%27%23ffffff%27 fill-opacity=%270.75%27/%3E%3Crect x=%272%27 y=%272%27 width=%271%27 height=%271%27 fill=%27%23ffffff%27 fill-opacity=%270.75%27/%3E%3Crect x=%276%27 y=%272%27 width=%271%27 height=%271%27 fill=%27%23ffffff%27 fill-opacity=%270.75%27/%3E%3Crect x=%271%27 y=%274%27 width=%271%27 height=%271%27 fill=%27%23ffffff%27 fill-opacity=%270.75%27/%3E%3Crect x=%275%27 y=%274%27 width=%271%27 height=%271%27 fill=%27%23ffffff%27 fill-opacity=%270.75%27/%3E%3Crect x=%273%27 y=%276%27 width=%271%27 height=%271%27 fill=%27%23ffffff%27 fill-opacity=%270.75%27/%3E%3Crect x=%277%27 y=%276%27 width=%271%27 height=%271%27 fill=%27%23ffffff%27 fill-opacity=%270.75%27/%3E%3C/svg%3E");
+  --fl-orange:#e4572e;
+}
+
+/* 1. 全站字符场：极淡，只做质感，不压信息 */
+.ascii-field{
+  position:fixed;inset:0;pointer-events:none;z-index:96;
+  background-image:var(--ascii-tile);
+  background-size:84px 42px;
+  opacity:.5;mix-blend-mode:overlay;
+}
+
+/* 2. 地图区：只在边缘显影，中心人物区保持干净 */
+.neon-mode .map-room::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:var(--ascii-tile);
+  background-size:84px 42px;
+  opacity:.85;
+  -webkit-mask-image:radial-gradient(ellipse 68% 58% at 50% 50%,transparent 38%,#000 100%);
+  mask-image:radial-gradient(ellipse 68% 58% at 50% 50%,transparent 38%,#000 100%);
+}
+
+/* 3. 品牌字：FLOWLINE 换成等宽橙字，下方一道 ASCII 标尺 */
+.neon-mode .brand strong{
+  font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;
+  font-size:27px;font-weight:800;letter-spacing:2px;
+  color:var(--fl-orange);
+  position:relative;
+}
+.neon-mode .brand strong::after{
+  content:"";position:absolute;left:0;right:0;bottom:-7px;height:5px;
+  background-image:var(--ascii-dither);
+  background-size:8px 8px;
+  background-color:rgba(228,87,46,.16);
+  opacity:.75;
+}
+
+/* 4. 统计条：把发光实心条改成 dither 量化条 */
+.neon-mode .gc-bar i em.on{
+  background-image:var(--ascii-dither);
+  background-size:8px 8px;
+  background-color:#8c331b;
+  box-shadow:none;
+}
+
+/* 5. 人物档案卡：右下角 ASCII 档案标记 */
+.neon-mode .artist-panel.game-card::after{
+  content:"[ ASCII / FLOWLINE ARCHIVE ]";
+  position:absolute;right:11px;bottom:5px;z-index:2;pointer-events:none;
+  font:8px/1 ui-monospace,Consolas,monospace;
+  letter-spacing:.1em;color:var(--fl-orange);opacity:.45;
+}
+
+/* 6. 暖色主题可读性补偿：自动映射把暗底次要文字压得太深，这里统一提亮。
+   只影响文字颜色，不碰背景、头像与任何布局。 */
+.neon-mode .search-area input::placeholder,
+.neon-mode .search-area svg,
+.neon-mode .board-title p,
+.neon-mode .board-hint,
+.neon-mode .bz-cta span,
+.neon-mode .bz-tag i,
+.neon-mode .bt-top,
+.neon-mode .bt-track button,
+.neon-mode .bt-top button,
+.neon-mode .map-room>.map-label,
+.neon-mode .map-room>.map-bottom{color:#9a8b7a}
+.neon-mode .bt-track button:hover,
+.neon-mode .bt-top button:hover{color:#e6d6bf}
+.neon-mode .bt-track button.past{color:#7a6d5f}
+.neon-mode .bz-tag em,
+.neon-mode .bz-tag .only-name{color:#c2b4a2}
+.neon-mode .bz.empty .bz-tag b,
+.neon-mode .bz.empty .bz-tag em,
+.neon-mode .bz.empty .bz-tag .only-name{color:#8a7d6f}
+.neon-mode .bz.empty .bz-tag i{color:#7a6d5f}
+.neon-mode .gc-bar,
+.neon-mode .gc-bar span,
+.neon-mode .gc-row small{color:#a39584}
+.neon-mode .gc-alias{color:#b3a593}
+.neon-mode .board-info small{color:#9a8b7a}
+.neon-mode .gc-row summary,
+.neon-mode .gc-sources p,
+.neon-mode .gc-none,
+.neon-mode .gc-empty p{color:#a39584}
+.neon-mode .gc-bar span{color:#b3a593}
+.neon-mode .gc-row small,
+.neon-mode .gc-row details p,
+.neon-mode .gc-sources,
+.neon-mode .gc-sources summary{color:#b8a995}
+
+/* 7. 移动端：字符场减淡，避免小屏显脏 */
+@media(max-width:780px){
+  .ascii-field{opacity:.28}
+  .neon-mode .map-room::before{opacity:.45}
+  .neon-mode .brand strong{font-size:23px}
+  .neon-mode .artist-panel.game-card::after{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .ascii-field,.neon-mode .map-room::before{opacity:.25}
+}

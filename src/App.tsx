@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {Download, Link2, MapPin, Plus, Route, Search, ShieldCheck, SlidersHorizontal, X} from 'lucide-react';
+import {ChevronDown, Download, Link2, MapPin, Plus, Route, Search, ShieldCheck, SlidersHorizontal, UserPlus, X, Zap} from 'lucide-react';
 import {useDataset} from './state/Dataset';
 import {RelationBoard} from './components/RelationBoard';
 import {ArtistPanel} from './components/ArtistPanel';
@@ -7,14 +7,17 @@ import {Avatar} from './components/PixelAvatar';
 import {CatalogPanel} from './components/CatalogPanel';
 import {SubmissionEditor, ReviewPanel, Modal, type EditorTarget} from './components/Community';
 import {ReportDialog, type ReportTarget} from './components/ReportDialog';
+import {BeefCard} from './components/BeefCard';
+import {BeefSubmit} from './components/BeefSubmit';
 import {ALL_PROVINCES, UNKNOWN_PROVINCE, provinceLabel, provinceOf, provinceOptions} from './lib/province';
-import {artistMatches, workMatches} from './lib/catalog';
+import {artistMatches} from './lib/catalog';
 import {shortestRoute} from './lib/network';
 import type {RelationType} from './data/types';
+import {allBeefs, loadLocalBeefs, saveLocalBeefs, type BeefEvent} from './data/beefs';
 
-type Section = 'map' | 'artists' | 'works';
+type Section = 'map' | 'artists';
 
-const NAV: [Section, string][] = [['map', '地图'], ['artists', '人物'], ['works', '作品']];
+const NAV: [Section, string][] = [['map', '地图'], ['artists', '人物']];
 
 /**
  * 人物深链：`?p=<id>`。
@@ -34,11 +37,21 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [province, setProvince] = useState<string>(ALL_PROVINCES);
   const [editor, setEditor] = useState<EditorTarget | null>(null);
+  // 三个投稿入口收进一个下拉：内容投稿（需 API）+ 本地线索（BEEF），离线时前两项保留并说明原因。
+  const [submitOpen, setSubmitOpen] = useState(false);
+  const [submitNotice, setSubmitNotice] = useState(false);
+  const submitRef = useRef<HTMLDivElement>(null);
   const [report, setReport] = useState<ReportTarget | null>(null);
   const [review, setReview] = useState(false);
   const [unlocated, setUnlocated] = useState(false);
   const [filters, setFilters] = useState(false);
   const [pathOpen, setPathOpen] = useState(false);
+  // BEEF 链：服务端公开数据（种子 + 网友投稿经审核）+ 本地离线草稿。
+  const [localBeefs, setLocalBeefs] = useState<BeefEvent[]>(loadLocalBeefs);
+  const [openBeef, setOpenBeef] = useState<BeefEvent | null>(null);
+  const [beefSubmitOpen, setBeefSubmitOpen] = useState(false);
+  const [onlyBeef, setOnlyBeef] = useState(false);
+  const beefs = useMemo(() => allBeefs(data.beefs, localBeefs), [data.beefs, localBeefs]);
   const [types, setTypes] = useState<RelationType[]>(['member', 'collaboration', 'production', 'affiliation']);
   const [start, setStart] = useState('yitai');
   const [end, setEnd] = useState('air');
@@ -51,7 +64,6 @@ export default function App() {
   const nodeById = useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
   const pendingLocations = nodes.filter(n => provinceOf(n.city) === UNKNOWN_PROVINCE);
   const matches = query.trim() ? nodes.filter(n => artistMatches(n, query)).slice(0, 7) : [];
-  const workResults = query.trim() ? works.filter(w => workMatches(w, query, nodeById)).slice(0, 3) : [];
 
   // 选中谁就把谁写进地址栏。用 replaceState 而不是 pushState：浏览人物不该
   // 在历史里堆一层层「后退」，否则从别人分享的链接进来后一按后退就困在图里。
@@ -74,6 +86,21 @@ export default function App() {
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
+
+  // 投稿下拉：点外部或 Esc 关闭；键盘也能操作，避免只在 hover 时才可用。
+  useEffect(() => {
+    if (!submitOpen) return;
+    const outside = (event: PointerEvent) => {
+      if (!submitRef.current?.contains(event.target as Node)) setSubmitOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') setSubmitOpen(false); };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', outside);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [submitOpen]);
 
   // 首屏带 ?p= 时把画布飞过去。投稿新增的人物要等接口数据回来才在 nodes 里，
   // 所以这里等 nodeById 更新而不是一次性跑完。
@@ -134,34 +161,62 @@ export default function App() {
   };
 
   return <div className={`app pixel-app neon-mode ${section === 'map' ? 'board-mode' : ''}`}>
+    <div className="ascii-field" aria-hidden="true" />
     <header className="site-header">
       <a href="#" className="brand" onClick={e => { e.preventDefault(); openSection('map'); }}>
-        <span className="vinyl-logo" /><strong>嘻哈版图<span>®</span></strong>
+        <span className="vinyl-logo" /><strong>FLOWLINE<span>®</span></strong>
       </a>
       <nav aria-label="主要导航">
         {NAV.map(([key, label]) => <button key={key} className={section === key ? 'active' : ''} onClick={() => openSection(key)}>{label}</button>)}
       </nav>
       <div className="header-actions">
-        {writable && <>
-          <button className="hbtn is-primary" onClick={() => setEditor({kind: 'artist'})}><Plus size={15} />添加人物</button>
-          <button className="hbtn" onClick={() => setEditor({kind: 'relationship'})}><Link2 size={15} />添加关系</button>
-        </>}
+        <div className="submit-menu" ref={submitRef}>
+          <button className={`hbtn is-primary submit-trigger ${submitOpen ? 'is-open' : ''}`}
+            onClick={() => setSubmitOpen(v => !v)} aria-haspopup="menu" aria-expanded={submitOpen} aria-label="投稿入口">
+            <Plus size={15} /><span>投稿</span><ChevronDown size={13} className="submit-caret" />
+          </button>
+          {submitOpen && <div className="submit-pop" role="menu">
+            <div className="submit-pop-head">
+              <span>CONTRIBUTE / 投稿中心</span>
+              <small>{writable ? '投稿服务已连接' : '浏览模式'}</small>
+            </div>
+            <button role="menuitem" className={`submit-item ${writable ? '' : 'is-disabled'}`}
+              onClick={() => { setSubmitOpen(false); if (writable) setEditor({kind: 'artist'}); else setSubmitNotice(true); }}>
+              <span className="si-icon"><UserPlus size={16} /></span>
+              <span className="si-body"><b>添加人物</b><small>录入新的人物档案</small></span>
+              {!writable && <em className="si-lock" title="需要连接投稿服务">离线</em>}
+            </button>
+            <button role="menuitem" className={`submit-item ${writable ? '' : 'is-disabled'}`}
+              onClick={() => { setSubmitOpen(false); if (writable) setEditor({kind: 'relationship'}); else setSubmitNotice(true); }}>
+              <span className="si-icon"><Link2 size={16} /></span>
+              <span className="si-body"><b>添加关系</b><small>补充合作 / 成员 / 制作关系</small></span>
+              {!writable && <em className="si-lock" title="需要连接投稿服务">离线</em>}
+            </button>
+            <button role="menuitem" className={`submit-item is-beef ${writable ? '' : 'is-draft'}`} onClick={() => { setSubmitOpen(false); setBeefSubmitOpen(true); }}>
+              <span className="si-icon"><Zap size={16} /></span>
+              <span className="si-body"><b>补充 BEEF</b><small>{writable ? '冲突线索 · 审核后公开' : '冲突线索 · 先存本地草稿'}</small></span>
+              <em className="si-count">{beefs.length}</em>
+            </button>
+            <p className="submit-foot">
+              {writable
+                ? '三类投稿都经站长审核；通过后所有人可见，也会实时同步到关系网。'
+                : <>当前为浏览模式：人物 / 关系投稿不可用，BEEF 只能存为本地草稿。<button onClick={() => { setSubmitOpen(false); setSubmitNotice(true); }}>为什么？</button></>}
+            </p>
+          </div>}
+        </div>
       </div>
     </header>
 
     <div className="workspace-toolbar">
       <div className="search-area">
         <Search size={17} />
-        <input aria-label="搜索人物、省份或作品" placeholder="搜索人物 / 作品 / 专辑" value={query} onChange={e => setQuery(e.target.value)} />
+        <input aria-label="搜索人物或省份" placeholder="搜索人物 / 别名" value={query} onChange={e => setQuery(e.target.value)} />
         {query && <button aria-label="清除搜索" onClick={() => setQuery('')}><X size={15} /></button>}
         {query.trim() && section === 'map' && <div className="search-results">
           {matches.map(n => <button key={n.id} onClick={() => flyPick(n.id)}>
             <Avatar node={n} /><span><strong>{n.name}</strong><small>{provinceLabel(provinceOf(n.city))}</small></span>
           </button>)}
-          {workResults.map(w => <button key={w.id} onClick={() => { setSection('works'); setQuery(w.title); }}>
-            <span className="small-record">♫</span><span>{w.title}<small>{w.year} · {w.version}</small></span>
-          </button>)}
-          {!matches.length && !workResults.length && <p>没有找到相关人物或作品。</p>}
+          {!matches.length && <p>没有找到相关人物。</p>}
         </div>}
       </div>
       <label className="city-filter">
@@ -188,7 +243,9 @@ export default function App() {
           ? <div className="map-room">
             <RelationBoard selected={selected} onSelect={pick} onClear={closeDetail} types={types} province={province}
               path={path} focus={focus} onToggleType={toggleType} onLocate={() => setUnlocated(true)}
-              onResetProvince={() => { setProvince(ALL_PROVINCES); clearPath(); }} />
+              onResetProvince={() => { setProvince(ALL_PROVINCES); clearPath(); }}
+              beefs={beefs} onlyBeef={onlyBeef} onToggleBeef={() => setOnlyBeef(v => !v)}
+              onOpenBeef={setOpenBeef} />
             {path && <div className="path-banner board-path">
               找到 {path.length - 1} 步路径：{path.map((id, i) => <span key={id}>{i > 0 ? ' → ' : ''}<button onClick={() => setSelected(id)}>{nodeById.get(id)?.name}</button></span>)}
               <button aria-label="清除路径" onClick={() => setPath(null)}>×</button>
@@ -201,7 +258,7 @@ export default function App() {
                 onContribute={() => setEditor({kind: 'relationship', source: current.id})} onClose={closeDetail} />
             </div>}
           </div>
-          : <CatalogPanel mode={section} query={query} onQuery={setQuery}
+          : <CatalogPanel query={query} onQuery={setQuery}
             onPick={id => { flyPick(id); setSection('map'); }} province={province} />}
       </section>
     </main>
@@ -217,6 +274,16 @@ export default function App() {
     {editor && <SubmissionEditor target={editor} onClose={() => setEditor(null)} />}
     {report && <ReportDialog target={report} onClose={() => setReport(null)} />}
     {review && <ReviewPanel onClose={() => setReview(false)} />}
+    {openBeef && <BeefCard beef={openBeef} nodeById={nodeById}
+      onClose={() => setOpenBeef(null)} onPick={flyPick}
+      // 定位到当事人即回到默认语境：选中谁，就只亮出与谁相关的那条链。
+      onLocate={id => { setOnlyBeef(false); flyPick(id); }} />}
+    {beefSubmitOpen && <BeefSubmit nodes={nodes} onClose={() => setBeefSubmitOpen(false)}
+      onSaveDraft={beef => setLocalBeefs(old => { const next = [...old, beef]; saveLocalBeefs(next); return next; })} />}
+    {submitNotice && <Modal title="为什么投稿不可用" onClose={() => setSubmitNotice(false)}>
+      <p className="form-intro">三类投稿都会提交到投稿服务，经站长核实来源后才能进入公开数据——这是网友共同补全关系网、又不让不实内容污染网站的方式。当前页面是静态浏览模式，没有连接投稿 API。</p>
+      <p className="field-help">本地开发运行 <code>npm run dev</code> 即可启用；线上站点需要站长在仓库 Variables 里配置 <code>VITE_API_BASE</code> 指向投稿 Worker。没连上时，BEEF 可先存为本地草稿，但只有你能看到，需要联网后重新提交。</p>
+    </Modal>}
     {unlocated && <Modal title="地域待考据" onClose={() => setUnlocated(false)}>
       <p className="form-intro">这些人物已收录，但还没有可核验的省份来源。他们暂时停留在“待考据之岛”，补充有来源的地域信息后会自动归入对应聚落。</p>
       <div className="unlocated-grid">{pendingLocations.map(n => <button key={n.id} onClick={() => flyPick(n.id)}>

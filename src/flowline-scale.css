@@ -1,0 +1,78 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   FLOWLINE · panel type scale + 4K performance guard
+   整文件删除即可完全回退。只覆盖字号与动画开关，
+   不碰配色、不碰布局结构、不碰任何功能逻辑。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── A. 人物档案面板字号放大 ─────────────────────────────────────────
+   原面板正文普遍 7–10px，4K 屏上偏小。统一抬到 9–13px。
+   面板宽度 340–346px 不变，同步放宽两处固定宽度的栏（条目标签 / 年份）。 */
+.neon-mode .gc-kind{font-size:9.5px;letter-spacing:1.2px}
+.neon-mode .gc-id h2{font-size:23px}
+.neon-mode .gc-alias{font-size:11px}
+.neon-mode .gc-prov{font-size:11px}
+.neon-mode .gc-level{font-size:9px}
+.neon-mode .gc-stats{margin:9px 0 7px}
+.neon-mode .gc-stats div{padding:6px 3px}
+.neon-mode .gc-stats b{font-size:16px}
+.neon-mode .gc-stats small{font-size:9px}
+.neon-mode .gc-bars{margin-bottom:7px}
+.neon-mode .gc-bar{font-size:10px}
+.neon-mode .gc-bar span{width:48px}
+.neon-mode .gc-bar b{font-size:10px;width:20px}
+.neon-mode .gc-bio{font-size:12px;line-height:1.7;max-height:72px;margin-bottom:6px}
+.neon-mode .gc-note{font-size:11px}
+.neon-mode .gc-moments h3{font-size:9.5px;letter-spacing:1.2px}
+.neon-mode .gc-shot-art{font-size:17px;height:34px}
+.neon-mode .gc-shot-meta b{font-size:10.5px}
+.neon-mode .gc-shot-meta small{font-size:9px}
+.neon-mode .gc-track{margin:7px 0}
+.neon-mode .gc-track-top{font-size:9.5px;letter-spacing:1.2px}
+.neon-mode .gc-track-top b{font-size:12px}
+.neon-mode .gc-track p{font-size:11.5px}
+.neon-mode .gc-tabs button{font-size:12px}
+.neon-mode .gc-tabs b{font-size:11px}
+.neon-mode .gc-row{padding:7px 0}
+.neon-mode .gc-row-year{font-size:11px;width:44px}
+.neon-mode .gc-row.is-link .gc-row-year{font-size:10px;width:44px}
+.neon-mode .gc-row b{font-size:12.5px}
+.neon-mode .gc-row button{font-size:12.5px}
+.neon-mode .gc-row small{font-size:10.5px}
+.neon-mode .gc-row summary{font-size:10px}
+.neon-mode .gc-row details p{font-size:10px}
+.neon-mode .gc-row details a{font-size:10px}
+.neon-mode .gc-none{font-size:11.5px}
+.neon-mode .gc-sources{font-size:10.5px}
+.neon-mode .gc-sources summary,
+.neon-mode .gc-sources a,
+.neon-mode .gc-sources p{font-size:10.5px}
+.neon-mode .gc-contribute{font-size:12px}
+.neon-mode .gc-share-menu button{font-size:12px}
+.neon-mode .gc-share-menu small{font-size:10px}
+.neon-mode .gc-toast{font-size:11px}
+.neon-mode .gc-empty h2{font-size:18px}
+.neon-mode .gc-empty p{font-size:12px}
+
+/* 移动端抽屉里字号略收一档，避免 346px→窄屏挤压 */
+@media(max-width:780px){
+  .neon-mode .gc-id h2{font-size:21px}
+  .neon-mode .gc-stats b{font-size:15px}
+  .neon-mode .gc-bar span{width:44px}
+}
+
+/* ── B. 4K / 高 DPR 性能降级 ─────────────────────────────────────────
+   背景的 7 层全屏动画（极光 / 线场 / 信号线 / 双雷达 / 扫描 / 浮尘）
+   在 DPR≥1.5 或逻辑宽≥2400px 时每帧要填 2000–3300 万像素，
+   是 4K 卡顿的主因。这里把这些层降为静态：渐变与构图全部保留，
+   只停掉 animation——这些动画周期 14–50s，静帧几乎看不出差别。 */
+@media (min-resolution: 1.5dppx), (-webkit-min-device-pixel-ratio: 1.5), (min-width: 2400px){
+  .board-bg .bg-aurora i,
+  .board-bg .bg-lines i,
+  .board-bg .bg-traces i,
+  .board-bg .bg-radar,
+  .board-bg .bg-radar.alt,
+  .board-bg .bg-sweep,
+  .board-bg .bg-sparks i{animation:none !important}
+  .board-bg .bg-sparks i{opacity:.35}
+  .board-bg .bg-par{will-change:auto}
+}

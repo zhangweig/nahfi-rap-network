@@ -1,0 +1,273 @@
+/* FLOWLINE · BEEF 链视觉层
+   酸绿 #b9d84a 是 beef 专属色：与全站焦橙互补，在炭黑底上最跳，
+   且属于 retro-digital 规范的「炭黑+橙红+酸绿」第二原色，不是新发明。
+   整层可删（连同 main.tsx 的 import）即可回退。 */
+
+:root{
+  --beef:#b9d84a;
+  --beef-dim:#7f9630;
+  --beef-ink:#0e0c0a;
+}
+
+/* ============ 关系网：冲突证据链 ============ */
+.board-edges.beef-only [class*="edge"]{opacity:0 !important;pointer-events:none}
+/* theme.css 给 .board-edges 设了 pointer-events:none；这里逐级恢复，让线身与档案牌可点击 */
+.board-edges .beef-links,.board-edges .beef-link,.board-edges .beef-hit{pointer-events:stroke}
+.beef-link{cursor:pointer}
+.beef-hit{stroke:transparent;cursor:pointer}
+/* 暗底实线 + 外发光 + 酸绿锯齿：三层叠出「档案封条」质感 */
+.beef-thread{stroke:#2c3312;stroke-width:2.6;opacity:.8;pointer-events:none}
+.beef-halo{stroke:var(--beef);stroke-width:12;opacity:.09;filter:blur(5px);pointer-events:none}
+.beef-zig{
+  stroke:var(--beef);
+  stroke-width:1.9;
+  stroke-linejoin:miter;
+  stroke-linecap:butt;
+  opacity:.82;
+  filter:drop-shadow(0 0 3px rgba(185,216,74,.5));
+  transition:opacity .25s,stroke-width .25s;
+  pointer-events:none;
+}
+.beef-zig.is-active{stroke-width:2.7;opacity:1;filter:drop-shadow(0 0 7px rgba(185,216,74,.9))}
+.beef-link:hover .beef-zig{stroke-width:2.7;opacity:1}
+/* 流动信号包：亮点沿链游走，选中或悬停时才亮，避免默认喧宾夺主 */
+.beef-spark{
+  stroke:#f4ffc4;stroke-width:2.6;stroke-dasharray:2 46;stroke-linecap:round;
+  opacity:0;filter:drop-shadow(0 0 5px rgba(244,255,196,.95));
+  animation:beef-spark 2.6s linear infinite;pointer-events:none;
+}
+.beef-link.is-active .beef-spark,.beef-link:hover .beef-spark{opacity:1}
+@keyframes beef-spark{from{stroke-dashoffset:48}to{stroke-dashoffset:0}}
+/* 双端定位标：菱形锁定点 + 十字刻度 */
+.beef-anchor{pointer-events:none}
+.beef-anchor-diamond{fill:#0d0e08;stroke:var(--beef);stroke-width:1.3;transition:fill .25s}
+.beef-link.is-active .beef-anchor-diamond{fill:var(--beef);filter:drop-shadow(0 0 5px rgba(185,216,74,.8))}
+.beef-anchor-ticks{fill:none;stroke:var(--beef);stroke-width:1.1;opacity:.55}
+.beef-link.is-active .beef-anchor-ticks{opacity:1}
+/* 引线：从链上锚点连到外移的档案牌 */
+.beef-leader{stroke:var(--beef);stroke-width:1;stroke-opacity:.5;stroke-dasharray:2 3;pointer-events:none}
+.beef-link.is-active .beef-leader{stroke-opacity:.85}
+/* 档案牌：切角封条 + 三行信息（状态 / 标题 / 提示） */
+.beef-tag{pointer-events:none}
+.beef-tag-body{
+  fill:#0c0d08;stroke:var(--beef);stroke-width:1.1;stroke-opacity:.85;
+  pointer-events:all;filter:drop-shadow(0 3px 8px rgba(0,0,0,.7));
+  transition:stroke-width .25s;
+}
+.beef-link.is-active .beef-tag-body{stroke-width:1.7;filter:drop-shadow(0 0 8px rgba(185,216,74,.35))}
+.beef-tag-accent{fill:none;stroke:var(--beef);stroke-width:2.5;stroke-opacity:.9;pointer-events:none}
+.beef-tag-kicker{
+  fill:var(--beef);font:600 8.5px/1 'JetBrains Mono','Microsoft YaHei',monospace;
+  letter-spacing:.8px;pointer-events:none;
+}
+.beef-tag-title{fill:#f2ede4;font:600 11px/1 'Noto Sans SC','Microsoft YaHei',sans-serif;pointer-events:none}
+.beef-tag-hint{fill:#8f9a6e;font:500 7.5px/1 'Noto Sans SC','Microsoft YaHei',sans-serif;pointer-events:none}
+
+/* ============ 节点：警戒环 + 角标 ============ */
+.bn.has-beef .bn-pic{position:relative}
+.bn-beef-ring{
+  position:absolute;
+  inset:-4px;
+  border:1.5px solid var(--beef);
+  border-radius:50%;
+  box-shadow:0 0 0 2px rgba(13,14,8,.7),0 0 8px rgba(185,216,74,.4);
+  pointer-events:none;
+  animation:beef-pulse 2.4s ease-in-out infinite;
+}
+@keyframes beef-pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+/* 选中头像会被 theme.css 放大 3 倍；新角标按 .bn-flag 的补偿方式缩回去，
+   否则警戒环/角标会跟着放大，盖住整片关系网。脉冲动画也要用补偿后的基准值，
+   不然 keyframe 里的 scale() 会把这条静态补偿覆盖掉。 */
+.bn.is-active .bn-beef-ring{animation-name:beef-pulse-active;transform-origin:50% 100%}
+@keyframes beef-pulse-active{0%,100%{opacity:.55;transform:scale(.3333)}50%{opacity:1;transform:scale(.36)}}
+.bn.is-active .bn-beef-flag{transform:scale(.3333);transform-origin:100% 0;top:-3px;right:-4.67px}
+.bn-beef-flag{
+  position:absolute;
+  top:-9px;
+  right:-14px;
+  background:var(--beef);
+  color:var(--beef-ink);
+  font:700 8px/1.5 'JetBrains Mono','Microsoft YaHei',monospace;
+  letter-spacing:.3px;
+  padding:0 4px;
+  border-radius:2px;
+  white-space:nowrap;
+  pointer-events:none;
+  box-shadow:0 1px 4px rgba(0,0,0,.6);
+}
+
+/* ============ 筛选开关 ============ */
+.rail-beef-mark{color:var(--beef);font-size:13px;line-height:1}
+.board-rail button.beef-on{--c:var(--beef);border-color:var(--beef);color:var(--beef)}
+.rail-beef-count{
+  font:700 8px/1 'JetBrains Mono',monospace;
+  color:var(--beef-ink);
+  background:var(--beef);
+  border-radius:6px;
+  padding:1px 4px;
+  font-style:normal;
+  margin-left:2px;
+}
+
+/* ============ 冲突档案卡 / 补充表单 弹层 ============ */
+.beef-card-backdrop{
+  position:absolute;
+  inset:0;
+  z-index:120;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(6,6,5,.74);
+  backdrop-filter:blur(3px);
+}
+.beef-card,.beef-submit{
+  width:min(560px,100%);
+  max-height:min(88vh,820px);
+  overflow:auto;
+  background:#141210;
+  border:1px solid #3a342c;
+  border-top:2px solid var(--beef);
+  border-radius:12px;
+  padding:20px 24px;
+  color:#e0d7c8;
+  font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;
+  box-shadow:0 24px 80px rgba(0,0,0,.75);
+}
+.bfc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.bfc-kicker{font:500 10px/1.4 'JetBrains Mono',monospace;letter-spacing:1.5px;color:var(--beef)}
+.bfc-head h3{font-size:20px;font-weight:600;margin:5px 0 0;color:#f2ede4;letter-spacing:.5px}
+.bfc-close{
+  flex:none;width:30px;height:30px;display:grid;place-items:center;
+  background:transparent;border:1px solid #4a4234;border-radius:6px;color:#bdae9b;cursor:pointer;
+}
+.bfc-close:hover{border-color:var(--beef);color:var(--beef)}
+.bfc-status-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.bfc-badge{font:500 10px/1 'JetBrains Mono','Microsoft YaHei',monospace;padding:4px 9px;border-radius:3px;letter-spacing:.5px}
+.bfc-badge.is-unverified{background:rgba(228,87,46,.14);color:#ff9a6a;border:1px solid rgba(228,87,46,.45)}
+.bfc-badge.is-verified{background:rgba(185,216,74,.14);color:var(--beef);border:1px solid rgba(185,216,74,.45)}
+.bfc-badge.is-local{background:rgba(255,255,255,.06);color:#bdae9b;border:1px solid #4a4234}
+
+/* 对阵 */
+.bfc-versus{
+  display:flex;flex-direction:column;gap:8px;
+  background:#1a1814;border:0.5px solid #3a342c;border-radius:8px;padding:14px;margin-bottom:20px;
+}
+.bfc-side{display:flex;align-items:center;gap:12px;position:relative}
+.bfc-face{
+  flex:none;width:52px;height:52px;border-radius:50%;overflow:hidden;
+  border:2px solid var(--beef);background:#242019;padding:0;cursor:pointer;
+}
+.bfc-face img{width:100%;height:100%;object-fit:cover;filter:grayscale(.3) contrast(1.1)}
+.bfc-face-empty{display:grid;place-items:center;color:var(--beef);font-size:22px;cursor:default}
+.bfc-side-info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bfc-side-info b{font-size:15px;color:#f2ede4;font-weight:600}
+.bfc-side-info small{font-size:11px;color:#9a8b7a}
+.bfc-side-info em{font-size:11px;color:var(--beef);font-style:normal}
+.bfc-vs{
+  position:absolute;left:44px;top:50%;transform:translateY(-50%);
+  font:700 11px/1 'JetBrains Mono',monospace;color:var(--beef-ink);
+  background:var(--beef);border-radius:2px;padding:2px 4px;z-index:1;
+}
+.bfc-open{font-size:11px;color:#ff9a6a;margin:4px 0 0 64px}
+
+/* 区块 */
+.bfc-section{margin-bottom:18px}
+.bfc-section h4{
+  font-size:11px;font-weight:600;letter-spacing:1.5px;color:var(--beef);
+  text-transform:uppercase;margin:0 0 10px;padding-bottom:6px;border-bottom:0.5px solid #3a342c;
+}
+.bfc-empty{font-size:12px;line-height:1.7;color:#9a8b7a;margin:0;display:flex;gap:6px;align-items:flex-start}
+.bfc-empty svg{flex:none;color:#ff9a6a;margin-top:2px}
+.bfc-timeline{border-left:1px solid #4a4234;margin-left:6px;padding-left:16px;display:flex;flex-direction:column;gap:14px}
+.bfc-moment{display:flex;gap:12px;position:relative}
+.bfc-moment::before{
+  content:'';position:absolute;left:-20px;top:4px;width:7px;height:7px;
+  border-radius:50%;background:var(--beef);box-shadow:0 0 0 3px #141210;
+}
+.bfc-year{font:600 12px/1.6 'JetBrains Mono',monospace;color:var(--beef);min-width:38px}
+.bfc-moment-body{display:flex;flex-direction:column;gap:4px;min-width:0}
+.bfc-tag{font:600 9px/1.4 'JetBrains Mono',monospace;padding:1px 6px;border-radius:2px;align-self:flex-start;letter-spacing:.5px}
+.bfc-tag-diss{background:rgba(228,87,46,.18);color:#ff9a6a}
+.bfc-tag-response,.bfc-tag-statement{background:rgba(185,216,74,.14);color:var(--beef)}
+.bfc-tag-reconcile{background:rgba(120,160,90,.18);color:#a9c77a}
+.bfc-tag-other{background:rgba(255,255,255,.08);color:#bdae9b}
+.bfc-moment-label{font-size:12px;color:#e0d7c8;line-height:1.6}
+.bfc-source{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--beef);text-decoration:none;width:fit-content}
+.bfc-source:hover{text-decoration:underline}
+.bfc-sources{display:flex;flex-direction:column;gap:6px}
+.bfc-sources a{
+  display:flex;align-items:flex-start;gap:8px;padding:8px 10px;
+  background:#1a1814;border:0.5px solid #3a342c;border-radius:5px;
+  color:var(--beef);text-decoration:none;
+}
+.bfc-sources a:hover{border-color:var(--beef)}
+.bfc-sources a span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bfc-sources b{font-size:12px;font-weight:500;color:#e0d7c8}
+.bfc-sources small{font-size:10px;color:#9a8b7a}
+.bfc-note{font-size:11px;line-height:1.6;color:#8a7d6f;font-style:italic;margin:0 0 16px;padding:8px 10px;background:rgba(255,255,255,.03);border-left:2px solid #4a4234}
+
+/* 底部 */
+.bfc-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-top:14px;margin-top:4px;border-top:0.5px solid #3a342c;
+}
+.bfc-foot>span{font:500 9px/1.4 'JetBrains Mono',monospace;color:#6b6358;letter-spacing:.5px;text-align:right}
+.bfc-locate{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--beef);color:var(--beef-ink);border:none;border-radius:5px;
+  padding:8px 14px;font:600 12px/1 'Noto Sans SC',sans-serif;cursor:pointer;
+}
+.bfc-locate:hover{filter:brightness(1.08)}
+.bfc-locate:disabled{opacity:.55;cursor:not-allowed}
+
+/* 补充表单 */
+.bfc-notice{
+  display:flex;gap:10px;align-items:flex-start;
+  background:rgba(228,87,46,.08);border:0.5px solid rgba(228,87,46,.3);border-radius:6px;
+  padding:10px 12px;margin-bottom:16px;
+}
+.bfc-notice svg{flex:none;color:#ff9a6a;margin-top:2px}
+.bfc-notice p{font-size:11px;line-height:1.7;color:#c9baa6;margin:0}
+.bfc-notice strong{color:#ff9a6a;font-weight:600}
+.bfm-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.bfm-field>span{font-size:11px;color:#bdae9b}
+.bfm-field small{color:#8a7d6f;font-weight:400}
+.bfm-field input,.bfm-field select,.bfm-field textarea{
+  width:100%;background:#1a1814;border:0.5px solid #4a4234;border-radius:5px;
+  color:#e0d7c8;padding:8px 10px;font:400 12px/1.5 'Noto Sans SC','Microsoft YaHei',sans-serif;
+  box-sizing:border-box;resize:vertical;
+}
+.bfm-field input:focus,.bfm-field select:focus,.bfm-field textarea:focus{outline:none;border-color:var(--beef)}
+.bfm-field input::placeholder,.bfm-field textarea::placeholder{color:#6b6358}
+.bfm-error{font-size:11px;line-height:1.5;color:#ff9a6a;background:rgba(228,87,46,.1);border-radius:4px;padding:8px 10px;margin:0 0 12px}
+.bfm-receipt{font:500 11px/1.6 'JetBrains Mono',monospace;color:#b9d84a;background:rgba(185,216,74,.08);border:0.5px solid rgba(185,216,74,.3);border-radius:5px;padding:10px 12px;word-break:break-all;margin:0 0 14px}
+.beef-submit-done>.bfc-notice{background:rgba(185,216,74,.07);border-color:rgba(185,216,74,.3)}
+.beef-submit-done>.bfc-notice p{color:#c9d3a6}
+.beef-submit-done>.bfc-notice svg{color:var(--beef)}
+
+/* 顶部补充按钮 */
+.hbtn.beef-add{color:var(--beef);border-color:rgba(185,216,74,.5)}
+.hbtn.beef-add:hover{background:rgba(185,216,74,.12);border-color:var(--beef)}
+
+/* 球星卡上的 BEEF 角标 */
+.rc-beef-flag{
+  position:absolute;top:0;right:0;z-index:3;
+  background:var(--beef);color:var(--beef-ink);
+  font:700 9px/1 'JetBrains Mono',monospace;letter-spacing:.3px;
+  padding:4px 6px;border-radius:0 8px 0 4px;
+  box-shadow:0 1px 5px rgba(0,0,0,.5);
+}
+
+/* 4K / 高 DPR / 减少动态：关闭酸绿脉冲与流光，保留静态锯齿线（信息不丢） */
+@media (min-resolution:1.5dppx),(min-width:2400px){
+  .beef-zig,.beef-spark,.bn-beef-ring{animation:none}
+  .bn.is-active .bn-beef-ring{transform:scale(.3333)}
+  /* 静态兜底：信号包停在高亮起点，保留「链上有信号」的读图信息 */
+  .beef-spark{opacity:.55;stroke-dashoffset:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .beef-zig,.beef-spark,.bn-beef-ring{animation:none}
+  .bn.is-active .bn-beef-ring{transform:scale(.3333)}
+  .beef-spark{opacity:.55}
+}

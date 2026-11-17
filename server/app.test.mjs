@@ -132,3 +132,52 @@ test('勘误的对象必须真实存在，说明要具体，蜜罐拦机器人',
   assert.equal((await request('/reports',{targetType:'artist',targetId:'one',message:'机器人填了蜜罐字段',website:'http://spam'})).status,400);
   assert.equal((await request('/reports',{targetType:'artist',targetId:'one',issue:'info',message:'简介里的城市写错了，应为重庆',sourceUrl:'https://example.com/profile'})).status,201);
 });
+
+// ---- BEEF 众包管线：与人物/关系共用投稿+审核，但独立成层 ----
+const beefProof={sourceTitle:'公开采访',sourceUrl:'https://example.com/beef-report',sourceNote:'测试数据：双方公开采访'};
+const beefPayload={sides:['one','two'],title:'艺人甲 vs 艺人乙',...beefProof,note:'待核实的冲突线索'};
+test('BEEF 投稿审核前不公开，批准后带来源进入公开数据并标已核实',async t=>{
+  const {request,login}=await setup(t);
+  const created=await request('/submissions',{kind:'beef',payload:beefPayload,contributor:'线索提供者'});
+  assert.equal(created.status,201);
+  // 审核前：公开关系网里既没有 beef，也没有投稿者昵称
+  const before=(await request('/data')).data;
+  assert.deepEqual(before.beefs,[]);
+  assert.ok(!JSON.stringify(before).includes('线索提供者'));
+  const cookie=await login();
+  const queue=await request('/review',undefined,cookie);
+  assert.equal(queue.data.items.length,1);
+  assert.equal(queue.data.items[0].kind,'beef');
+  assert.equal((await request(`/review/${created.data.id}`,{action:'approve'},cookie)).status,200);
+  const after=(await request('/data')).data;
+  assert.equal(after.beefs.length,1);
+  assert.equal(after.beefs[0].title,'艺人甲 vs 艺人乙');
+  assert.equal(after.beefs[0].status,'verified');
+  assert.equal(after.beefs[0].evidence[0].url,beefProof.sourceUrl);
+  assert.ok(!JSON.stringify(after).includes('线索提供者'));
+  assert.equal((await request(`/review/${created.data.id}`,{action:'approve'},cookie)).status,409);
+});
+test('BEEF 校验：必须有 HTTPS 来源、当事人须已公开、同事件去重、蜜罐拦截',async t=>{
+  const {request,login}=await setup(t);
+  assert.equal((await request('/submissions',{kind:'beef',payload:{...beefPayload,sourceUrl:'http://example.com/x'}})).status,400);
+  assert.equal((await request('/submissions',{kind:'beef',payload:{...beefPayload,sourceUrl:''}})).status,400);
+  assert.equal((await request('/submissions',{kind:'beef',payload:{...beefPayload,sides:['one','one']}})).status,400);
+  assert.equal((await request('/submissions',{kind:'beef',payload:{...beefPayload,sides:['one','nobody']}})).status,400);
+  assert.equal((await request('/submissions',{kind:'beef',payload:beefPayload,website:'http://spam'})).status,400);
+  // 对手待补充：只给一方也接受
+  assert.equal((await request('/submissions',{kind:'beef',payload:{...beefPayload,sides:['one'],title:'艺人甲 · 对手待补充'}})).status,201);
+  // 重复投稿在入队时允许（与关系投稿一致），真正拦截发生在批准时，见下一条用例。
+  assert.equal((await request('/submissions',{kind:'beef',payload:beefPayload})).status,201);
+  assert.equal((await request('/submissions',{kind:'beef',payload:beefPayload})).status,201);
+});
+test('BEEF 审核时的重复检测：两条不同投稿指向同一事件，第二条通过后被拦下',async t=>{
+  const {request,login}=await setup(t);
+  const first=await request('/submissions',{kind:'beef',payload:beefPayload});
+  const second=await request('/submissions',{kind:'beef',payload:{...beefPayload,contributor:'另一人'}});
+  assert.equal(first.status,201);assert.equal(second.status,201);
+  const cookie=await login();
+  assert.equal((await request(`/review/${first.data.id}`,{action:'approve'},cookie)).status,200);
+  const conflict=await request(`/review/${second.data.id}`,{action:'approve'},cookie);
+  assert.equal(conflict.status,409);
+  assert.equal((await request('/data')).data.beefs.length,1);
+});

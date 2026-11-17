@@ -62,12 +62,13 @@ const PROVINCE_CODE: Record<string, string> = {
   云南: 'YN', 西藏: 'XZ', 陕西: 'SA', 甘肃: 'GS', 青海: 'QH', 宁夏: 'NX', 新疆: 'XJ',
   香港: 'HK', 澳门: 'MO', 台湾: 'TW',
 };
+/* FLOWLINE warm palette — low-saturation earth/ochre tones keep provinces distinguishable */
 const PROVINCE_COLOR: Record<string, string> = {
-  四川: '#ff3d6e', 重庆: '#ffc93c', 湖南: '#35ff9e', 新疆: '#ff8a3d', 上海: '#35d6ff', 福建: '#b07cff',
-  陕西: '#ff5964', 江苏: '#4f7cff', 广东: '#b8f135', 吉林: '#ff4dd8', 台湾: '#5ee0c8', 北京: '#f4d35e',
+  四川: '#e4572e', 重庆: '#d9a05b', 湖南: '#b8703a', 新疆: '#c96f3f', 上海: '#e08a5c', 福建: '#a85d4a',
+  陕西: '#d4563a', 江苏: '#c9a873', 广东: '#9c8555', 吉林: '#b5626a', 台湾: '#c98f6a', 北京: '#e0b877',
 };
-const EMPTY_COLOR = '#42607a';
-const ARCHIVE_COLOR = '#8ea8bd';
+const EMPTY_COLOR = '#6b6358';
+const ARCHIVE_COLOR = '#9a8f7d';
 
 interface Rect {x: number; y: number; w: number; h: number}
 
@@ -314,10 +315,10 @@ function placeNodes(
 }
 
 export const relationMeta: Record<RelationType, {label: string; tag: string; color: string}> = {
-  member: {label: '组合成员', tag: 'CREW', color: '#35d6ff'},
-  collaboration: {label: '歌曲合作', tag: 'FEAT', color: '#ffc93c'},
-  production: {label: '幕后制作', tag: 'PROD', color: '#b07cff'},
-  affiliation: {label: '厂牌关联', tag: 'TIES', color: '#35ff9e'},
+  member: {label: '组合成员', tag: 'CREW', color: '#e4572e'},
+  collaboration: {label: '歌曲合作', tag: 'FEAT', color: '#d9a05b'},
+  production: {label: '幕后制作', tag: 'PROD', color: '#b8703a'},
+  affiliation: {label: '厂牌关联', tag: 'TIES', color: '#a85d4a'},
 };
 
 export const relationYear = (relation: {track?: {year?: number}; observedYear?: number; startYear?: number}) =>
@@ -396,6 +397,35 @@ export const edgeMid = (edge: BoardEdge) => ({
   x: (edge.ax + 2 * edge.cx + edge.bx) / 4,
   y: (edge.ay + 2 * edge.cy + edge.by) / 4,
 });
+
+/**
+ * BEEF 链的锯齿/闪电折线：沿二次曲线采样，逐点沿法线交替偏移，形成电流感的折线。
+ * 与普通关系的平滑曲线形成强对比，让 beef 在 526 条暖色线里一眼可辨。
+ * amplitude 与段数由线长决定，短链也至少有 6 个齿。
+ */
+export const beefPath = (a: {x: number; y: number}, b: {x: number; y: number}, c: {x: number; y: number}) => {
+  const dist = Math.hypot(b.x - a.x, b.y - a.y);
+  const steps = Math.max(6, Math.min(28, Math.round(dist / 16)));
+  const amp = Math.min(9, Math.max(5, dist / 40));
+  const pts: string[] = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const it = 1 - t;
+    // 曲线上的点
+    const px = it * it * a.x + 2 * it * t * c.x + t * t * b.x;
+    const py = it * it * a.y + 2 * it * t * c.y + t * t * b.y;
+    // 曲线切线 → 法线
+    let dx = 2 * it * (c.x - a.x) + 2 * t * (b.x - c.x);
+    let dy = 2 * it * (c.y - a.y) + 2 * t * (b.y - c.y);
+    const len = Math.hypot(dx, dy) || 1;
+    dx /= len; dy /= len;
+    const nx = -dy, ny = dx;
+    // 端点不偏移（要接在头像上），中间点交替正负
+    const offset = i === 0 || i === steps ? 0 : (i % 2 === 0 ? amp : -amp);
+    pts.push(`${(px + nx * offset).toFixed(1)},${(py + ny * offset).toFixed(1)}`);
+  }
+  return `M${pts.join(' L')}`;
+};
 
 export const firstYearOf = (nodeId: string, relations: any[]) => {
   let best: number | null = null;

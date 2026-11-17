@@ -50,7 +50,6 @@ export default function App() {
   const [localBeefs, setLocalBeefs] = useState<BeefEvent[]>(loadLocalBeefs);
   const [openBeef, setOpenBeef] = useState<BeefEvent | null>(null);
   const [beefSubmitOpen, setBeefSubmitOpen] = useState(false);
-  const [onlyBeef, setOnlyBeef] = useState(false);
   const beefs = useMemo(() => allBeefs(data.beefs, localBeefs), [data.beefs, localBeefs]);
   const [types, setTypes] = useState<RelationType[]>(['member', 'collaboration', 'production', 'affiliation']);
   const [start, setStart] = useState('yitai');
@@ -244,8 +243,7 @@ export default function App() {
             <RelationBoard selected={selected} onSelect={pick} onClear={closeDetail} types={types} province={province}
               path={path} focus={focus} onToggleType={toggleType} onLocate={() => setUnlocated(true)}
               onResetProvince={() => { setProvince(ALL_PROVINCES); clearPath(); }}
-              beefs={beefs} onlyBeef={onlyBeef} onToggleBeef={() => setOnlyBeef(v => !v)}
-              onOpenBeef={setOpenBeef} />
+              beefs={beefs} onOpenBeef={setOpenBeef} />
             {path && <div className="path-banner board-path">
               找到 {path.length - 1} 步路径：{path.map((id, i) => <span key={id}>{i > 0 ? ' → ' : ''}<button onClick={() => setSelected(id)}>{nodeById.get(id)?.name}</button></span>)}
               <button aria-label="清除路径" onClick={() => setPath(null)}>×</button>
@@ -276,8 +274,7 @@ export default function App() {
     {review && <ReviewPanel onClose={() => setReview(false)} />}
     {openBeef && <BeefCard beef={openBeef} nodeById={nodeById}
       onClose={() => setOpenBeef(null)} onPick={flyPick}
-      // 定位到当事人即回到默认语境：选中谁，就只亮出与谁相关的那条链。
-      onLocate={id => { setOnlyBeef(false); flyPick(id); }} />}
+      onLocate={flyPick} />}
     {beefSubmitOpen && <BeefSubmit nodes={nodes} onClose={() => setBeefSubmitOpen(false)}
       onSaveDraft={beef => setLocalBeefs(old => { const next = [...old, beef]; saveLocalBeefs(next); return next; })} />}
     {submitNotice && <Modal title="为什么投稿不可用" onClose={() => setSubmitNotice(false)}>

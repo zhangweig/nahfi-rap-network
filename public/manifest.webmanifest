@@ -1,0 +1,30 @@
+{
+  "name": "FLOWLINE · 中文说唱人物关系图谱",
+  "short_name": "FLOWLINE",
+  "description": "按省份探索中文说唱人物、作品与关系。",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#080606",
+  "theme_color": "#171310",
+  "icons": [
+    {
+      "src": "android-chrome-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "android-chrome-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "android-chrome-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

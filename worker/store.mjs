@@ -112,6 +112,28 @@ export async function decideSubmission(db, base, id, action, note) {
   return {ok: true};
 }
 
+/* ── 星级评分 ────────────────────────────────────────────────────────────
+   与审核体系完全隔离：一条 UPSERT 就是一次投票，同一 (人物, 匿名标识) 覆盖旧分。
+   /api/data 带上聚合后的均分与人数，前端一次请求即可拿到，不必为每张卡单独查。 */
+
+export async function setRating(db, value) {
+  const now = new Date().toISOString();
+  await db.prepare(
+    `INSERT INTO ratings(target_id,voter,stars,created_at,updated_at) VALUES(?,?,?,?,?)
+     ON CONFLICT(target_id,voter) DO UPDATE SET stars=excluded.stars, updated_at=excluded.updated_at`
+  ).bind(value.targetId, value.voter, value.stars, now, now).run();
+}
+
+export async function ratingStats(db) {
+  const {results} = await db.prepare(
+    'SELECT target_id, AVG(stars) AS avg, COUNT(*) AS count FROM ratings GROUP BY target_id'
+  ).all();
+  return Object.fromEntries((results || []).map(row => [row.target_id, {
+    average: Math.round(row.avg * 10) / 10,
+    count: row.count,
+  }]));
+}
+
 /* ── 勘误 ──────────────────────────────────────────────────────────────
    与投稿完全隔离：reports 表只被站长读取，不参与 compose()，
    所以无论队列里堆多少条，公开数据一个字节都不会变。 */

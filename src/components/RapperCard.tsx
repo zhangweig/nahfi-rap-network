@@ -25,6 +25,11 @@ export function RapperCard({node,index,workCount,relationCount,inBeef,onPick}:{
     el.style.setProperty('--py',`${y}%`);
     el.style.setProperty('--rx',`${(0.5-y/100)*10}deg`);
     el.style.setProperty('--ry',`${(x/100-0.5)*10}deg`);
+    // 图像与字符纹理以不同幅度反向视差，形成层次；文字层始终不动。
+    el.style.setProperty('--ax',`${(x/100-0.5)*-16}px`);
+    el.style.setProperty('--ay',`${(y/100-0.5)*-12}px`);
+    el.style.setProperty('--tx',`${(x/100-0.5)*20}px`);
+    el.style.setProperty('--ty',`${(y/100-0.5)*14}px`);
   };
 
   const onMove=(e:React.PointerEvent)=>{
@@ -42,6 +47,10 @@ export function RapperCard({node,index,workCount,relationCount,inBeef,onPick}:{
     el.style.setProperty('--py','50%');
     el.style.setProperty('--rx','0deg');
     el.style.setProperty('--ry','0deg');
+    el.style.setProperty('--ax','0px');
+    el.style.setProperty('--ay','0px');
+    el.style.setProperty('--tx','0px');
+    el.style.setProperty('--ty','0px');
   };
 
   const path=avatarPath(node);
@@ -60,6 +69,8 @@ export function RapperCard({node,index,workCount,relationCount,inBeef,onPick}:{
       </span>
       <span className="rc-art">
         {path ? <img src={path} alt="" draggable={false} loading="lazy" /> : <span className="rc-art-ph">{node.name.slice(0,1)}</span>}
+        <span className="rc-art-ascii" aria-hidden="true" />
+        <span className="rc-art-reticle" aria-hidden="true" />
         <span className="rc-art-shade" aria-hidden="true" />
       </span>
       <span className="rc-info">

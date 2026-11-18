@@ -1,7 +1,8 @@
 import {createContext,useContext,useEffect,useState,useCallback,type ReactNode} from 'react';
 import {nodes,relations,works,type ArtistNode,type Relationship,type Work} from '../data/rap-data';
 import {SEED_BEEFS,type BeefEvent} from '../data/beefs';
-export interface Dataset {nodes:ArtistNode[];relations:Relationship[];works:Work[];beefs:BeefEvent[];revisions:Record<string,string>}
+export interface RatingStat {average:number;count:number}
+export interface Dataset {nodes:ArtistNode[];relations:Relationship[];works:Work[];beefs:BeefEvent[];ratings:Record<string,RatingStat>;revisions:Record<string,string>}
 
 /**
  * 页面托管在 GitHub Pages，投稿 API 跑在别处（Cloudflare Workers），所以接口地址要能外部注入。
@@ -35,7 +36,7 @@ export async function api<T=any>(path:string,body?:unknown):Promise<T>{
   }
   return result;
 }
-const initial={nodes,relations,works,beefs:SEED_BEEFS,revisions:{}};
+const initial={nodes,relations,works,beefs:SEED_BEEFS,ratings:{},revisions:{}};
 const Context=createContext<{data:Dataset;online:boolean;checked:boolean;refresh:()=>Promise<void>}>({data:initial,online:false,checked:false,refresh:async()=>{}});
 export function DatasetProvider({children}:{children:ReactNode}){
   const [data,setData]=useState<Dataset>(initial),[online,setOnline]=useState(false);

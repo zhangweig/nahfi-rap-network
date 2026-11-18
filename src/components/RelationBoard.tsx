@@ -512,13 +512,14 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
 
   const zoomed = view.scale >= 1.22;
 
-  return <div className="board">
+  return <div className={`board ${focusId ? 'has-focus' : ''}`}>
     <div className={`board-viewport ${dragging ? 'dragging' : ''} ${dragProvince ? 'zone-dragging' : ''}`} ref={viewport}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
       {/* Ambient backdrop: drifts slower than the board so the canvas gets depth. */}
       <div className={`board-bg ${selected ? 'is-soft' : ''}`} aria-hidden="true"
         style={{['--px' as string]: `${(view.x * 0.08).toFixed(1)}px`, ['--py' as string]: `${(view.y * 0.08).toFixed(1)}px`}}>
         <div className="bg-par">
+          <div className="bg-depth-plane" />
           <div className="bg-aurora"><i /><i /><i /></div>
           <div className="bg-lines"><i /></div>
           <div className="bg-traces"><i /><i /><i /><i /><i /></div>
@@ -552,6 +553,9 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
             </div>
           </div>)}
 
+          {/* 透视地面压在省份框之上、连线与节点之下：有焦点时才显影，不接收指针事件。 */}
+          <div className="board-floor" aria-hidden="true" />
+
           <svg className="board-edges" width={world.width} height={world.height} viewBox={`0 0 ${world.width} ${world.height}`} aria-hidden="true">
             {[...edges].sort((a, b) => Number(isFocusEdge(a)) - Number(isFocusEdge(b))).map(edge => {
               const focus = isFocusEdge(edge);
@@ -563,7 +567,8 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
                 strokeWidth={onPath ? 2.4 : strong ? 1.9 : focus ? 1 : 0.9}
                 strokeOpacity={onPath ? 0.95 : strong ? 0.9 : focus ? 0.22 : Math.min(0.26, 0.06 + edge.count * 0.015)}
                 strokeDasharray={edge.type === 'member' ? undefined : edge.type === 'production' ? '3 4' : '6 5'}
-                className={focus || onPath ? 'edge-live' : ''} />;
+                style={{color: onPath ? '#ffffff' : color}}
+                className={focus || onPath ? `edge-live edge-focus ${onPath ? 'edge-path' : ''}` : focusId ? 'edge-rest' : ''} />;
             })}
             {/* Selected person: light runs along every connected line, inward toward the face. */}
             {selected && edges.filter(edge => edge.source === selected || edge.target === selected).map((edge, index) => {
@@ -633,7 +638,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
             const raised = dragProvince === place.province;
             // Focused plates may wrap further so the full name can be read.
             const labelFocus = node.id === hover || active;
-            return <button key={node.id} className={`bn ${place.mini ? 'mini' : ''} ${place.tight ? 'tight' : ''} ${active ? 'is-active' : ''} ${dim ? 'is-dim' : ''} ${featured ? 'is-group' : ''} ${inBeef ? 'has-beef' : ''}`}
+            return <button key={node.id} className={`bn ${place.mini ? 'mini' : ''} ${place.tight ? 'tight' : ''} ${active ? 'is-active' : ''} ${node.id === focusId ? 'is-focus' : ''} ${neighbours.has(node.id) ? 'is-neighbour' : ''} ${dim ? 'is-dim' : ''} ${featured ? 'is-group' : ''} ${inBeef ? 'has-beef' : ''}`}
               style={{left: place.x - place.size / 2, top: place.y - place.size / 2, ['--c' as string]: place.color, ['--s' as string]: `${place.size}px`, zIndex: raised ? 3 : undefined}}
               onClick={() => { if (suppressClick.current) return; onSelect(node.id); }}
               // An avatar works as a handle for its whole province card: dragging any face
@@ -641,6 +646,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
               onPointerDown={event => startZoneDrag(event, place.province)}
               onMouseEnter={() => setHover(node.id)} onMouseLeave={() => setHover(null)}
               title={`${node.name} · ${provinceLabel(provinceOf(node.city))}`}>
+              <span className="bn-focus-base" aria-hidden="true" />
               <span className="bn-pic"><Avatar node={node} />
                 {featured && <span className="bn-flag">CREW</span>}
                 {inBeef && <span className="bn-beef-ring" aria-hidden="true" />}

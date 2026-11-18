@@ -3,7 +3,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {randomBytes,randomUUID,scryptSync,timingSafeEqual,createHash} from 'node:crypto';
 import {readFile,stat} from 'node:fs/promises';
 import {resolve,sep,extname} from 'node:path';
-import {validateSubmission,validateReport,compose,publishPayload,fingerprint,InputError} from './domain.mjs';
+import {validateSubmission,validateReport,validateRating,compose,publishPayload,fingerprint,InputError} from './domain.mjs';
 
 /**
  * `base` may be a plain snapshot or a getter. The getter form lets the dev server pick up
@@ -18,12 +18,15 @@ export function createApplication({base,dbPath,adminPassword,publicOrigin='',sta
     CREATE TABLE IF NOT EXISTS approved(entity_id TEXT PRIMARY KEY,kind TEXT NOT NULL,payload TEXT NOT NULL,submission_id TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY,submission_id TEXT NOT NULL,action TEXT NOT NULL,note TEXT NOT NULL,created_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS sessions(hash TEXT PRIMARY KEY,expires INTEGER NOT NULL);
-    CREATE TABLE IF NOT EXISTS reports(id TEXT PRIMARY KEY,target_type TEXT NOT NULL,target_id TEXT NOT NULL,issue TEXT NOT NULL,message TEXT NOT NULL,source_url TEXT,contact TEXT,status TEXT NOT NULL DEFAULT 'open',created_at TEXT NOT NULL,resolved_at TEXT,note TEXT);`);
+    CREATE TABLE IF NOT EXISTS reports(id TEXT PRIMARY KEY,target_type TEXT NOT NULL,target_id TEXT NOT NULL,issue TEXT NOT NULL,message TEXT NOT NULL,source_url TEXT,contact TEXT,status TEXT NOT NULL DEFAULT 'open',created_at TEXT NOT NULL,resolved_at TEXT,note TEXT);
+    CREATE TABLE IF NOT EXISTS ratings(target_id TEXT NOT NULL,voter TEXT NOT NULL,stars INTEGER NOT NULL,created_at TEXT NOT NULL,updated_at TEXT NOT NULL,PRIMARY KEY(target_id,voter));
+    CREATE INDEX IF NOT EXISTS idx_ratings_target ON ratings(target_id);`);
   // Restart / password rotation revokes old owner sessions.
   db.exec('DELETE FROM sessions');
   const salt=randomBytes(32), passwordHash=scryptSync(adminPassword,salt,64);
   const buckets=new Map();
   const snapshot=()=>compose(baseData(),db.prepare('SELECT * FROM approved ORDER BY rowid').all());
+  const ratingStats=()=>Object.fromEntries(db.prepare('SELECT target_id, AVG(stars) AS avg, COUNT(*) AS count FROM ratings GROUP BY target_id').all().map(row=>[row.target_id,{average:Math.round(row.avg*10)/10,count:row.count}]));
   const hash=value=>createHash('sha256').update(value).digest('hex');
   const authorized=req=>{const token=(req.headers.cookie||'').split(';').map(x=>x.trim()).find(x=>x.startsWith('nahfi_owner='))?.slice(12);return !!token&&!!db.prepare('SELECT hash FROM sessions WHERE hash=? AND expires>?').get(hash(token),Date.now());};
   const requireOwner=req=>{if(!authorized(req))throw new InputError('请先登录审核台',401);};
@@ -58,7 +61,7 @@ export function createApplication({base,dbPath,adminPassword,publicOrigin='',sta
           : lower(originHost)===lower(req.headers.host)||(loopback(originHost)&&loopback(req.headers.host));
         if(!allowed)throw new InputError('请求来源不匹配',403);
       }
-      if(pathname==='/api/data'&&method==='GET'){const data=snapshot();return send(res,200,{...data,revisions:Object.fromEntries([...data.nodes,...data.relations].map(x=>[x.id,fingerprint(x)]))});}
+      if(pathname==='/api/data'&&method==='GET'){const data=snapshot();return send(res,200,{...data,ratings:ratingStats(),revisions:Object.fromEntries([...data.nodes,...data.relations].map(x=>[x.id,fingerprint(x)]))});}
       if(pathname==='/api/session'&&method==='GET')return send(res,200,{owner:authorized(req)});
       if(pathname==='/api/login'&&method==='POST'){
         limit(req,'login',10);const input=await body(req);
@@ -74,6 +77,11 @@ export function createApplication({base,dbPath,adminPassword,publicOrigin='',sta
         limit(req,'submit',20);const value=validateSubmission(await body(req),snapshot()),id=randomUUID();
         db.prepare('INSERT INTO submissions(id,kind,target_id,base_revision,payload,contributor,message,created_at) VALUES(?,?,?,?,?,?,?,?)').run(id,value.kind,value.targetId,value.baseRevision,JSON.stringify(value.payload),value.contributor,value.message,new Date().toISOString());
         return send(res,201,{id,status:'pending'});
+      }
+      if(pathname==='/api/ratings'&&method==='POST'){
+        limit(req,'rate',60);const value=validateRating(await body(req),snapshot()),now=new Date().toISOString();
+        db.prepare('INSERT INTO ratings(target_id,voter,stars,created_at,updated_at) VALUES(?,?,?,?,?) ON CONFLICT(target_id,voter) DO UPDATE SET stars=excluded.stars, updated_at=excluded.updated_at').run(value.targetId,value.voter,value.stars,now,now);
+        return send(res,200,{ok:true});
       }
       if(pathname==='/api/review'&&method==='GET'){
         requireOwner(req);const rows=db.prepare('SELECT * FROM submissions ORDER BY created_at DESC LIMIT 500').all();

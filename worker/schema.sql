@@ -56,3 +56,16 @@ CREATE TABLE IF NOT EXISTS reports(
 );
 
 CREATE INDEX IF NOT EXISTS idx_reports_status ON reports(status, created_at DESC);
+
+-- 网友星级评分。与审核体系完全隔离：直接写入、按 (人物, 匿名投票者) 去重，
+-- 一人对一人只有一票、可改分；公开数据只暴露均分与人数，不暴露投票者身份。
+CREATE TABLE IF NOT EXISTS ratings(
+  target_id TEXT NOT NULL,
+  voter TEXT NOT NULL,
+  stars INTEGER NOT NULL,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  PRIMARY KEY(target_id, voter)
+);
+
+CREATE INDEX IF NOT EXISTS idx_ratings_target ON ratings(target_id);

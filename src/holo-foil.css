@@ -1,0 +1,178 @@
+/* 镭射层：参考 simeydotme/pokemon-cards-css 的分层思路重新实现。
+   只借鉴 CSS Transforms / Gradients / Blend-modes / Filters 的组合方式，
+   色谱、纹理与代码均为本项目原创，未复制其 GPLv3 源码或图片素材。 */
+
+:root{
+  --foil-c1:#e4572e;   /* 焦橙 */
+  --foil-c2:#f0b83a;   /* 金 */
+  --foil-c3:#b9d84a;   /* 酸绿 */
+  --foil-c4:#35c7a1;   /* 青绿 */
+  --foil-c5:#7b5cc4;   /* 紫 */
+  --foil-c6:#e2557a;   /* 珊瑚红 */
+
+  --foil-px:50%;
+  --foil-py:50%;
+  --foil-bg-x:50%;
+  --foil-bg-y:50%;
+  --foil-bar-x:50%;
+  --foil-o:.22;
+  --foil-glare-o:.18;
+  --foil-art-o:.32;
+  --foil-tilt-x:0deg;
+  --foil-tilt-y:0deg;
+}
+
+.foil-card{
+  transform:perspective(900px) rotateX(var(--foil-tilt-x)) rotateY(var(--foil-tilt-y));
+  transform-style:preserve-3d;
+  transition:transform .22s cubic-bezier(.2,.8,.2,1);
+  isolation:isolate;
+}
+.foil-card__layer{
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+}
+
+/* 彩虹底层：宽光谱扫带 + 细密扫描线，指针驱动背景位移 */
+.foil-card__shine{
+  z-index:4;
+  background-image:
+    repeating-linear-gradient(112deg,
+      var(--foil-c1) 0%, var(--foil-c2) 7%, var(--foil-c3) 14%,
+      var(--foil-c4) 21%, var(--foil-c5) 28%, var(--foil-c6) 35%,
+      var(--foil-c1) 42%),
+    repeating-linear-gradient(90deg,
+      rgba(0,0,0,.5) 0 2px,
+      rgba(255,255,255,.14) 2px 3px);
+  background-size:420% 420%, 100% 5px;
+  background-position:var(--foil-bg-x) var(--foil-bg-y), center center;
+  background-blend-mode:soft-light;
+  filter:brightness(.95) contrast(1.18) saturate(1.05);
+  mix-blend-mode:soft-light;
+  opacity:var(--foil-o);
+  transform:translateZ(2px);
+  /* 镭射集中在头像与卡名区域，统计和评分区保持干净 */
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 58%,rgba(0,0,0,.35) 72%,transparent 88%);
+  mask-image:linear-gradient(180deg,#000 0%,#000 58%,rgba(0,0,0,.35) 72%,transparent 88%);
+}
+/* 竖向高光条：随指针反向滑动，形成真实镭射卡的“闪带” */
+.foil-card__shine::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background-image:repeating-linear-gradient(90deg,
+    transparent 0 8%,
+    rgba(255,255,255,.03) 8% 9%,
+    transparent 9% 15%,
+    rgba(255,255,255,.24) 15% 16%,
+    transparent 16% 24%,
+    rgba(255,255,255,.1) 24% 25%,
+    transparent 25% 38%);
+  background-size:260% 100%;
+  background-position:var(--foil-bar-x) center;
+  background-repeat:no-repeat;
+  mix-blend-mode:screen;
+  filter:brightness(1) contrast(1.05);
+  opacity:.34;
+}
+/* 指针附近的柔光：让扫光有聚焦点，而不是整张卡同时在动 */
+.foil-card__shine::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:radial-gradient(farthest-corner circle at var(--foil-px) var(--foil-py),
+    rgba(255,255,255,.38) 0%,
+    rgba(255,255,255,.12) 22%,
+    rgba(0,0,0,.08) 62%,
+    rgba(0,0,0,.22) 100%);
+  mix-blend-mode:soft-light;
+  filter:brightness(.9) contrast(1.4);
+  opacity:.6;
+}
+
+/* 玻璃 glare：最外层的镜面反光 */
+.foil-card__glare{
+  z-index:6;
+  background-image:radial-gradient(farthest-corner circle at var(--foil-px) var(--foil-py),
+    rgba(255,255,255,.55) 6%,
+    rgba(255,255,255,.22) 18%,
+    rgba(255,255,255,.04) 46%,
+    rgba(0,0,0,.2) 100%);
+  mix-blend-mode:screen;
+  filter:brightness(.9) contrast(1.2);
+  opacity:var(--foil-glare-o);
+  transform:translateZ(3px);
+}
+
+/* 金属细边：压住镭射层边缘，避免圆角处露底 */
+.foil-card__edge{
+  z-index:7;
+  border:1px solid rgba(255,235,200,.42);
+  box-shadow:
+    inset 0 0 0 1px rgba(228,87,46,.35),
+    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 -1px 0 rgba(0,0,0,.6);
+  mix-blend-mode:screen;
+  opacity:.7;
+}
+
+/* 图像区专用强镭射：只在头像区域出现，文字区保持可读 */
+.foil-art{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+  border-radius:inherit;
+  background-image:
+    repeating-linear-gradient(118deg,
+      var(--foil-c1) 0%, var(--foil-c2) 8%, var(--foil-c3) 16%,
+      var(--foil-c4) 24%, var(--foil-c5) 32%, var(--foil-c6) 40%,
+      var(--foil-c1) 48%),
+    repeating-linear-gradient(90deg,
+      rgba(0,0,0,.48) 0 2px,
+      rgba(255,255,255,.12) 2px 3px);
+  background-size:360% 360%, 100% 4px;
+  background-position:var(--foil-bg-x) var(--foil-bg-y), center;
+  background-blend-mode:overlay;
+  filter:brightness(1.02) contrast(1.2) saturate(1.16);
+  mix-blend-mode:screen;
+  opacity:var(--foil-art-o);
+  -webkit-mask-image:linear-gradient(180deg, #000 0%, #000 62%, transparent 92%);
+  mask-image:linear-gradient(180deg, #000 0%, #000 62%, transparent 92%);
+}
+/* 头像区专属斜向闪带：移动指针时会出现一条明亮的高光扫过 */
+.foil-art::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(118deg,
+    transparent 18%,
+    rgba(255,255,255,.34) 25%,
+    rgba(255,236,180,.2) 30%,
+    transparent 38%,
+    transparent 58%,
+    rgba(255,255,255,.2) 64%,
+    transparent 72%);
+  background-size:280% 100%;
+  background-position:var(--foil-bar-x) center;
+  background-repeat:no-repeat;
+  mix-blend-mode:color-dodge;
+  opacity:.42;
+}
+.foil-art::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(farthest-corner circle at var(--foil-px) var(--foil-py),
+    rgba(255,255,255,.42), transparent 55%);
+  mix-blend-mode:overlay;
+  opacity:.4;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .foil-card{transition:none;transform:none}
+}

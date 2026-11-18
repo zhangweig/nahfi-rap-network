@@ -1,0 +1,55 @@
+/* 人物页 three.js 3D 球星卡舞台。删除本文件 + main.tsx 对应 import +
+   CatalogPanel 里把 HoloCardStage 换回原 artist-grid 即可整块回退。 */
+
+/* WebGL 卡阵需要可滚动容器，且四周留白容纳 hover 时的透视放大 */
+.catalog-panel:has(.holo-grid){overflow:auto}
+.holo-grid{
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(178px,1fr));
+  gap:34px 18px;
+  padding:28px 24px 40px;
+  /* 给抬升的卡牌留出纵深空间，避免被面板裁切 */
+  perspective:1200px;
+}
+/* 必须压过主题里通用的 button:hover 背景，否则会刷成实心色块盖住 canvas */
+.holo-grid .holo-hit{
+  position:relative;
+  z-index:1;
+  display:block;width:100%;aspect-ratio:5/7;
+  padding:0;border:0;border-radius:12px;
+  appearance:none;-webkit-appearance:none;
+  background:transparent !important;
+  box-shadow:none !important;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.holo-grid .holo-hit:hover,
+.holo-grid .holo-hit:focus,
+.holo-grid .holo-hit:active{
+  background:transparent !important;
+  box-shadow:none !important;
+  transform:none !important;
+}
+.holo-hit:focus-visible{
+  outline:2px solid #e4572e;
+  outline-offset:4px;
+}
+.holo-canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  z-index:0;
+  pointer-events:none;
+  /* 卡牌阴影与上浮空间不被容器切断 */
+  overflow:visible;
+}
+
+.catalog-loading{
+  display:grid;place-items:center;min-height:420px;
+  font:700 12px/1 ui-monospace,Consolas,monospace;
+  letter-spacing:.16em;color:#c9a873;
+}
+
+@media(max-width:780px){
+  .holo-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+}

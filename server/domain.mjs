@@ -84,6 +84,24 @@ export function validateSubmission(input, data) {
   return {kind,targetId,baseRevision:original?fingerprint(original):null,payload:result,contributor:text(input.contributor||'匿名乐迷','投稿昵称',60),message:text(input.message||'','补充说明',1500,false)};
 }
 
+/**
+ * 星级评分校验。与投稿/勘误的根本区别：评分不进审核、不属于实体数据，
+ * 只是一张独立表里的一条投票。校验只保证「对象真实存在 + 星级合法 + 匿名标识合规」，
+ * 绝不写进 approved 表，所以再多的评分也不会污染人物/关系档案。
+ */
+export function validateRating(input, data) {
+  if (!input || typeof input !== 'object') throw new InputError('评分格式错误');
+  if (input.website) throw new InputError('无法提交');
+  const targetId = text(input.targetId, '评分对象', 120);
+  if (!data.nodes.some(n => n.id === targetId)) throw new InputError('找不到要评分的人物', 404);
+  const stars = Number(input.stars);
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) throw new InputError('评分必须是 1 到 5 星');
+  // 匿名投票者标识由前端生成并存在本地，仅用来给同一人去重 / 改分，不收集任何身份信息。
+  const voter = String(input.voter || '').trim();
+  if (!/^[a-zA-Z0-9_-]{8,64}$/.test(voter)) throw new InputError('评分标识无效');
+  return {targetId, stars, voter};
+}
+
 const REPORT_ISSUES = {
   artist: ['info', 'missing', 'source', 'other'],
   avatar: ['wrong-person', 'low-quality', 'missing', 'other'],

@@ -1,6 +1,6 @@
 import baseData from '../server/generated/base-data.json';
-import {validateSubmission,validateReport,fingerprint,InputError} from '../server/domain.mjs';
-import {snapshot,createSubmission,listSubmissions,decideSubmission,createReport,listReports,decideReport} from './store.mjs';
+import {validateSubmission,validateReport,validateRating,fingerprint,InputError} from '../server/domain.mjs';
+import {snapshot,createSubmission,listSubmissions,decideSubmission,createReport,listReports,decideReport,setRating,ratingStats} from './store.mjs';
 
 /**
  * Cloudflare Workers 版投稿 / 审核 API。
@@ -153,9 +153,10 @@ async function route(request, env, url) {
     const cacheKey = new Request(new URL('/api/data', url.origin));
     const hit = cache ? await cache.match(cacheKey) : null;
     if (hit) return hit;
-    const data = await snapshot(env.DB, BASE);
+    const [data, ratings] = await Promise.all([snapshot(env.DB, BASE), ratingStats(env.DB)]);
     const body = {
       ...data,
+      ratings,
       revisions: Object.fromEntries([...data.nodes, ...data.relations].map(item => [item.id, fingerprint(item)]))
     };
     // max-age=0 让浏览器每次都回边缘取，边缘按 s-maxage 缓存 60 秒。
@@ -209,6 +210,16 @@ async function route(request, env, url) {
     const value = validateSubmission(input, await snapshot(env.DB, BASE));
     const id = await createSubmission(env.DB, value);
     return json({id, status: 'pending'}, 201);
+  }
+
+  // 星级评分：不进审核队列、不写 approved 表，直接 UPSERT 一条投票。
+  // 聚合均分随 /api/data 公开；提交后清缓存，所有人下一次请求就能看到新分数。
+  if (pathname === '/api/ratings' && method === 'POST') {
+    limit(request, 'rate', 60);
+    const value = validateRating(await readJson(request), await snapshot(env.DB, BASE));
+    await setRating(env.DB, value);
+    await purgeData(url.origin);
+    return json({ok: true});
   }
 
   if (pathname === '/api/review' && method === 'GET') {

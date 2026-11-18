@@ -1,0 +1,75 @@
+/* 人物大卡 + 星级评分弹层。删除本文件 + main.tsx import 即可回退。 */
+
+.rapper-detail-dialog{
+  width:min(440px,94vw);
+  max-height:88vh;
+  padding:8px 8px 0;border:1px solid #7a4a2b;border-radius:14px;
+  background:linear-gradient(170deg,#171310,#0c0908 60%,#120d0a);
+  color:#f2ede4;
+  box-shadow:0 30px 80px #000e,0 0 0 1px #e4572e33,0 0 50px #e4572e1a;
+  overflow:auto;
+}
+.rapper-detail-dialog::backdrop{background:#050403c9;backdrop-filter:blur(3px);cursor:zoom-out}
+/* 弹层自身留白也可关闭；内部内容区不继承该光标 */
+.rapper-detail-dialog{cursor:default}
+
+/* ── 卡片本体 ───────────────────────────────────────────────────────── */
+.rd-card{position:relative;margin:4px 4px 10px;border:1px solid #3c2c22;border-radius:12px;
+  overflow:hidden;background:#0e0b09;isolation:isolate;
+  box-shadow:0 18px 34px -18px #000,inset 0 1px 0 #ffffff14}
+.rd-top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:10px 12px;
+  font:700 10px/1 ui-monospace,Consolas,monospace;letter-spacing:.08em}
+.rd-kind{color:#e4572e;border:1px solid #e4572e66;padding:3px 7px;border-radius:2px}
+.rd-cat{color:#9a8b7a;font-size:9px}
+.rd-art{position:relative;z-index:2;margin:0 12px;aspect-ratio:16/11;border:1px solid #4d382a;border-radius:6px;
+  overflow:hidden;background:radial-gradient(120% 90% at 50% 25%,#2e221c,#0a0807 80%)}
+.rd-art img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:grayscale(.1) contrast(1.06)}
+.rd-art-ph{display:grid;place-items:center;width:100%;height:100%;
+  font:800 92px/1 "Microsoft YaHei",sans-serif;color:#e4572e}
+.rd-art-ascii{position:absolute;inset:0;pointer-events:none;
+  background-image:var(--ascii-tile);background-size:84px 42px;
+  mix-blend-mode:screen;opacity:.16;
+  -webkit-mask-image:radial-gradient(ellipse 50% 46% at 50% 40%,transparent 14%,#000 90%);
+  mask-image:radial-gradient(ellipse 50% 46% at 50% 40%,transparent 14%,#000 90%)}
+.rd-beef{position:absolute;left:8px;bottom:8px;padding:3px 8px;border-radius:2px;
+  background:#b9d84a;color:#141608;font:800 11px/1 ui-monospace,Consolas,monospace}
+.rd-body{position:relative;z-index:2;padding:14px 14px 12px}
+.rd-name{margin:0 0 6px;font-size:24px;font-weight:800;color:#f2ede4;text-shadow:0 0 14px #e4572e55}
+.rd-prov{display:flex;align-items:center;gap:4px;margin:0 0 10px;
+  font:11px/1.4 ui-monospace,Consolas,monospace;color:#c9a873}
+.rd-desc{margin:0 0 12px;font-size:12px;line-height:1.6;color:#a39584;
+  max-height:66px;overflow:auto}
+.rd-stats{display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid #3c2c22;border-bottom:1px solid #3c2c22;padding:10px 0}
+.rd-stats>span{display:flex;flex-direction:column;align-items:center;gap:3px;border-right:1px solid #3c2c2277}
+.rd-stats>span:last-child{border-right:0}
+.rd-stats b{font:800 18px/1 ui-monospace,Consolas,monospace;color:#e4572e}
+.rd-stats small{font-size:10px;color:#a39584;letter-spacing:.08em}
+
+/* ── 评分区 ─────────────────────────────────────────────────────────── */
+.rd-rating{padding:4px 20px 22px;text-align:center}
+.rd-score{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.rd-score-num{font:800 40px/1 ui-monospace,Consolas,monospace;color:#ffb08a}
+.rd-score-of{font:14px/1 ui-monospace,Consolas,monospace;color:#7a6d5f;align-self:flex-end;margin-bottom:4px}
+.rd-stars-static{display:inline-flex;gap:3px;color:#4d382a;vertical-align:middle;margin-left:4px}
+.rd-stars-static .on{color:#e4572e}
+.rd-hint{margin:8px 0 16px;font-size:10px;color:#7a6d5f}
+.rd-rate-row{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.rd-mine-label{font-size:12px;color:#c9a873}
+.rd-stars-input{display:inline-flex;gap:4px}
+.rd-stars-input button{padding:4px;border:0;background:none;cursor:pointer;color:#4d382a;
+  transition:transform .12s,color .12s}
+.rd-stars-input button:hover:not(:disabled){transform:scale(1.18)}
+.rd-stars-input button.on{color:#ffb08a}
+.rd-stars-input button:disabled{cursor:default;opacity:.6}
+.rd-notice{margin:12px 0 0;font-size:11px;color:#b9d84a}
+.rd-locate{display:inline-flex;align-items:center;gap:6px;margin-top:18px;
+  padding:9px 16px;border:1px solid #7a4a2b;border-radius:6px;
+  background:#171310;color:#e4572e;cursor:pointer;
+  font:700 11px/1 "Microsoft YaHei",sans-serif;letter-spacing:.04em}
+.rd-locate:hover{border-color:#e4572e;background:#e4572e14}
+
+@media(max-width:520px){
+  .rd-name{font-size:20px}
+  .rd-score-num{font-size:34px}
+}

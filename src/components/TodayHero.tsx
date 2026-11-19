@@ -1,99 +1,205 @@
-import {useMemo, useState} from 'react';
-import {useDataset} from '../state/Dataset';
-import {avatarPath, thumbPath} from './PixelAvatar';
+import {useMemo, useRef, useState} from 'react';
+import {ArrowRight, FileSearch, RefreshCw, Zap} from 'lucide-react';
+import {useDatasetData, useDatasetStatus} from '../state/Dataset';
+import {Avatar, avatarPath} from './PixelAvatar';
+import {HeroCard} from './HeroCard';
 import {RapperDetail} from './RapperDetail';
-import {allBeefs, loadLocalBeefs, beefNodeIds} from '../data/beefs';
+import {BeefCard} from './BeefCard';
+import {allBeefs, loadLocalBeefs, beefNodeIds, type BeefEvent} from '../data/beefs';
 import {provinceLabel, provinceOf} from '../lib/province';
 import type {ArtistNode} from '../data/types';
 
+/** 卡阵张数：正中一张 + 两侧各两张。奇数才有「正中」。 */
+const FAN = 5;
+
 /**
- * 今日首屏：走廊两侧是看不清的人像卡飞过，正中一张当日主角卡，
- * 底部一句话说明这个网站能做什么。数字全部来自公开数据，不写死。
+ * 今日首屏：左侧今日翻牌与说明，正中五张卡摊开，右侧 BEEF 线索。
+ *
+ * 卡是实体感的：指针移过整个舞台时，五张卡按各自的前后层级倾斜，
+ * 越靠前倾角越大，形成真实的视差，而不是整块一起晃。
+ * 卡片本身不监听鼠标——舞台算一次指针位置，写进 CSS 变量，五张卡共享。
  */
 export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
-  const {data:{nodes, relations, works, beefs, ratings}, refresh} = useDataset();
+  const {nodes, relations, works, beefs, ratings} = useDatasetData();
+  const {refresh} = useDatasetStatus();
 
-  // 只有真实头像的人物才做卡片（走廊 + 换一位候选），避免像素占位图充数。
-  const portraitNodes = useMemo(() => nodes.filter(n => !!avatarPath(n)), [nodes]);
-  const [heroId, setHeroId] = useState('air');
+  // 只有真实头像的人物才适合当主角；占位人像留给两侧，避免首页第一眼就是剪影。
+  const withPortrait = useMemo(() => nodes.filter(n => !!avatarPath(n)), [nodes]);
+  const [heroId, setHeroId] = useState(() => withPortrait[0]?.id || nodes[0]?.id || 'air');
   const [detailOpen, setDetailOpen] = useState(false);
+  const [openBeef, setOpenBeef] = useState<BeefEvent | null>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
 
-  const hero:ArtistNode = portraitNodes.find(n => n.id === heroId) || portraitNodes[0] || nodes[0];
-  const heroIndex = nodes.findIndex(n => n.id === hero?.id);
-  const relationCount = relations.filter(r => r.source === hero?.id || r.target === hero?.id).length;
-  const workCount = works.filter(w => w.artistIds.includes(hero?.id)).length;
-  const inBeef = hero ? beefNodeIds(allBeefs(beefs, loadLocalBeefs())).has(hero.id) : false;
-  const province = hero ? provinceLabel(provinceOf(hero.city)) : '';
+  const nodeById = useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
 
-  // 走廊飞卡：排除主角自己，左右交替，循环播。
-  const flyers = useMemo(() => {
-    const pool = portraitNodes.filter(n => n.id !== heroId);
-    const list = pool.length ? pool : portraitNodes;
-    return Array.from({length: 24}, (_, i) => list[i % list.length]).filter(Boolean);
-  }, [portraitNodes, heroId]);
+  // 一次遍历建好索引，避免每张卡各自 filter 一遍全量作品与关系。
+  const {workCounts, relationCounts} = useMemo(() => {
+    const w = new Map<string, number>();
+    for (const work of works) for (const id of work.artistIds) w.set(id, (w.get(id) || 0) + 1);
+    const r = new Map<string, number>();
+    for (const rel of relations) {
+      r.set(rel.source, (r.get(rel.source) || 0) + 1);
+      r.set(rel.target, (r.get(rel.target) || 0) + 1);
+    }
+    return {workCounts: w, relationCounts: r};
+  }, [works, relations]);
+
+  const beefList = useMemo(() => allBeefs(beefs, loadLocalBeefs()), [beefs]);
+  const beefSet = useMemo(() => beefNodeIds(beefList), [beefList]);
+
+  // 卡阵：主角固定在正中，再按 ±1、±2 向两侧取人，凑成 5 张。
+  // 位置数组按「左 → 右」排好，中心索引由 FAN 推出来，不依赖取人的顺序。
+  const fan = useMemo(() => {
+    if (!nodes.length) return [] as ArtistNode[];
+    const pool = withPortrait.length >= 2 ? withPortrait : nodes;
+    const anchor = Math.max(0, pool.findIndex(n => n.id === heroId));
+    const mid = Math.floor(FAN / 2);
+    const slots: (ArtistNode | undefined)[] = Array.from({length: FAN});
+    slots[mid] = pool[anchor];
+    for (let k = 1; k <= mid; k++) {
+      slots[mid - k] = pool[(anchor - k + pool.length * 2) % pool.length];
+      slots[mid + k] = pool[(anchor + k) % pool.length];
+    }
+    // pool 比 FAN 小时两侧会取到同一个人，去重后阵型自动收窄。
+    const seen = new Set<string>();
+    return slots.filter((n): n is ArtistNode => {
+      if (!n || seen.has(n.id)) return false;
+      seen.add(n.id);
+      return true;
+    });
+  }, [nodes, withPortrait, heroId]);
+
+  const hero = nodeById.get(heroId) || fan[0] || nodes[0];
+  const heroIndex = hero ? nodes.findIndex(n => n.id === hero.id) : 0;
 
   const next = () => {
-    if (portraitNodes.length < 2) return;
-    const at = portraitNodes.findIndex(n => n.id === heroId);
-    setHeroId(portraitNodes[(at + 1) % portraitNodes.length].id);
+    const pool = withPortrait.length >= 2 ? withPortrait : nodes;
+    if (pool.length < 2) return;
+    const at = pool.findIndex(n => n.id === heroId);
+    setHeroId(pool[(at + 1) % pool.length].id);
+  };
+
+  // 指针位置 → 舞台上的两个 CSS 变量。直接写 style，不触发 React 重渲染。
+  const trackPointer = (event: React.PointerEvent<HTMLDivElement>) => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const rect = stage.getBoundingClientRect();
+    const fx = Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width - 0.5) * 2));
+    const fy = Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height - 0.5) * 2));
+    stage.style.setProperty('--fx', fx.toFixed(3));
+    stage.style.setProperty('--fy', fy.toFixed(3));
+  };
+  const resetPointer = () => {
+    stageRef.current?.style.setProperty('--fx', '0');
+    stageRef.current?.style.setProperty('--fy', '0');
   };
 
   const today = new Date();
   const stamp = `${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
+  const provinces = new Set(nodes.map(n => provinceOf(n.city))).size;
+  const stats = (node: ArtistNode) => ({
+    workCount: workCounts.get(node.id) || 0,
+    relationCount: relationCounts.get(node.id) || 0,
+    average: ratings[node.id]?.average,
+    count: ratings[node.id]?.count,
+  });
 
   return <section className="today-hero" aria-label="今日人物">
-    <div className="th-corridor" aria-hidden="true">
-      <div className="th-floor" />
-      {flyers.map((node, i) => (
-        <div key={`${node.id}-${i}`} className={`th-flyer ${i % 2 ? 'right' : 'left'}`}
-          style={{animationDelay: `${-(i * (8 / flyers.length)).toFixed(2)}s`}}>
-          <div className="th-face"><img src={thumbPath(node)} alt="" width={160} height={160} loading="lazy" decoding="async" draggable={false} /></div>
-        </div>
-      ))}
+    <div className="thv-spine" aria-hidden="true">
+      <span>FLOWLINE</span><i /> ARCHIVE OF CHINESE RAP
     </div>
 
-    <div className="th-stage">
-      <button className="th-card" onClick={() => setDetailOpen(true)} aria-label={`翻开 ${hero?.name} 的卡`}>
-        <div className="th-card-top">
-          <span className="th-serial">NO. {String(heroIndex + 1).padStart(3, '0')} / {nodes.length}</span>
-          <span>{hero?.kind === 'group' ? 'CREW' : 'ARTIST'} · {province}</span>
-        </div>
-        <div className="th-portrait">
-          <img src={hero ? avatarPath(hero) : ''} alt={hero ? `${hero.name}头像` : ''} width={320} height={320} decoding="async" fetchPriority="high" draggable={false} />
-          <span className="th-scan" aria-hidden="true" />
-        </div>
-        <div className="th-body">
-          <div className="th-name">{hero?.name}</div>
-          <div className="th-city">{hero?.city} · {hero?.category}</div>
-          {hero?.description && <p className="th-desc">{hero.description}</p>}
-          <div className="th-stats">
-            <span><b>{relationCount}</b><small>关系</small></span>
-            <span><b>{workCount}</b><small>作品</small></span>
-            <span className="th-rate">
-              <span className="th-stars">{ratings[hero?.id]?.average ? '★'.repeat(Math.round(ratings[hero.id].average)) + '☆'.repeat(5 - Math.round(ratings[hero.id].average)) : '☆☆☆☆☆'}</span>
-              <small>{ratings[hero?.id]?.count ? `${ratings[hero.id].average.toFixed(1)} · ${ratings[hero.id].count} 人评分` : '暂无评分 · 来做第一个'}</small>
-            </span>
-          </div>
-        </div>
-      </button>
-    </div>
-
-    <div className="th-bottom">
-      <div className="th-kicker"><span className="th-dot" />THE FACE OF TODAY · {stamp}</div>
-      <h1>今日人物 · <em>{hero?.name}</em></h1>
-      <p className="th-hook">{nodes.length} 位中文说唱人物，收录 {relations.length} 条关系，等你来补全</p>
-      <div className="th-actions">
-        <button className="th-primary" onClick={() => setDetailOpen(true)}>翻开这张卡 →</button>
-        <button className="th-ghost" onClick={next}>换一位</button>
+    <div className="thv-copy">
+      <span className="thv-kicker"><i />今日翻牌 · {stamp}</span>
+      <h1>{nodes.length} 位人物，<br />{relations.length} 条关系，<br />一张一张翻。</h1>
+      <p className="thv-hook">
+        每天换一位中文说唱人物。翻开卡，合作、厂牌与冲突线索都在同一条关系网里，
+        覆盖 {provinces} 个省份 —— 缺的部分等你补。
+      </p>
+      <div className="thv-actions">
+        <button className="thv-primary" onClick={() => setDetailOpen(true)} tabIndex={0}>
+          翻开 {hero?.name} 的卡 <ArrowRight size={15} />
+        </button>
+        <button className="thv-ghost" onClick={next}><RefreshCw size={14} />换一位</button>
       </div>
+      <p className="thv-meta">
+        <b>{hero?.name}</b>
+        <span>{hero ? `${provinceLabel(provinceOf(hero.city))} · ${hero.category}` : ''}</span>
+        <span>NO.{String(heroIndex + 1).padStart(3, '0')} / {nodes.length}</span>
+      </p>
     </div>
 
-    <div className="th-signature">FLOWLINE / 一张卡就是一个入口</div>
+    <div className="thv-stage" ref={stageRef} onPointerMove={trackPointer} onPointerLeave={resetPointer}>
+      <div className="thv-fan">
+        {fan.map((node, i) => <HeroCard key={node.id} node={node}
+          index={nodes.findIndex(n => n.id === node.id)} total={nodes.length}
+          slot={i - (fan.length - 1) / 2} stats={stats(node)}
+          inBeef={beefSet.has(node.id)} isFront={node.id === hero?.id}
+          onOpen={() => setDetailOpen(true)}
+          onPromote={() => setHeroId(node.id)} />)}
+      </div>
+      <div className="thv-floor" aria-hidden="true" />
+      <div className="thv-plinth" aria-hidden="true" />
+    </div>
+
+    <aside className="thv-beef" aria-label="冲突线索">
+      <header className="thv-beef-head">
+        <span className="thv-beef-kicker"><Zap size={13} />BEEF 线索</span>
+        <b>{beefList.length}</b>
+      </header>
+      {beefList.length === 0
+        ? <p className="thv-beef-empty"><FileSearch size={15} />还没有可查的冲突记录。</p>
+        : <ul className="thv-beef-list">
+          {beefList.slice(0, 4).map(beef => {
+            const sides = beef.sides.filter((s): s is NonNullable<typeof s> => !!s);
+            return <li key={beef.id}>
+              <button className="thv-beef-row" onClick={() => setOpenBeef(beef)}>
+                <span className="thv-beef-faces">
+                  {sides.map(side => {
+                    const node = nodeById.get(side.nodeId);
+                    // 没有照片的人用像素头像兜底，不留空格子。
+                    return node
+                      ? <span key={side.nodeId} className="thv-beef-face"><Avatar node={node} /></span>
+                      : <i key={side.nodeId} className="thv-beef-unknown">?</i>;
+                  })}
+                  {beef.sides[1] === null && <i className="thv-beef-unknown">?</i>}
+                </span>
+                <span className="thv-beef-body">
+                  <b>{beef.title}</b>
+                  <small>{beef.status === 'verified' ? '已核实' : '待核实 · 可补充'}</small>
+                </span>
+              </button>
+            </li>;
+          })}
+        </ul>}
+      <p className="thv-beef-foot">
+        涉及真人的内容必须附可查证来源，本站只公开核实过的经过。
+      </p>
+    </aside>
+
+    <dl className="thv-rail" aria-label="收录概况">
+      {[
+        ['人物', nodes.length],
+        ['关系', relations.length],
+        ['作品', works.length],
+        ['省份', provinces],
+        ['BEEF', beefList.length],
+      ].map(([label, value]) => <div key={label}>
+        <dt>{label}</dt><dd>{value}</dd>
+      </div>)}
+      <p>数据全部来自公开来源与网友补充，每条关系都附证据链接。</p>
+    </dl>
 
     {detailOpen && hero && <RapperDetail node={hero} stat={ratings[hero.id]}
-      workCount={workCount} relationCount={relationCount} inBeef={inBeef}
+      workCount={workCounts.get(hero.id) || 0} relationCount={relationCounts.get(hero.id) || 0}
+      inBeef={beefSet.has(hero.id)}
       onClose={() => setDetailOpen(false)}
       onLocate={() => { setDetailOpen(false); onLocate(hero.id); }}
       onRated={() => void refresh()} />}
+
+    {openBeef && <BeefCard beef={openBeef} nodeById={nodeById}
+      onClose={() => setOpenBeef(null)}
+      onPick={id => { setOpenBeef(null); setHeroId(id); }}
+      onLocate={id => { setOpenBeef(null); onLocate(id); }} />}
   </section>;
 }

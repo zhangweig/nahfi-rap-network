@@ -2,6 +2,7 @@ import {useEffect, useRef} from 'react';
 import * as THREE from 'three';
 import type {ArtistNode} from '../data/types';
 import {avatarPath} from './PixelAvatar';
+import {drawPortrait} from '../lib/portrait';
 import {provinceLabel, provinceOf} from '../lib/province';
 
 /**
@@ -205,7 +206,7 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
   ctx.fillStyle = '#b3a593';
   ctx.fillText(kind, TEX_W - 38, 68);
 
-  // 头像区：暗底 + 首字母兜底（头像纹理加载失败时仍可读）
+  // 头像区：暗底 + 程序化人像兜底（真人照片加载成功后由 avatar 层盖住）
   const artX = 40, artY = 96, artW = TEX_W - 80, artH = 380;
   const art = ctx.createRadialGradient(TEX_W / 2, artY + 130, 20, TEX_W / 2, artY + 130, 380);
   art.addColorStop(0, '#2e221c');
@@ -213,13 +214,12 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
   ctx.fillStyle = art;
   ctx.fillRect(artX, artY, artW, artH);
   drawFoilPatch(ctx, artX, artY, artW, artH, index + 1);
+  // 双色丝网印剪影：明确表示「暂无照片」，但看起来是一版设计而不是缺图。
+  // 以前这里是一个 190px 的首字，三百多人里三百张都长那样。
+  drawPortrait(ctx, artX, artY, artW, artH, {seed: index + 3, accent: node.color});
   ctx.strokeStyle = '#4d382a';
   ctx.lineWidth = 2;
   ctx.strokeRect(artX, artY, artW, artH);
-  ctx.fillStyle = '#e4572e';
-  ctx.font = 'bold 190px "Microsoft YaHei", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(node.name.slice(0, 1), TEX_W / 2, artY + 268);
 
   ctx.strokeStyle = '#e4572e';
   ctx.lineWidth = 3;

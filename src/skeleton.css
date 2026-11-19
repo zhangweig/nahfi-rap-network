@@ -1,0 +1,65 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   骨架屏 + 错误边界（删此文件 + main.tsx 的 import 即可回退）
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.hero-skeleton .sk-corridor{position:absolute;inset:0;transform-style:preserve-3d;
+  perspective:900px;perspective-origin:50% 46%;pointer-events:none;overflow:hidden}
+.hero-skeleton .sk-flyer{position:absolute;left:50%;top:46%;width:1px;height:1px;transform-style:preserve-3d;
+  animation:th-fly 8s linear infinite}
+.hero-skeleton .sk-flyer::before{content:"";position:absolute;width:200px;height:270px;margin:-135px 0 0 -100px;
+  border-radius:12px;background:linear-gradient(110deg,#1c130d 20%,#2a1c13 40%,#1c130d 60%);
+  background-size:220% 100%;border:1px solid #3a2b21;filter:blur(3.5px) brightness(.6)}
+.hero-skeleton .sk-flyer.left::before{transform:translateX(-360px) rotateY(66deg)}
+.hero-skeleton .sk-flyer.right::before{transform:translateX(360px) rotateY(-66deg)}
+
+.hero-skeleton .sk-stage{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;
+  padding-top:72px;z-index:10;
+  background:radial-gradient(ellipse 48% 44% at 50% 40%,transparent 0%,transparent 40%,#08070688 66%,#080706dd 100%)}
+.hero-skeleton .sk-card{position:relative;width:300px;padding:16px;border-radius:16px;
+  background:linear-gradient(155deg,#2a1a10,#0e0a08 50%,#181009);border:1.5px solid #e4572e}
+.sk-line{display:block;height:12px;border-radius:5px;
+  background:linear-gradient(100deg,#2a1c13 20%,#3a281a 42%,#2a1c13 64%);
+  background-size:220% 100%;animation:sk-shimmer 1.4s linear infinite}
+.hero-skeleton .sk-top{height:10px;width:55%;margin-bottom:16px;opacity:.7}
+.hero-skeleton .sk-portrait{height:196px;border-radius:9px;margin-bottom:16px;border:1px solid #3a2b21;
+  background:linear-gradient(110deg,#1c130d 20%,#2e2016 42%,#1c130d 64%);background-size:220% 100%;
+  animation:sk-shimmer 1.4s linear infinite}
+.hero-skeleton .sk-name{height:26px;width:52%;margin-bottom:10px}
+.hero-skeleton .sk-city{height:10px;width:40%;margin-bottom:16px;opacity:.7}
+.hero-skeleton .sk-desc{height:10px;width:100%;margin-bottom:8px;opacity:.6}
+.hero-skeleton .sk-desc.short{width:78%}
+.hero-skeleton .sk-stats{display:flex;gap:18px;margin-top:18px;padding-top:14px;border-top:1px solid #3a2b21}
+.hero-skeleton .sk-stats span{flex:1;height:24px;border-radius:6px;
+  background:linear-gradient(100deg,#241811 20%,#332318 42%,#241811 64%);background-size:220% 100%;
+  animation:sk-shimmer 1.4s linear infinite}
+.hero-skeleton .sk-bottom{position:absolute;left:0;right:0;bottom:52px;z-index:10;
+  display:flex;flex-direction:column;align-items:center;gap:11px}
+.hero-skeleton .sk-bottom .sk-line{width:190px}
+.hero-skeleton .sk-bottom .sk-line.short{width:150px;opacity:.7}
+.hero-skeleton .sk-bottom .sk-line.tiny{width:110px;height:26px;border-radius:6px;opacity:.55}
+@keyframes sk-shimmer{0%{background-position:120% 0}100%{background-position:-120% 0}}
+
+/* 错误边界 */
+.error-fallback{max-width:640px;margin:40px auto;padding:34px 30px;text-align:center;
+  background:linear-gradient(155deg,#2a1a10,#120d0a);border:1px solid #7a4a2b;border-radius:14px;
+  color:#e8dccb;box-shadow:0 20px 50px #0009}
+.error-fallback-mark{display:grid;place-items:center;width:46px;height:46px;margin:0 auto 16px;
+  border:2px solid #e4572e;border-radius:50%;color:#e4572e;font:800 26px/1 monospace}
+.error-fallback h3{margin:0 0 9px;font-size:19px;color:#f2ede4}
+.error-fallback p{margin:0 0 16px;font-size:12px;line-height:1.8;color:#a39584}
+.error-fallback details{margin:0 0 18px;font-size:11px;color:#8a7b6c;text-align:left}
+.error-fallback details summary{cursor:pointer}
+.error-fallback code{display:block;margin-top:8px;padding:9px;background:#0a0706;border-radius:6px;
+  color:#e4572e;overflow-wrap:anywhere}
+.error-fallback button{padding:10px 22px;background:#e4572e;color:#171310;border:1px solid #e4572e;
+  border-radius:6px;font-weight:800;font-size:12px}
+.error-fallback button:hover{background:#ff7045}
+
+@media (prefers-reduced-motion:reduce){
+  .sk-line,.hero-skeleton .sk-portrait,.hero-skeleton .sk-stats span{animation:none}
+  .hero-skeleton .sk-flyer{animation:none;opacity:.5}
+}
+@media (min-resolution:1.5dppx),(-webkit-min-device-pixel-ratio:1.5),(min-width:2400px){
+  .hero-skeleton .sk-flyer{animation:none;opacity:.5}
+  .sk-line,.hero-skeleton .sk-portrait,.hero-skeleton .sk-stats span{animation-duration:2.6s}
+}

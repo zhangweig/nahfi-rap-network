@@ -10,15 +10,18 @@ import {ReportDialog, type ReportTarget} from './components/ReportDialog';
 import {BeefCard} from './components/BeefCard';
 import {BeefSubmit} from './components/BeefSubmit';
 import {TodayHero} from './components/TodayHero';
+import {RankPanel} from './components/RankPanel';
+import {ErrorBoundary} from './components/ErrorBoundary';
+import {HeroSkeleton} from './components/Skeleton';
 import {ALL_PROVINCES, UNKNOWN_PROVINCE, provinceLabel, provinceOf, provinceOptions} from './lib/province';
 import {artistMatches} from './lib/catalog';
 import {shortestRoute} from './lib/network';
 import type {RelationType} from './data/types';
 import {allBeefs, loadLocalBeefs, saveLocalBeefs, type BeefEvent} from './data/beefs';
 
-type Section = 'today' | 'map' | 'artists';
+type Section = 'today' | 'map' | 'artists' | 'rank';
 
-const NAV: [Section, string][] = [['today', '今日'], ['map', '地图'], ['artists', '人物']];
+const NAV: [Section, string][] = [['today', '今日'], ['map', '地图'], ['artists', '人物'], ['rank', '榜单']];
 
 /**
  * 人物深链：`?p=<id>`。
@@ -61,10 +64,15 @@ export default function App() {
   const [focus, setFocus] = useState<{id: string; n: number} | null>(null);
 
   const provinces = useMemo(() => provinceOptions(nodes), [nodes]);
-  const current = nodes.find(n => n.id === selected) || null;
   const nodeById = useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
-  const pendingLocations = nodes.filter(n => provinceOf(n.city) === UNKNOWN_PROVINCE);
-  const matches = query.trim() ? nodes.filter(n => artistMatches(n, query)).slice(0, 7) : [];
+  const current = selected ? nodeById.get(selected) || null : null;
+  const pendingLocations = useMemo(() => nodes.filter(n => provinceOf(n.city) === UNKNOWN_PROVINCE), [nodes]);
+  const matches = useMemo(() => query.trim() ? nodes.filter(n => artistMatches(n, query)).slice(0, 7) : [], [nodes, query]);
+  const typeCounts = useMemo(() => {
+    const counts: Record<string, number> = {member:0,collaboration:0,production:0,affiliation:0};
+    for (const r of relations) if (r.type in counts) counts[r.type] += 1;
+    return counts;
+  }, [relations]);
 
   // 选中谁就把谁写进地址栏。用 replaceState 而不是 pushState：浏览人物不该
   // 在历史里堆一层层「后退」，否则从别人分享的链接进来后一按后退就困在图里。
@@ -208,7 +216,7 @@ export default function App() {
       </div>
     </header>
 
-    {section !== 'today' && <div className="workspace-toolbar">
+    {section !== 'today' && section !== 'rank' && <div className="workspace-toolbar">
       <div className="search-area">
         <Search size={17} />
         <input aria-label="搜索人物或省份" placeholder="搜索人物 / 别名" value={query} onChange={e => setQuery(e.target.value)} />
@@ -230,18 +238,23 @@ export default function App() {
       <button onClick={() => setPathOpen(true)}><Route size={16} /><span>寻找路径</span></button>
     </div>}
 
-    {filters && section !== 'today' && <div className="filter-strip">
+    {filters && section !== 'today' && section !== 'rank' && <div className="filter-strip">
       {Object.entries({member: '组合成员', collaboration: '歌曲合作', production: '幕后制作', affiliation: '历史关联'}).map(([key, label]) =>
         <label key={key}>
           <input type="checkbox" checked={types.includes(key as RelationType)} onChange={() => toggleType(key as RelationType)} />
-          {label}<small>{relations.filter(r => r.type === key).length}</small>
+          {label}<small>{typeCounts[key]}</small>
         </label>)}
     </div>}
 
-    <main className={`explorer ${section === 'today' ? 'is-today' : section === 'map' ? 'is-board' : 'is-catalog'}`}>
+    <main className={`explorer ${section === 'today' ? 'is-today' : section === 'map' ? 'is-board' : section === 'rank' ? 'is-rank' : 'is-catalog'}`}>
       <section className="explore-main">
+        {section === 'today' && !checked
+          ? <HeroSkeleton />
+          : <ErrorBoundary label={section === 'today' ? '今日' : section === 'rank' ? '榜单' : section === 'map' ? '关系网' : '人物'} resetKey={section}>
         {section === 'today'
           ? <TodayHero onLocate={id => { flyPick(id); setSection('map'); }} />
+          : section === 'rank'
+          ? <RankPanel onLocate={id => { flyPick(id); setSection('map'); }} />
           : section === 'map'
           ? <div className="map-room">
             <RelationBoard selected={selected} onSelect={pick} onClear={closeDetail} types={types} province={province}
@@ -262,6 +275,7 @@ export default function App() {
           </div>
           : <CatalogPanel query={query} onQuery={setQuery}
             onPick={id => { flyPick(id); setSection('map'); }} province={province} />}
+        </ErrorBoundary>}
       </section>
     </main>
 

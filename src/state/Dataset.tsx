@@ -1,4 +1,4 @@
-import {createContext,useContext,useEffect,useState,useCallback,type ReactNode} from 'react';
+import {createContext,useContext,useEffect,useState,useCallback,useMemo,useRef,type ReactNode} from 'react';
 import {nodes,relations,works,type ArtistNode,type Relationship,type Work} from '../data/rap-data';
 import {SEED_BEEFS,type BeefEvent} from '../data/beefs';
 export interface RatingStat {average:number;count:number}
@@ -36,15 +36,75 @@ export async function api<T=any>(path:string,body?:unknown):Promise<T>{
   }
   return result;
 }
+
 const initial={nodes,relations,works,beefs:SEED_BEEFS,ratings:{},revisions:{}};
-const Context=createContext<{data:Dataset;online:boolean;checked:boolean;refresh:()=>Promise<void>}>({data:initial,online:false,checked:false,refresh:async()=>{}});
+
+/**
+ * 用 revisions（每个 node/relation 的内容指纹）+ ratings 汇总出一个稳定的整体签名。
+ * 轮询时只有签名变了才 setData —— 否则 setData 每次都给新对象引用，
+ * context value 一变，所有 consumer（含 ~7000 元素的关系网）都会整棵重渲染。
+ */
+const dataSignature=(d:Dataset):string=>{
+  const rev=d.revisions||{};
+  const ratings=d.ratings||{};
+  let parts='r:'+Object.keys(rev).length+';';
+  for(const key in rev) parts+=key+'='+rev[key]+'|';
+  parts+='@'+Object.keys(ratings).length+';';
+  for(const key in ratings) parts+=key+'='+ratings[key].average+'/'+ratings[key].count+'|';
+  parts+='@n'+d.nodes.length+',rel'+d.relations.length+',w'+d.works.length+',b'+(d.beefs?.length||0);
+  return parts;
+};
+
+/*
+ * context 拆成两个，且 Provider 的 value 都保持稳定引用：
+ *  - DataContext  : 整份数据，只有内容签名变化时才换引用（低频）。
+ *  - StatusContext: {online,checked,refresh}，refresh 是稳定函数；online/checked
+ *    只在初次探测与登录态切换时更新。
+ * 这样高频轮询不会把「刷新函数」也塞进变化引用里连带所有 consumer 重渲染。
+ * 两个独立 hook 让只读数据的组件（关系网/名录/首屏）不必订阅状态变化。
+ */
+const DataContext=createContext<Dataset>(initial);
+const StatusContext=createContext<{online:boolean;checked:boolean;refresh:()=>Promise<void>}>({online:false,checked:false,refresh:async()=>{}});
+
 export function DatasetProvider({children}:{children:ReactNode}){
-  const [data,setData]=useState<Dataset>(initial),[online,setOnline]=useState(false);
-  // `checked` flips after the first probe: a static build (GitHub Pages) has no API,
-  // and the UI should hide the write paths instead of offering buttons that always fail.
+  const [data,setData]=useState<Dataset>(initial);
+  const [online,setOnline]=useState(false);
   const [checked,setChecked]=useState(false);
-  const refresh=useCallback(async()=>{try{const result=await api<Dataset>('/data');setData(result);setOnline(true);}catch{setOnline(false);}finally{setChecked(true);}},[]);
-  useEffect(()=>{void refresh();const timer=setInterval(refresh,30_000);const focus=()=>void refresh();window.addEventListener('focus',focus);return()=>{clearInterval(timer);window.removeEventListener('focus',focus);};},[refresh]);
-  return <Context.Provider value={{data,online,checked,refresh}}>{children}</Context.Provider>;
+  const signature=useRef<string>(dataSignature(initial));
+
+  const refresh=useCallback(async()=>{
+    try{
+      const result=await api<Dataset>('/data');
+      const next=dataSignature(result);
+      if(next!==signature.current){signature.current=next;setData(result);}
+      setOnline(true);
+    }catch{setOnline(false);}
+    finally{setChecked(true);}
+  },[]);
+
+  useEffect(()=>{
+    let timer:ReturnType<typeof setInterval>|null=null;
+    const start=()=>{if(timer===null)timer=setInterval(()=>void refresh(),30_000);};
+    const stop=()=>{if(timer!==null){clearInterval(timer);timer=null;}};
+    // 页面不可见时停掉轮询：后台标签页既没人看，又在白白消耗 Workers 额度与电量。
+    const onVisibility=()=>{if(document.hidden)stop();else{void refresh();start();}};
+    void refresh();
+    start();
+    document.addEventListener('visibilitychange',onVisibility);
+    return()=>{stop();document.removeEventListener('visibilitychange',onVisibility);};
+  },[refresh]);
+
+  // 状态 value 只在三个字段真变化时换引用，避免把 data consumer 也拉着重渲染。
+  const status=useMemo(()=>({online,checked,refresh}),[online,checked,refresh]);
+
+  return <StatusContext.Provider value={status}>
+    <DataContext.Provider value={data}>{children}</DataContext.Provider>
+  </StatusContext.Provider>;
 }
-export const useDataset=()=>useContext(Context);
+
+/** 只订阅数据。关系网/名录/首屏等重组件用它，避免被 online/checked 变化波及。 */
+export const useDatasetData=()=>useContext(DataContext);
+/** 只订阅连接状态与刷新函数。投稿入口、页脚、审核台等轻量 UI 用它。 */
+export const useDatasetStatus=()=>useContext(StatusContext);
+/** 兼容旧调用：一次拿到全部字段。新代码优先用上面两个细粒度 hook。 */
+export const useDataset=()=>({data:useContext(DataContext),...useContext(StatusContext)});

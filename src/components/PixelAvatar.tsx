@@ -9,8 +9,13 @@ import type {ArtistNode} from '../data/types';
  */
 const localAvatars=import.meta.glob('../assets/avatars/*.{png,webp,jpg,jpeg}',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
 const localAvatarById=new Map(Object.entries(localAvatars).map(([path,url])=>[path.split('/').pop()!.replace(/\.[^.]+$/,''),url]));
+// 走廊飞卡只需要 160px 的小图，用缩略图避免 24 张原图（合计 1.4M）同时下载。
+const localThumbs=import.meta.glob('../assets/thumbs/*.{png,webp,jpg,jpeg}',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
+const thumbById=new Map(Object.entries(localThumbs).map(([path,url])=>[path.split('/').pop()!.replace(/\.[^.]+$/,''),url]));
 
 export const avatarPath=(node:ArtistNode)=>node.avatarUrl||localAvatarById.get(node.id)||'';
+/** 走廊等装饰性小图优先用缩略图；没有缩略图时退回原图。 */
+export const thumbPath=(node:ArtistNode)=>thumbById.get(node.id)||avatarPath(node);
 
 const hashOf=(value:string)=>{let h=7;for(let i=0;i<value.length;i+=1)h=(h*31+value.charCodeAt(i))%100003;return h;};
 

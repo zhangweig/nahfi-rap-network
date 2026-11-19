@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {LayoutGrid, RotateCcw, Search, Sparkles, Users, X} from 'lucide-react';
-import {useDataset} from '../state/Dataset';
+import {useDatasetData} from '../state/Dataset';
 import {Avatar} from './PixelAvatar';
 import {ALL_PROVINCES, UNKNOWN_PROVINCE, provinceLabel, provinceOf} from '../lib/province';
 import {boardLayout, buildEdges, edgeMid, edgePath, beefPath, relationMeta, type NodePlace} from '../lib/board';
@@ -59,7 +59,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   beefs: BeefEvent[];
   onOpenBeef: (beef: BeefEvent) => void;
 }) {
-  const {data} = useDataset();
+  const data = useDatasetData();
   const viewport = useRef<HTMLDivElement>(null);
   const [view, setView] = useState({scale: 0.8, x: 0, y: 0});
 
@@ -527,8 +527,8 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       .sort((a, b) => b.count - a.count).slice(0, 10).map(edge => edge.id));
   }, [edges, focusId]);
 
-  const visibleNodes = data.nodes.filter(node => positions.has(node.id));
-  const locatedCount = data.nodes.filter(node => provinceOf(node.city) !== UNKNOWN_PROVINCE).length;
+  const visibleNodes = useMemo(() => data.nodes.filter(node => positions.has(node.id)), [data.nodes, positions]);
+  const locatedCount = useMemo(() => data.nodes.reduce((sum, node) => sum + (provinceOf(node.city) !== UNKNOWN_PROVINCE ? 1 : 0), 0), [data.nodes]);
 
   /* ── roster: every artist inside one province, searchable ─────────────── */
   const rosterRows = useMemo(() => {

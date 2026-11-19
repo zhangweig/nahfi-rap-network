@@ -1,8 +1,9 @@
 import {useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent} from 'react';
-import {MapPin, Star} from 'lucide-react';
+import {Bookmark, MapPin, Star} from 'lucide-react';
 import type {ArtistNode} from '../data/types';
 import type {RatingStat} from '../state/Dataset';
 import {api} from '../state/Dataset';
+import {useFavorites, toggleFavorite} from '../state/favorites';
 import {avatarPath} from './PixelAvatar';
 import {provinceLabel, provinceOf} from '../lib/province';
 
@@ -45,6 +46,8 @@ export function RapperDetail({node, stat, workCount, relationCount, inBeef,
   const [mine, setMine] = useState<number>(() => readMine()[node.id] || 0);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('');
+  const favorites = useFavorites();
+  const saved = favorites.includes(node.id);
 
   useEffect(() => {
     ref.current?.showModal();
@@ -168,9 +171,15 @@ export function RapperDetail({node, stat, workCount, relationCount, inBeef,
         </span>
       </div>
       {notice && <p className="rd-notice" role="status">{notice}</p>}
-      <button className="rd-locate" onClick={() => { onClose(); onLocate(); }}>
-        <MapPin size={14} />在关系网中定位
-      </button>
+      <div className="rd-actions">
+        <button className={`rd-save ${saved ? 'is-saved' : ''}`} onClick={() => toggleFavorite(node.id)}
+          aria-pressed={saved} aria-label={saved ? '取消收藏' : '收藏这位人物'}>
+          <Bookmark size={14} fill={saved ? 'currentColor' : 'none'} />{saved ? '已收藏' : '收藏'}
+        </button>
+        <button className="rd-locate" onClick={() => { onClose(); onLocate(); }}>
+          <MapPin size={14} />在关系网中定位
+        </button>
+      </div>
     </div>
   </dialog>;
 }

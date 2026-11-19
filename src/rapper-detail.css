@@ -63,11 +63,18 @@
 .rd-stars-input button.on{color:#ffb08a}
 .rd-stars-input button:disabled{cursor:default;opacity:.6}
 .rd-notice{margin:12px 0 0;font-size:11px;color:#b9d84a}
-.rd-locate{display:inline-flex;align-items:center;gap:6px;margin-top:18px;
+.rd-locate{display:inline-flex;align-items:center;gap:6px;
   padding:9px 16px;border:1px solid #7a4a2b;border-radius:6px;
   background:#171310;color:#e4572e;cursor:pointer;
   font:700 11px/1 "Microsoft YaHei",sans-serif;letter-spacing:.04em}
 .rd-locate:hover{border-color:#e4572e;background:#e4572e14}
+.rd-actions{display:flex;gap:9px;align-items:center;margin-top:18px;flex-wrap:wrap}
+.rd-save{display:inline-flex;align-items:center;gap:6px;
+  padding:9px 16px;border:1px solid #5a4a3c;border-radius:6px;
+  background:#171310;color:#b3a593;cursor:pointer;
+  font:700 11px/1 "Microsoft YaHei",sans-serif;letter-spacing:.04em}
+.rd-save:hover{border-color:#b9d84a;color:#d8ec8a;background:#b9d84a0f}
+.rd-save.is-saved{border-color:#b9d84a;color:#b9d84a;background:#b9d84a14}
 
 @media(max-width:520px){
   .rd-name{font-size:20px}

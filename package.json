@@ -16,6 +16,7 @@
     "api:deploy": "node scripts/build-data.mjs server/generated && wrangler deploy",
     "test:server": "node --test server/app.test.mjs",
     "data": "node scripts/build-data.mjs",
+    "thumbs": "node scripts/make-thumbs.mjs",
     "feishu:init": "node scripts/feishu-init.mjs",
     "feishu:check": "node scripts/feishu-check.mjs",
     "feishu:pull": "node scripts/feishu-pull.mjs",

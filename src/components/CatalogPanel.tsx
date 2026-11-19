@@ -1,7 +1,7 @@
 import {lazy, Suspense, useMemo, useState} from 'react';
 import {Search, Music2} from 'lucide-react';
 import {artistMatches} from '../lib/catalog';
-import {useDataset} from '../state/Dataset';
+import {useDatasetData, useDatasetStatus} from '../state/Dataset';
 import {ALL_PROVINCES,provinceLabel,provinceOf} from '../lib/province';
 import type {HoloCardData} from './HoloCards';
 import {RapperDetail} from './RapperDetail';
@@ -12,15 +12,25 @@ const HoloCardStage = lazy(() => import('./HoloCards').then(m => ({default: m.Ho
 
 /** Rapper 名录：以 3D 球星卡阵列展示，点击弹出大卡打分，大卡里可回到地图定位。 */
 export function CatalogPanel({query,onQuery,onPick,province}:{query:string;onQuery:(query:string)=>void;onPick:(id:string)=>void;province:string}) {
-  const {data:{nodes,works,relations,beefs,ratings},refresh}=useDataset();
-  const worksByArtist=new Map(nodes.map(n=>[n.id,works.filter(w=>w.artistIds.includes(n.id))]));
-  const relationCounts=new Map(nodes.map(n=>[n.id,relations.filter(r=>r.source===n.id||r.target===n.id).length]));
-  const beefIds=beefNodeIds(allBeefs(beefs,loadLocalBeefs()));
+  const {nodes,works,relations,beefs,ratings}=useDatasetData();
+  const {refresh}=useDatasetStatus();
+  // 单次遍历建索引，替代原先「每个 node 各 filter 一遍 works / relations」的 O(n²)。
+  const {worksByArtist,relationCounts}=useMemo(()=>{
+    const w=new Map<string,typeof works>();
+    const r=new Map<string,number>();
+    for(const work of works)for(const id of work.artistIds){const list=w.get(id);if(list)list.push(work);else w.set(id,[work]);}
+    for(const rel of relations){
+      r.set(rel.source,(r.get(rel.source)||0)+1);
+      r.set(rel.target,(r.get(rel.target)||0)+1);
+    }
+    return {worksByArtist:w,relationCounts:r};
+  },[works,relations]);
+  const beefIds=useMemo(()=>beefNodeIds(allBeefs(beefs,loadLocalBeefs())),[beefs]);
+  const nodeById=useMemo(()=>new Map(nodes.map(n=>[n.id,n])),[nodes]);
   const [page,setPage]=useState(1);
   const [detailId,setDetailId]=useState<string|null>(null);
   const pageSize=24;
-  const inScope=(node:{city:string})=>province===ALL_PROVINCES||provinceOf(node.city)===province;
-  const artists=nodes.filter(node=>inScope(node)&&artistMatches(node,query));
+  const artists=useMemo(()=>nodes.filter(node=>(province===ALL_PROVINCES||provinceOf(node.city)===province)&&artistMatches(node,query)),[nodes,province,query]);
   const total=artists.length;
   const pageCount=Math.max(1,Math.ceil(total/pageSize));
   const currentPage=Math.min(page,pageCount);
@@ -33,7 +43,7 @@ export function CatalogPanel({query,onQuery,onPick,province}:{query:string;onQue
     inBeef:beefIds.has(node.id),
   })),[artists,offset,worksByArtist,relationCounts,beefIds]);
 
-  const detail = detailId ? nodes.find(n => n.id === detailId) : null;
+  const detail = detailId ? nodeById.get(detailId) || null : null;
 
   return <section className="catalog-panel" aria-label="Rapper 名录">
     <div className="catalog-controls">

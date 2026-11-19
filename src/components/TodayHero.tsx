@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react';
 import {useDataset} from '../state/Dataset';
-import {avatarPath} from './PixelAvatar';
+import {avatarPath, thumbPath} from './PixelAvatar';
 import {RapperDetail} from './RapperDetail';
 import {allBeefs, loadLocalBeefs, beefNodeIds} from '../data/beefs';
 import {provinceLabel, provinceOf} from '../lib/province';
@@ -47,7 +47,7 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
       {flyers.map((node, i) => (
         <div key={`${node.id}-${i}`} className={`th-flyer ${i % 2 ? 'right' : 'left'}`}
           style={{animationDelay: `${-(i * (8 / flyers.length)).toFixed(2)}s`}}>
-          <div className="th-face"><img src={avatarPath(node)} alt="" draggable={false} /></div>
+          <div className="th-face"><img src={thumbPath(node)} alt="" width={160} height={160} loading="lazy" decoding="async" draggable={false} /></div>
         </div>
       ))}
     </div>
@@ -59,7 +59,7 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
           <span>{hero?.kind === 'group' ? 'CREW' : 'ARTIST'} · {province}</span>
         </div>
         <div className="th-portrait">
-          <img src={hero ? avatarPath(hero) : ''} alt={hero ? `${hero.name}头像` : ''} draggable={false} />
+          <img src={hero ? avatarPath(hero) : ''} alt={hero ? `${hero.name}头像` : ''} width={320} height={320} decoding="async" fetchPriority="high" draggable={false} />
           <span className="th-scan" aria-hidden="true" />
         </div>
         <div className="th-body">

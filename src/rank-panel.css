@@ -1,0 +1,50 @@
+/* ── 榜单 / 收藏回访页（FLOWLINE 暖色暗底）───────────────────────────── */
+.explorer.is-rank{display:block}
+.rank-panel{max-width:900px;margin:0 auto;padding:22px 0 40px;color:#e8dccb}
+
+.rank-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;
+  padding:0 4px 18px;border-bottom:1px solid #3a2b21}
+.rank-head-title{display:flex;align-items:center;gap:13px;color:#e4572e}
+.rank-head-title h2{margin:0;font-size:22px;letter-spacing:.04em;color:#f2ede4;font-weight:800}
+.rank-head-title p{margin:5px 0 0;font-size:11px;color:#a39584;letter-spacing:.02em}
+.rank-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.rank-tabs button{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;
+  background:#171310;border:1px solid #3a2b21;border-radius:6px;color:#b3a593;
+  font-size:12px;font-weight:700;letter-spacing:.03em}
+.rank-tabs button:hover{background:#241a14;border-color:#7a4a2b;color:#f2ede4}
+.rank-tabs button.active{background:#e4572e;border-color:#e4572e;color:#171310}
+.rank-tab-count{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;
+  border-radius:9px;background:#00000038;font:700 10px/1 ui-monospace,monospace}
+.rank-tabs button.active .rank-tab-count{background:#17131038}
+
+.rank-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.rank-row{width:100%;display:flex;align-items:center;gap:14px;text-align:left;padding:12px 16px;
+  background:linear-gradient(100deg,#1c140e,#120e0b);border:1px solid #3a2b21;border-radius:10px;
+  color:#e8dccb;box-shadow:inset 0 0 24px #e4572e08}
+.rank-row:hover{background:linear-gradient(100deg,#26180f,#160f0b);border-color:#7a4a2b;
+  box-shadow:inset 0 0 30px #e4572e12,0 6px 20px #0007}
+.rank-no{width:34px;text-align:center;font:800 18px/1 ui-monospace,monospace;color:#7a6a58;flex:none}
+.rank-no.is-top{color:#e4572e;text-shadow:0 0 14px #e4572e66}
+.rank-face{width:46px;height:46px;border-radius:8px;overflow:hidden;border:1px solid #6b4a30;flex:none;background:#0d0908}
+.rank-face img{width:100%;height:100%;object-fit:cover;filter:contrast(1.04) saturate(.92)}
+.rank-who{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+.rank-who b{font-size:15px;color:#f2ede4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-who small{font-size:10px;color:#a39584;letter-spacing:.05em}
+.rank-score{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.rank-score b{font:800 20px/1 ui-monospace,monospace;color:#e4572e}
+.rank-score small{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#a39584}
+
+.rank-empty{text-align:center;padding:80px 16px;color:#7a6a58}
+.rank-empty h3{margin:16px 0 8px;font-size:18px;color:#e8dccb}
+.rank-empty p{margin:0;font-size:12px;line-height:1.8;color:#a39584}
+.rank-foot{display:flex;align-items:center;justify-content:center;gap:7px;margin:22px 0 0;
+  font-size:10px;color:#8a7b6c;letter-spacing:.03em}
+
+@media (max-width:640px){
+  .rank-head{align-items:flex-start}
+  .rank-head-title h2{font-size:19px}
+  .rank-row{gap:10px;padding:10px 12px}
+  .rank-face{width:40px;height:40px}
+  .rank-no{width:26px;font-size:15px}
+  .rank-score b{font-size:17px}
+}

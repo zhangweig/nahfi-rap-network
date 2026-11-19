@@ -14,5 +14,12 @@ import './holo-foil.css';      // 镭射分层（参考 pokemon-cards-css 的技
 import './beef.css';           // BEEF 链视觉层：酸绿证据链+档案卡（删此行+此文件即可回退）
 import './submit-menu.css';    // 右上角投稿中心下拉（删此行+此文件即可回退）
 import './today-hero.css';     // 今日首屏：走廊飞卡 + 居中主角卡 + 底部钩子（删此行+此文件即可回退）
+import './rank-panel.css';     // 榜单/收藏回访页（删此行+此文件即可回退）
+import './skeleton.css';       // 首屏骨架屏 + 错误边界（删此行+此文件即可回退）
 import {DatasetProvider} from './state/Dataset';
-createRoot(document.getElementById('root')!).render(<React.StrictMode><DatasetProvider><App/></DatasetProvider></React.StrictMode>);
+import {ErrorBoundary} from './components/ErrorBoundary';
+createRoot(document.getElementById('root')!).render(
+  <ErrorBoundary label="页面">
+    <React.StrictMode><DatasetProvider><App/></DatasetProvider></React.StrictMode>
+  </ErrorBoundary>
+);

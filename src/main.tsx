@@ -13,5 +13,6 @@ import './rapper-detail.css';  // 人物大卡 + 星级评分弹层
 import './holo-foil.css';      // 镭射分层（参考 pokemon-cards-css 的技术思路重写）
 import './beef.css';           // BEEF 链视觉层：酸绿证据链+档案卡（删此行+此文件即可回退）
 import './submit-menu.css';    // 右上角投稿中心下拉（删此行+此文件即可回退）
+import './today-hero.css';     // 今日首屏：走廊飞卡 + 居中主角卡 + 底部钩子（删此行+此文件即可回退）
 import {DatasetProvider} from './state/Dataset';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><DatasetProvider><App/></DatasetProvider></React.StrictMode>);

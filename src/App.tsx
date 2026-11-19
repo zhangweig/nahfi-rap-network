@@ -9,15 +9,16 @@ import {SubmissionEditor, ReviewPanel, Modal, type EditorTarget} from './compone
 import {ReportDialog, type ReportTarget} from './components/ReportDialog';
 import {BeefCard} from './components/BeefCard';
 import {BeefSubmit} from './components/BeefSubmit';
+import {TodayHero} from './components/TodayHero';
 import {ALL_PROVINCES, UNKNOWN_PROVINCE, provinceLabel, provinceOf, provinceOptions} from './lib/province';
 import {artistMatches} from './lib/catalog';
 import {shortestRoute} from './lib/network';
 import type {RelationType} from './data/types';
 import {allBeefs, loadLocalBeefs, saveLocalBeefs, type BeefEvent} from './data/beefs';
 
-type Section = 'map' | 'artists';
+type Section = 'today' | 'map' | 'artists';
 
-const NAV: [Section, string][] = [['map', '地图'], ['artists', '人物']];
+const NAV: [Section, string][] = [['today', '今日'], ['map', '地图'], ['artists', '人物']];
 
 /**
  * 人物深链：`?p=<id>`。
@@ -32,7 +33,8 @@ export default function App() {
   const {data, online, checked} = useDataset();
   const writable = online || !checked;
   const {nodes, relations, works} = data;
-  const [section, setSection] = useState<Section>('map');
+  // 带 ?p= 进来的（分享链接 / 站内定位）直接落到关系网；普通访问先看今日首屏。
+  const [section, setSection] = useState<Section>(() => personInUrl() ? 'map' : 'today');
   const [selected, setSelected] = useState<string | null>(personInUrl);
   const [query, setQuery] = useState('');
   const [province, setProvince] = useState<string>(ALL_PROVINCES);
@@ -206,7 +208,7 @@ export default function App() {
       </div>
     </header>
 
-    <div className="workspace-toolbar">
+    {section !== 'today' && <div className="workspace-toolbar">
       <div className="search-area">
         <Search size={17} />
         <input aria-label="搜索人物或省份" placeholder="搜索人物 / 别名" value={query} onChange={e => setQuery(e.target.value)} />
@@ -226,9 +228,9 @@ export default function App() {
       </label>
       <button onClick={() => setFilters(!filters)} aria-expanded={filters}><SlidersHorizontal size={16} /><span>关系筛选</span></button>
       <button onClick={() => setPathOpen(true)}><Route size={16} /><span>寻找路径</span></button>
-    </div>
+    </div>}
 
-    {filters && <div className="filter-strip">
+    {filters && section !== 'today' && <div className="filter-strip">
       {Object.entries({member: '组合成员', collaboration: '歌曲合作', production: '幕后制作', affiliation: '历史关联'}).map(([key, label]) =>
         <label key={key}>
           <input type="checkbox" checked={types.includes(key as RelationType)} onChange={() => toggleType(key as RelationType)} />
@@ -236,9 +238,11 @@ export default function App() {
         </label>)}
     </div>}
 
-    <main className={`explorer ${section === 'map' ? 'is-board' : 'is-catalog'}`}>
+    <main className={`explorer ${section === 'today' ? 'is-today' : section === 'map' ? 'is-board' : 'is-catalog'}`}>
       <section className="explore-main">
-        {section === 'map'
+        {section === 'today'
+          ? <TodayHero onLocate={id => { flyPick(id); setSection('map'); }} />
+          : section === 'map'
           ? <div className="map-room">
             <RelationBoard selected={selected} onSelect={pick} onClear={closeDetail} types={types} province={province}
               path={path} focus={focus} onToggleType={toggleType} onLocate={() => setUnlocated(true)}

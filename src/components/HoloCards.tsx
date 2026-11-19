@@ -402,7 +402,10 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
     } catch {
       return; // WebGL 不可用时保留透明热区，不抛错
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    // 4K / 高 DPR 下把渲染分辨率压到 1x：卡阵是展示层，DPR1 已足够清晰，
+    // 但像素填充量从 2.25x 降到 1x（4K 屏省一半以上 GPU 填充）。
+    const hiRes = window.innerWidth >= 2400 || (window.devicePixelRatio || 1) >= 2;
+    renderer.setPixelRatio(hiRes ? 1 : Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     const maxAniso = renderer.capabilities.getMaxAnisotropy();
     const texLoader = new THREE.TextureLoader();

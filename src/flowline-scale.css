@@ -75,4 +75,31 @@
   .board-bg .bg-sparks i{animation:none !important}
   .board-bg .bg-sparks i{opacity:.35}
   .board-bg .bg-par{will-change:auto}
+
+  /* ── 补充：选中态/抽屉态里仍在跑的动画与大面积滤镜 ─────────────────
+     这些只在 hover/选中/打开抽屉时出现，但 drop-shadow 作用在 SVG path 上，
+     在 4K 下逐帧参与合成。静态保留发光外观，停掉动画与滤镜。 */
+  .edge-live,
+  .board-edges .edge-flow{animation:none}
+  .edge-live,
+  .board-edges .edge-flow,
+  .board-edges .edge-focus,
+  .board.has-focus .beef-link.is-active{filter:none}
+  .gc-wave i{animation:none}
+  /* BEEF 静态发光保留，但去掉最贵的高斯模糊光晕与逐帧滤镜 */
+  .beef-halo{filter:none;opacity:.06}
+  .bn-beef-ring{filter:none}
+  .beef-zig,.beef-spark,.beef-anchor-diamond,.beef-tag rect{filter:none}
+
+  /* 全屏 ASCII 叠加层：overlay 混合在高 DPR 下有固定合成开销，
+     降一档透明度但仍保留字符质感；地图内那层带 mask 的改用更淡的静态值。 */
+  .ascii-field{opacity:.32}
+  .neon-mode .map-room::before{opacity:.5}
+
+  /* 毛玻璃：3–4px 的 backdrop blur 在大面积面板上代价高，4K 下退成实色。 */
+  .rail-group,
+  .board-timeline,
+  .board-zoom,
+  .site-header,
+  .submit-pop{backdrop-filter:none}
 }

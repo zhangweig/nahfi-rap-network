@@ -62,6 +62,32 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   const {data} = useDataset();
   const viewport = useRef<HTMLDivElement>(null);
   const [view, setView] = useState({scale: 0.8, x: 0, y: 0});
+
+  /* ── 高频手势节流 ──────────────────────────────────────────────────────
+     拖拽/滚轮每秒能发上百个事件，而每次 setView 都会让 ~7000 个节点+连线
+     做一次 React 重渲染。这里把一帧内的多次更新合并成一次提交：
+     用 ref 累积最新目标，单个 rAF 里统一 setView。视觉无差，重渲染降到 60fps 上限。 */
+  const viewRef = useRef(view);
+  const pendingView = useRef<{scale:number; x:number; y:number} | null>(null);
+  const viewFrame = useRef<number | null>(null);
+  useEffect(() => { viewRef.current = view; }, [view]);
+  const queueView = useCallback((fn:(old:{scale:number; x:number; y:number})=>{scale:number; x:number; y:number}) => {
+    const next = fn(pendingView.current ?? viewRef.current);
+    pendingView.current = next;
+    if (viewFrame.current === null) {
+      viewFrame.current = requestAnimationFrame(() => {
+        viewFrame.current = null;
+        const target = pendingView.current;
+        pendingView.current = null;
+        if (target) { viewRef.current = target; setView(target); }
+      });
+    }
+  }, []);
+  // 飞入动画/自动适配走直接 setView，先清掉未提交的拖拽帧，避免两者互相覆盖。
+  const cancelQueuedView = useCallback(() => {
+    if (viewFrame.current !== null) { cancelAnimationFrame(viewFrame.current); viewFrame.current = null; }
+    pendingView.current = null;
+  }, []);
   const [hover, setHover] = useState<string | null>(null);
   const [year, setYear] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -256,7 +282,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
       const rect = element.getBoundingClientRect();
-      setView(old => {
+      queueView(old => {
         const next = clampScale(old.scale * Math.exp(-event.deltaY * 0.0014));
         const ratio = next / old.scale;
         return {
@@ -268,7 +294,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     };
     element.addEventListener('wheel', onWheel, {passive: false});
     return () => element.removeEventListener('wheel', onWheel);
-  }, []);
+  }, [queueView]);
 
   /* ── canvas panning ─────────────────────────────────────────────────── */
   const pan = useRef({x: 0, y: 0, ox: 0, oy: 0, active: false, moved: false, blank: false});
@@ -283,10 +309,11 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   const onPointerMove = (event: React.PointerEvent) => {
     if (!pan.current.active) return;
     if (Math.hypot(event.clientX - pan.current.x, event.clientY - pan.current.y) > 4) pan.current.moved = true;
-    setView(old => ({
+    const px = event.clientX, py = event.clientY;
+    queueView(old => ({
       ...old,
-      x: pan.current.ox + (event.clientX - pan.current.x),
-      y: pan.current.oy + (event.clientY - pan.current.y),
+      x: pan.current.ox + (px - pan.current.x),
+      y: pan.current.oy + (py - pan.current.y),
     }));
   };
   const onPointerUp = () => {
@@ -422,7 +449,9 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       y: rect.height / 2 - place.y * scale,
     };
     if (animation.current !== null) cancelAnimationFrame(animation.current);
-    const start = view;
+    // 若拖拽最后一帧尚未提交，用它做起点，避免飞入瞬间回跳。
+    const start = pendingView.current ?? view;
+    cancelQueuedView();
     const begin = performance.now();
     const step = () => {
       const k = Math.min(1, (performance.now() - begin) / 360);
@@ -435,11 +464,12 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       animation.current = k < 1 ? requestAnimationFrame(step) : null;
     };
     animation.current = requestAnimationFrame(step);
-  }, [positions, view]);
+  }, [positions, view, cancelQueuedView]);
 
   useEffect(() => () => {
     if (animation.current !== null) cancelAnimationFrame(animation.current);
     if (dragFrame.current !== null) cancelAnimationFrame(dragFrame.current);
+    if (viewFrame.current !== null) cancelAnimationFrame(viewFrame.current);
   }, []);
 
   const focusNonce = useRef(0);

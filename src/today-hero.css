@@ -87,14 +87,23 @@
 /* ── 今日页铺满，不再用地图的双栏 grid ── */
 .explorer.is-today{display:block}
 
-/* ── 4K / 高 DPR / 降级：走廊飞卡改为静帧，避免大面积模糊+3D 逐帧重绘 ── */
+/* ── 4K / 高 DPR / 降级 ──────────────────────────────────────────────
+   高斯模糊的成本随物理像素数平方增长：一张 200×270 卡在 DPR2 下要对
+   140 万像素做卷积，24 张就是 3300 万像素/帧。这里停掉动画的同时，
+   去掉 blur 与 drop-shadow，改用低透明度 + 暗色叠加维持「看不清」的观感。 */
 @media (min-resolution:1.5dppx),(-webkit-min-device-pixel-ratio:1.5),(min-width:2400px){
-  .th-flyer{animation:none;opacity:.5}
+  .th-flyer{animation:none;opacity:.32}
   .th-flyer.left{transform:translateZ(-600px)}
   .th-flyer.right{transform:translateZ(-900px)}
+  .th-face{filter:none;background:#1a120d;border-color:#4a2a18}
+  .th-face img{opacity:.35}
+  .th-face::after{background:linear-gradient(180deg,#08060499,#080604f0)}
+  .th-floor{opacity:.5}
 }
 @media (prefers-reduced-motion:reduce){
   .th-flyer{animation:none;opacity:.5}
+  .th-face{filter:none}
+  .th-face img{opacity:.4}
 }
 @media (max-width:760px){
   .today-hero{height:calc(100vh - 150px)}

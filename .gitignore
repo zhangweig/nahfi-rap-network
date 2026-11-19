@@ -15,7 +15,11 @@ server/generated/
 # 本地调试截图与临时产物
 screenshots/
 .shots/
+# 头像抓取的候选图与联络表：本地肉眼验收用，可再生，不进仓库
+research/avatars-candidates/
+research/avatars-sheet.html
 # 工作笔记（内部过程记录，不属于项目产物）
 .workbuddy/
+Claude-WorkBuddy分工.md
 # Excel / WPS 打开文件时生成的临时锁文件
 ~$*

@@ -3,8 +3,8 @@ import type {ArtistNode} from '../data/types';
 
 /**
  * 头像替换接口，按优先级取：
- * 1. node.avatarUrl（表格「头像」列或审核台里的直链）；
- * 2. src/assets/avatars/<人物id>.png（把图片丢进这个目录就自动生效，支持 png/webp/jpg）；
+ * 1. src/assets/avatars/<人物id>.png（本地图永远压过外部直链，支持 png/webp/jpg）；
+ * 2. node.avatarUrl（表格「头像」列或审核台里的直链）；
  * 3. 都没有 -> 用 id 生成的随机像素头像（现阶段的默认值）。
  */
 const localAvatars=import.meta.glob('../assets/avatars/*.{png,webp,jpg,jpeg}',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
@@ -13,7 +13,7 @@ const localAvatarById=new Map(Object.entries(localAvatars).map(([path,url])=>[pa
 const localThumbs=import.meta.glob('../assets/thumbs/*.{png,webp,jpg,jpeg}',{eager:true,query:'?url',import:'default'}) as Record<string,string>;
 const thumbById=new Map(Object.entries(localThumbs).map(([path,url])=>[path.split('/').pop()!.replace(/\.[^.]+$/,''),url]));
 
-export const avatarPath=(node:ArtistNode)=>node.avatarUrl||localAvatarById.get(node.id)||'';
+export const avatarPath=(node:ArtistNode)=>localAvatarById.get(node.id)||node.avatarUrl||'';
 /** 走廊等装饰性小图优先用缩略图；没有缩略图时退回原图。 */
 export const thumbPath=(node:ArtistNode)=>thumbById.get(node.id)||avatarPath(node);
 

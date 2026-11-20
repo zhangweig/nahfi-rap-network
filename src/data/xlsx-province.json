@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-11-16",
   "source": "用户名单（按省份）xlsx",
-  "totalRows": 141,
+  "totalRows": 143,
   "assignments": [
     {
       "id": "xiedi",
@@ -1412,6 +1412,26 @@
       "verify": "已核实",
       "origin": "出生美国西弗吉尼亚，祖籍上海",
       "note": "歌手/rapper，《中国有嘻哈》导师；海外出生，仅作活动参考行"
+    },
+    {
+      "id": "landuo",
+      "name": "懒惰",
+      "province": "北京",
+      "row": 142,
+      "via": "懒惰",
+      "verify": "用户补充",
+      "origin": "北京",
+      "note": "用户在「待补地区名单」中填写（2026-11-20）"
+    },
+    {
+      "id": "pending-026",
+      "name": "Top Barry杨博睿",
+      "province": "四川",
+      "row": 143,
+      "via": "Top Barry杨博睿",
+      "verify": "用户补充",
+      "origin": "四川",
+      "note": "用户在「待补地区名单」中填写（2026-11-20）"
     }
   ]
 }

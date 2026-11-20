@@ -1492,21 +1492,6 @@
       }
     },
     {
-      "id": "pending-096",
-      "name": "JN",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "JN",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 2,
-        "source": "新说唱100强"
-      }
-    },
-    {
       "id": "pending-097",
       "name": "福来",
       "aliases": [],
@@ -1515,36 +1500,6 @@
       "category": "说唱 / 音乐人",
       "color": "#8ea8bd",
       "initials": "福来",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 2,
-        "source": "新说唱100强"
-      }
-    },
-    {
-      "id": "pending-098",
-      "name": "Jason",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "JA",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 2,
-        "source": "新说唱100强"
-      }
-    },
-    {
-      "id": "pending-099",
-      "name": "潘潘",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "潘潘",
       "description": "仅收录姓名，关系、作品与头像待补充。",
       "_pending": {
         "tier": 2,
@@ -1564,21 +1519,6 @@
       "_pending": {
         "tier": 2,
         "source": "新说唱100强"
-      }
-    },
-    {
-      "id": "pending-101",
-      "name": "双胞胎",
-      "aliases": [],
-      "kind": "group",
-      "city": "未标注",
-      "category": "说唱 / 团体",
-      "color": "#8ea8bd",
-      "initials": "双胞",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 2,
-        "source": "新说唱100强（组合）"
       }
     },
     {
@@ -2257,21 +2197,6 @@
       }
     },
     {
-      "id": "pending-146",
-      "name": "张靓颖",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "张靓",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "新说唱2020 制作人"
-      }
-    },
-    {
       "id": "pending-147",
       "name": "范丞丞",
       "aliases": [],
@@ -2280,21 +2205,6 @@
       "category": "说唱 / 音乐人",
       "color": "#8ea8bd",
       "initials": "范丞",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "新说唱2024 制作人"
-      }
-    },
-    {
-      "id": "pending-148",
-      "name": "大张伟",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "大张",
       "description": "仅收录姓名，关系、作品与头像待补充。",
       "_pending": {
         "tier": 3,
@@ -2317,36 +2227,6 @@
       }
     },
     {
-      "id": "pending-150",
-      "name": "黄子韬",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "黄子",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "新说唱2025 制作人"
-      }
-    },
-    {
-      "id": "pending-151",
-      "name": "严浩翔",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "严浩",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "新说唱2025/巅峰对决2026 赛事组"
-      }
-    },
-    {
       "id": "pending-152",
       "name": "王嘉尔",
       "aliases": [
@@ -2364,70 +2244,6 @@
       }
     },
     {
-      "id": "pending-153",
-      "name": "朴宰范",
-      "aliases": [
-        "Jay Park"
-      ],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "朴宰",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "新说唱2020/巅峰对决嘉宾"
-      }
-    },
-    {
-      "id": "pending-154",
-      "name": "周震南",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "周震",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "巅峰对决嘉宾"
-      }
-    },
-    {
-      "id": "pending-155",
-      "name": "张艺兴",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "张艺",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "巅峰对决嘉宾"
-      }
-    },
-    {
-      "id": "pending-156",
-      "name": "刘逸云Amber",
-      "aliases": [
-        "Amber Liu"
-      ],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "刘逸",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "巅峰对决2023 赛事组"
-      }
-    },
-    {
       "id": "pending-157",
       "name": "吴克群",
       "aliases": [],
@@ -2440,36 +2256,6 @@
       "_pending": {
         "tier": 3,
         "source": "巅峰对决2023 嘉宾"
-      }
-    },
-    {
-      "id": "pending-158",
-      "name": "龚琳娜",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "龚琳",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "新说唱2025 特邀制作人"
-      }
-    },
-    {
-      "id": "pending-159",
-      "name": "杜海涛",
-      "aliases": [],
-      "kind": "artist",
-      "city": "未标注",
-      "category": "说唱 / 音乐人",
-      "color": "#8ea8bd",
-      "initials": "杜海",
-      "description": "仅收录姓名，关系、作品与头像待补充。",
-      "_pending": {
-        "tier": 3,
-        "source": "新说唱2025/巅峰对决2026 主持"
       }
     },
     {

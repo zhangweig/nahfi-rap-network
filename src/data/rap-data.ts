@@ -5,6 +5,7 @@ import catalog from './catalog.json';
 import nameOnly from './name-only.json';
 import xlsxProvinces from './xlsx-province.json';
 import crewRelations from './crew-relations.json';
+import lateNodes from './late-nodes.json';
 import community from './community-approved.json';
 import sheetOverrides from './sheet-overrides.json';
 import {applyApproved, applyOverrides, type ApprovedFile, type OverrideFile} from './merge-approved';
@@ -130,10 +131,31 @@ function canonicalize(nodes:ArtistNode[], rels:Relationship[], works:Work[]) {
 }
 const canon = canonicalize(merged.nodes, merged.relations, merged.works);
 
+/**
+ * 追加区（late-nodes.json）必须挂在整条流水线的最后一步。
+ * 节点下标就是卡面档案号（serial），这样新收录的人只会拿到更大的号，
+ * 已有编号永不后移；如果插到上面任何一段（catalog / report / name-only / 厂牌），
+ * 后面所有人的号都会整体 +1。
+ */
+const lateArtists = lateNodes.artists as ArtistNode[];
+const lateGroups = lateNodes.groups as ArtistNode[];
+
 // 按省份名单是用户明确指定的口径，最后再叠一次，确保盖过旧的飞书人工编辑。
-export const nodes:ArtistNode[] = canon.nodes.map(applyXlsxProvince);
-export const relations:Relationship[] = canon.relations;
-export const works:Work[] = canon.works;
+export const nodes:ArtistNode[] = [...canon.nodes.map(applyXlsxProvince), ...lateArtists, ...lateGroups];
+export const relations:Relationship[] = [...canon.relations, ...(lateNodes.relations as Relationship[])];
+
+/**
+ * 后建档者的作品署名补丁：目录抓取时这些人还没有节点，平台署名里他们的名字被丢掉了。
+ * 补档后把 artistIds 补回去，creditedAs 始终保留平台原文，不做改写。
+ */
+const workPatches = new Map<string,string[]>();
+for (const patch of lateNodes.workPatches) workPatches.set(patch.id, patch.addArtistIds);
+
+export const works:Work[] = canon.works.map(work => {
+  const extra = workPatches.get(work.id);
+  if (!extra) return work;
+  return {...work, artistIds:[...new Set([...work.artistIds, ...extra])]};
+});
 export const workById = new Map(works.map(work => [work.id, work]));
 export const nodeById = new Map(nodes.map(node => [node.id, node]));
 export const cities = [...new Set(nodes.map(node => node.city))].sort((a,b) => a === '未标注' ? 1 : b === '未标注' ? -1 : a.localeCompare(b,'zh-CN'));

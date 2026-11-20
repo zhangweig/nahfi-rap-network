@@ -112,7 +112,11 @@ export const reportOverrides: Record<string, Partial<ArtistNode>> = {
   ty: {city: '成都'},
   ddg: {city: '成都'},
   vava: {city: '成都'},
-  lianma: {city: '成都'},
+  lianma: {
+    city: '成都',
+    category: '五人组',
+    description: '五人组成员，与 JinJiBeWater_隼（隼）为双胞胎亲兄弟。作品档案收录《舔狗》、《譚sir》等曲目。合作记录以具体版本署名为准。',
+  },
   wudu: {city: '重庆'},
   wangqiming: {city: '重庆'},
   pact: {city: '西安'},

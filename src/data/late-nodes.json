@@ -1,0 +1,285 @@
+{
+  "generatedFrom": "用户提供的「五人组」厂牌资料（2026-11-20）",
+  "note": "追加区：新收录的人物与团体只追加在此，保证节点下标只增不减，卡面档案号（serial）永久稳定。已存在的同名人物请改 name-only / catalog，不要在此重复建档。",
+  "artists": [
+    {
+      "id": "sasi",
+      "name": "SASIOVERLXRD",
+      "aliases": [
+        "SASI",
+        "Sasi"
+      ],
+      "kind": "artist",
+      "city": "四川",
+      "category": "五人组",
+      "color": "#b07cff",
+      "initials": "SA",
+      "description": "五人组成员。用户提供籍贯：四川。个人作品与详细履历待补充。"
+    },
+    {
+      "id": "babybako",
+      "name": "BaByBaKo",
+      "aliases": [
+        "Rich Nomadic",
+        "BaBy BaKo",
+        "BabyBako"
+      ],
+      "kind": "artist",
+      "city": "甘肃",
+      "category": "五人组",
+      "color": "#35d6ff",
+      "initials": "BB",
+      "description": "五人组成员，另以 Rich Nomadic 一名活动。用户提供籍贯：甘肃。"
+    },
+    {
+      "id": "zhacai",
+      "name": "ZhaCai",
+      "aliases": [
+        "榨菜",
+        "ZhaCai 榨菜"
+      ],
+      "kind": "artist",
+      "city": "甘肃",
+      "category": "五人组",
+      "color": "#8be05e",
+      "initials": "榨",
+      "description": "五人组成员，中文名榨菜。用户提供籍贯：甘肃。"
+    },
+    {
+      "id": "daojiao",
+      "name": "刀脚",
+      "aliases": [
+        "刀腳",
+        "DaoJiao"
+      ],
+      "kind": "artist",
+      "city": "贵州",
+      "category": "五人组",
+      "color": "#ff5c8a",
+      "initials": "刀",
+      "description": "五人组名誉第六人，非正式成员。用户提供籍贯：贵州。公开目录中与布瑞吉Bridge、连麻Swimming、邓典果DDG 同曲署名（《頂樑柱》《哦 (Live)》）。"
+    }
+  ],
+  "groups": [
+    {
+      "id": "crew-five",
+      "name": "五人组",
+      "aliases": [
+        "五人組"
+      ],
+      "kind": "group",
+      "city": "四川",
+      "category": "厂牌 / 团体",
+      "color": "#ffc93c",
+      "initials": "五人",
+      "description": "四川出发的五人团体，成员：SASIOVERLXRD、JinJiBeWater_隼、连麻Swimming、BaByBaKo（Rich Nomadic）、ZhaCai（榨菜）；刀脚为名誉第六人。成员名单与籍贯由用户提供，仅按该口径建立归属关系，不推断签约状态。"
+    }
+  ],
+  "workPatches": [
+    {
+      "id": "apple-1822989435",
+      "addArtistIds": [
+        "daojiao"
+      ],
+      "note": "《頂樑柱》平台署名为「布瑞吉Bridge, 刀脚 & 連麻」，此前因刀脚未建档导致该署名被丢弃，补档后补回 artistIds。"
+    },
+    {
+      "id": "apple-1835505893",
+      "addArtistIds": [
+        "daojiao"
+      ],
+      "note": "《哦 (Live)》平台署名为「連麻, 刀腳 & 鄧典果DDG」，此前因刀脚未建档导致该署名被丢弃，补档后补回 artistIds。"
+    }
+  ],
+  "relations": [
+    {
+      "id": "crew-five-sasi",
+      "source": "crew-five",
+      "target": "sasi",
+      "type": "member",
+      "label": "五人组 · 成员",
+      "evidence": [
+        {
+          "title": "用户提供：五人组厂牌资料",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 由站长提供的五人组成员名单：SASIOVERLXRD、JinJiBeWater_隼、连麻Swimming、BaByBaKo（Rich Nomadic）、ZhaCai（榨菜）。仅记录该名单口径，不推断当前签约状态。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-five-pending-023",
+      "source": "crew-five",
+      "target": "pending-023",
+      "type": "member",
+      "label": "五人组 · 成员",
+      "evidence": [
+        {
+          "title": "用户提供：五人组厂牌资料",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长提供的名单中「JinJiBeWater_隼」为五人组成员；该人物此前仅收录姓名（新说唱2024 总冠军），本次补齐籍贯四川与厂牌归属。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-five-lianma",
+      "source": "crew-five",
+      "target": "lianma",
+      "type": "member",
+      "label": "五人组 · 成员",
+      "evidence": [
+        {
+          "title": "用户提供：五人组厂牌资料",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长提供的名单中「连麻Swimming」为五人组成员；该人物此前仅有 Apple Music 目录档案，本次补齐厂牌归属。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-five-babybako",
+      "source": "crew-five",
+      "target": "babybako",
+      "type": "member",
+      "label": "五人组 · 成员",
+      "evidence": [
+        {
+          "title": "用户提供：五人组厂牌资料",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长提供的名单中「BaByBaKo（或 Rich Nomadic）」为五人组成员，籍贯甘肃。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-five-zhacai",
+      "source": "crew-five",
+      "target": "zhacai",
+      "type": "member",
+      "label": "五人组 · 成员",
+      "evidence": [
+        {
+          "title": "用户提供：五人组厂牌资料",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长提供的名单中「ZhaCai（榨菜）」为五人组成员，籍贯甘肃。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "crew-five-daojiao",
+      "source": "crew-five",
+      "target": "daojiao",
+      "type": "affiliation",
+      "label": "五人组 · 名誉第六人（非正式成员）",
+      "evidence": [
+        {
+          "title": "用户提供：五人组厂牌资料",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长说明刀脚为「名誉第六人」，不在五人组正式成员名单内，故记为 affiliation 而非 member。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "lianma-pending-023-twins",
+      "source": "lianma",
+      "target": "pending-023",
+      "type": "affiliation",
+      "label": "双胞胎亲兄弟",
+      "evidence": [
+        {
+          "title": "用户提供：五人组厂牌资料",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长说明连麻Swimming 与 JinJiBeWater_隼 为双胞胎亲兄弟。亲属关系不属于成员/合作类型，按 affiliation 记录，标签明确写为双胞胎。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "apple-1822989435-daojiao-lianma",
+      "source": "daojiao",
+      "target": "lianma",
+      "type": "collaboration",
+      "label": "《頂樑柱》· 发行版",
+      "track": {
+        "id": "apple-1822989435",
+        "title": "頂樑柱",
+        "year": 2025,
+        "version": "发行版"
+      },
+      "evidence": [
+        {
+          "title": "Apple Music：曲目与演唱署名",
+          "url": "https://music.apple.com/tw/album/%E9%A0%82%E6%A8%91%E6%9F%B1/1822989059?i=1822989435",
+          "note": "《頂樑柱》（2025-06-27）署名「布瑞吉Bridge, 刀脚 & 連麻」，刀脚此前未建档，合作边被丢弃；本次补档后按公开署名重建。核对日期：2026-11-20。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "apple-1822989435-daojiao-bridge",
+      "source": "daojiao",
+      "target": "bridge",
+      "type": "collaboration",
+      "label": "《頂樑柱》· 发行版",
+      "track": {
+        "id": "apple-1822989435",
+        "title": "頂樑柱",
+        "year": 2025,
+        "version": "发行版"
+      },
+      "evidence": [
+        {
+          "title": "Apple Music：曲目与演唱署名",
+          "url": "https://music.apple.com/tw/album/%E9%A0%82%E6%A8%91%E6%9F%B1/1822989059?i=1822989435",
+          "note": "同曲署名「布瑞吉Bridge, 刀脚 & 連麻」，本次补刀脚建档后按同一份公开署名补齐与布瑞吉Bridge 的合作边。核对日期：2026-11-20。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "apple-1835505893-daojiao-lianma",
+      "source": "daojiao",
+      "target": "lianma",
+      "type": "collaboration",
+      "label": "《哦 (Live)》· 现场版",
+      "track": {
+        "id": "apple-1835505893",
+        "title": "哦 (Live)",
+        "year": 2025,
+        "version": "现场版"
+      },
+      "evidence": [
+        {
+          "title": "Apple Music：曲目与演唱署名",
+          "url": "https://music.apple.com/tw/album/%E5%93%A6-live/1835505584?i=1835505893",
+          "note": "《哦 (Live)》（2025-08-23，新說唱2025 第12期）署名「連麻, 刀腳 & 鄧典果DDG」，补刀脚建档后重建该合作边。核对日期：2026-11-20。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "apple-1835505893-daojiao-ddg",
+      "source": "daojiao",
+      "target": "ddg",
+      "type": "collaboration",
+      "label": "《哦 (Live)》· 现场版",
+      "track": {
+        "id": "apple-1835505893",
+        "title": "哦 (Live)",
+        "year": 2025,
+        "version": "现场版"
+      },
+      "evidence": [
+        {
+          "title": "Apple Music：曲目与演唱署名",
+          "url": "https://music.apple.com/tw/album/%E5%93%A6-live/1835505584?i=1835505893",
+          "note": "同曲署名「連麻, 刀腳 & 鄧典果DDG」，本次补刀脚建档后按同一份公开署名补齐与邓典果DDG 的合作边。核对日期：2026-11-20。"
+        }
+      ],
+      "status": "verified"
+    }
+  ]
+}

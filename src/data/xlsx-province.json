@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-11-16",
   "source": "用户名单（按省份）xlsx",
-  "totalRows": 143,
+  "totalRows": 174,
   "assignments": [
     {
       "id": "xiedi",
@@ -956,12 +956,12 @@
     {
       "id": "pending-082",
       "name": "爆音",
-      "province": "辽宁",
+      "province": "四川",
       "row": 96,
       "via": "爆音",
-      "verify": "出生地未核实",
-      "origin": "辽宁沈阳（未核实）",
-      "note": "地下 Battle MC；注：艾志恒不在此省，见湖北"
+      "verify": "用户改表",
+      "origin": "四川",
+      "note": "用户于 2026-11-20 在总表 F 列由「辽宁」改为「四川」（原注：地下 Battle MC；注：艾志恒不在此省，见湖北）"
     },
     {
       "id": "pgone",
@@ -1419,9 +1419,9 @@
       "province": "北京",
       "row": 142,
       "via": "懒惰",
-      "verify": "用户补充",
+      "verify": "用户改表",
       "origin": "北京",
-      "note": "用户在「待补地区名单」中填写（2026-11-20）"
+      "note": "用户于 2026-11-20 在总表 F 列填写"
     },
     {
       "id": "pending-026",
@@ -1432,6 +1432,316 @@
       "verify": "用户补充",
       "origin": "四川",
       "note": "用户在「待补地区名单」中填写（2026-11-20）"
+    },
+    {
+      "id": "pending-040",
+      "name": "陈近南",
+      "province": "吉林",
+      "row": 0,
+      "via": "陈近南",
+      "verify": "用户改表",
+      "origin": "吉林",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-041",
+      "name": "阿达娃",
+      "province": "四川",
+      "row": 0,
+      "via": "阿达娃",
+      "verify": "用户改表",
+      "origin": "四川",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-043",
+      "name": "斯威特",
+      "province": "北京",
+      "row": 0,
+      "via": "斯威特",
+      "verify": "用户改表",
+      "origin": "北京",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-044",
+      "name": "AK刘彰",
+      "province": "广东",
+      "row": 0,
+      "via": "AK刘彰",
+      "verify": "用户改表",
+      "origin": "广东",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-049",
+      "name": "钧泽",
+      "province": "福建",
+      "row": 0,
+      "via": "钧泽",
+      "verify": "用户改表",
+      "origin": "福建",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-051",
+      "name": "胡旭",
+      "province": "台湾",
+      "row": 0,
+      "via": "胡旭",
+      "verify": "用户改表",
+      "origin": "台湾",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-052",
+      "name": "李文",
+      "province": "四川",
+      "row": 0,
+      "via": "李文",
+      "verify": "用户改表",
+      "origin": "四川",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-069",
+      "name": "小安迪",
+      "province": "安徽",
+      "row": 0,
+      "via": "小安迪",
+      "verify": "用户改表",
+      "origin": "安徽",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-070",
+      "name": "杨晓川",
+      "province": "福建",
+      "row": 0,
+      "via": "杨晓川",
+      "verify": "用户改表",
+      "origin": "福建",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-072",
+      "name": "Vex",
+      "province": "辽宁",
+      "row": 0,
+      "via": "Vex",
+      "verify": "用户改表",
+      "origin": "辽宁",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-077",
+      "name": "Round2",
+      "province": "江苏",
+      "row": 0,
+      "via": "Round2",
+      "verify": "用户改表",
+      "origin": "江苏",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-078",
+      "name": "蜜妞",
+      "province": "江苏",
+      "row": 0,
+      "via": "蜜妞",
+      "verify": "用户改表",
+      "origin": "江苏",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-079",
+      "name": "李棒棒",
+      "province": "天津",
+      "row": 0,
+      "via": "李棒棒",
+      "verify": "用户改表",
+      "origin": "天津",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-080",
+      "name": "Young Lego",
+      "province": "河南",
+      "row": 0,
+      "via": "Young Lego",
+      "verify": "用户改表",
+      "origin": "河南",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-097",
+      "name": "福来",
+      "province": "天津",
+      "row": 0,
+      "via": "福来",
+      "verify": "用户改表",
+      "origin": "天津",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-142",
+      "name": "吴亦凡",
+      "province": "广东",
+      "row": 0,
+      "via": "吴亦凡",
+      "verify": "用户改表",
+      "origin": "广东",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-147",
+      "name": "范丞丞",
+      "province": "山东",
+      "row": 0,
+      "via": "范丞丞",
+      "verify": "用户改表",
+      "origin": "山东",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-198",
+      "name": "施鑫文月",
+      "province": "四川",
+      "row": 0,
+      "via": "施鑫文月",
+      "verify": "用户改表",
+      "origin": "四川",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-199",
+      "name": "地磁卡",
+      "province": "云南",
+      "row": 0,
+      "via": "地磁卡",
+      "verify": "用户改表",
+      "origin": "云南",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-204",
+      "name": "Adam Ocean 亚当魔星",
+      "province": "四川",
+      "row": 0,
+      "via": "Adam Ocean 亚当魔星",
+      "verify": "用户改表",
+      "origin": "四川",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-205",
+      "name": "春 Chun",
+      "province": "四川",
+      "row": 0,
+      "via": "春 Chun",
+      "verify": "用户改表",
+      "origin": "四川",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-206",
+      "name": "Haysen Cheng",
+      "province": "香港",
+      "row": 0,
+      "via": "Haysen Cheng",
+      "verify": "用户改表",
+      "origin": "香港",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-207",
+      "name": "Alyway",
+      "province": "新疆",
+      "row": 0,
+      "via": "Alyway",
+      "verify": "用户改表",
+      "origin": "新疆",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-208",
+      "name": "africakid",
+      "province": "四川",
+      "row": 0,
+      "via": "africakid",
+      "verify": "用户改表",
+      "origin": "四川",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-209",
+      "name": "Akemen杀",
+      "province": "贵州",
+      "row": 0,
+      "via": "Akemen杀",
+      "verify": "用户改表",
+      "origin": "贵州",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-210",
+      "name": "BOBBYNOPEACE",
+      "province": "四川",
+      "row": 0,
+      "via": "BOBBYNOPEACE",
+      "verify": "用户改表",
+      "origin": "四川",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-211",
+      "name": "周乘羽",
+      "province": "浙江",
+      "row": 0,
+      "via": "周乘羽",
+      "verify": "用户改表",
+      "origin": "浙江",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-212",
+      "name": "ddmashawty",
+      "province": "安徽",
+      "row": 0,
+      "via": "ddmashawty",
+      "verify": "用户改表",
+      "origin": "安徽",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-213",
+      "name": "youngcashjason",
+      "province": "新疆",
+      "row": 0,
+      "via": "youngcashjason",
+      "verify": "用户改表",
+      "origin": "新疆",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-214",
+      "name": "狂兆北",
+      "province": "云南",
+      "row": 0,
+      "via": "狂兆北",
+      "verify": "用户改表",
+      "origin": "云南",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-215",
+      "name": "莽",
+      "province": "云南",
+      "row": 0,
+      "via": "莽",
+      "verify": "用户改表",
+      "origin": "云南",
+      "note": "用户于 2026-11-20 在总表 F 列填写"
     }
   ]
 }

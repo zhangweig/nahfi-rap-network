@@ -88,10 +88,20 @@
   align-self:stretch;
   min-height:100%;min-width:0;
   perspective:1600px;perspective-origin:50% 46%;
-  --fx:0;--fy:0;
+  --fx:0;--fy:0;--dragX:0px;
+  outline:none;
   /* --w 提到 stage 上：刻度环、聚光、卡阵共用同一比例。
      只按可用高度算（卡高 ≈ 1.4w），保证首屏矮的时候卡会缩，而不是被裁掉。 */
   --w:clamp(156px,min(15vw,calc((min(100vh - 130px,820px) - 214px) / 1.62)),272px);
+}
+.thv-stage:focus-visible{outline:1px dashed #e4572e55;outline-offset:-6px;border-radius:12px}
+/* 宽屏放大卡阵：18vw 让卡片随可用宽度长大，上限抬到 380px。
+   高度仍参与约束，矮屏不会被撑破。 */
+@media (min-width:2000px){
+  .thv-stage{--w:clamp(220px,min(17vw,calc((min(100dvh - 150px,1200px) - 214px) / 1.5)),380px)}
+}
+@media (min-width:3200px){
+  .thv-stage{--w:clamp(280px,min(15vw,calc((min(100dvh - 170px,1500px) - 220px) / 1.45)),420px)}
 }
 .thv-fan{
   position:relative;
@@ -99,6 +109,10 @@
   width:calc(var(--w) * 3.14);
   height:calc(var(--w) * 1.4 * 1.12);
   transform-style:preserve-3d;
+  /* translate 由 rAF 弹簧每帧写入 --dragX（跟手位移/阻尼回弹），
+     与 transform 的指针倾斜相互独立，不会彼此覆盖。位移时轻微淡出，
+     让"抽出一张推入一张"更像真实换牌而不是整体平移。 */
+  translate:var(--dragX,0px) 0;
   transform:rotateX(calc(var(--fy) * -3deg)) rotateY(calc(var(--fx) * 4.4deg));
   transition:transform .5s cubic-bezier(.2,.8,.2,1);
 }

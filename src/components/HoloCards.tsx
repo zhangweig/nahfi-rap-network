@@ -40,6 +40,16 @@ const FOV = 32;
 const CARD_DEPTH = 4;      // 薄卡：接近实体球星卡厚度，不再是砖块
 const CARD_RADIUS = 12;    // 略带圆角
 
+/**
+ * 模块级纹理缓存：解决「切页/刷新回来卡片照片重新加载、卡卡的」。
+ * 根因是 WebGL effect 依赖 cards 数据签名，切页返回时整段重建，
+ * 卡面 CanvasTexture（640×896 逐像素绘制）与头像 Texture 都重新生成/解码。
+ * 这里按稳定 key 缓存两类纹理，重建时直接复用；因磁盘只有 24 张/页、总量有限
+ * （约 24×(640×896×4)+头像 ≈ 60MB 上限），保留缓存的收益远大于内存代价。
+ */
+const faceCache = new Map<string, THREE.CanvasTexture>();
+const avatarCache = new Map<string, THREE.Texture>();
+
 /** 圆角矩形轮廓，卡体与镭射层共用，避免矩形层在圆角处露馅。 */
 function roundedRectShape(w: number, h: number): THREE.Shape {
   const x = -w / 2, y = -h / 2, r = CARD_RADIUS;
@@ -424,13 +434,36 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
           if (child instanceof THREE.Mesh) {
             child.geometry.dispose();
             const mats = Array.isArray(child.material) ? child.material : [child.material];
+            // 材质本身要释放；但它引用的贴图来自模块缓存，绝不能 dispose，
+            // 否则切页回来纹理已失效，又退回到重新加载。
             mats.forEach(m => { if (m !== sideMat) m.dispose(); });
           }
         });
-        o.face.dispose();
-        o.avatar?.dispose();
+        // face / avatar 纹理留在全局缓存里供下次复用，这里不再 dispose。
       });
       objects.clear();
+    }
+
+    /** 头像纹理：命中缓存直接复用；否则加载并写缓存。返回是否有缓存可同步上屏。 */
+    function applyAvatar(id: string, url: string, maxAniso: number) {
+      const cached = avatarCache.get(url);
+      if (cached) {
+        const obj = objects.get(id);
+        if (obj) { obj.avatar = cached; obj.avatarMat.map = cached; obj.avatarMat.opacity = 1; obj.avatarMat.needsUpdate = true; }
+        return;
+      }
+      texLoader.load(url, tex => {
+        if (disposed) { tex.dispose(); return; }
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.anisotropy = maxAniso;
+        avatarCache.set(url, tex);
+        const obj = objects.get(id);
+        if (!obj) return;
+        obj.avatar = tex;
+        obj.avatarMat.map = tex;
+        obj.avatarMat.opacity = 1;
+        obj.avatarMat.needsUpdate = true;
+      });
     }
 
     function build() {
@@ -456,8 +489,14 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
         const group = new THREE.Group();
         group.position.set(baseX, baseY, 0);
 
-        const face = makeFaceTexture(data);
-        face.anisotropy = maxAniso;
+        // 卡面纹理：数据签名做 key，命中缓存就不重绘那张 640×896 画布。
+        const faceKey = `${data.node.id}:${data.index}:${data.workCount}:${data.relationCount}:${data.inBeef ? 1 : 0}`;
+        let face = faceCache.get(faceKey);
+        if (!face) {
+          face = makeFaceTexture(data);
+          face.anisotropy = maxAniso;
+          faceCache.set(faceKey, face);
+        }
         const faceMat = new THREE.MeshBasicMaterial({map: face});
         // 薄卡体：圆角长方形，接近实体球星卡厚度
         const body = new THREE.Mesh(makeCardGeometry(bw, bh), [faceMat, sideMat]);
@@ -472,19 +511,7 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
         avatarPlane.position.set(0, artY, CARD_DEPTH / 2 + 1.2);
         group.add(avatarPlane);
         const url = avatarPath(data.node);
-        if (url) {
-          texLoader.load(url, tex => {
-            if (disposed) { tex.dispose(); return; }
-            tex.colorSpace = THREE.SRGBColorSpace;
-            tex.anisotropy = maxAniso;
-            const obj = objects.get(id);
-            if (!obj) { tex.dispose(); return; }
-            obj.avatar = tex;
-            obj.avatarMat.map = tex;
-            obj.avatarMat.opacity = 1;
-            obj.avatarMat.needsUpdate = true;
-          });
-        }
+        if (url) applyAvatar(id, url, maxAniso);
 
         // 每张卡给不同初始相位，静态时各卡镭射纹理各异、但都完全静止
         const initPhase = data.index * 0.618;

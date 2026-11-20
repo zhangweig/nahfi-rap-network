@@ -1,5 +1,5 @@
-import {useMemo, useRef, useState} from 'react';
-import {ArrowRight, FileSearch, RefreshCw, Zap} from 'lucide-react';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import {ArrowRight, FileSearch, Zap} from 'lucide-react';
 import {useDatasetData, useDatasetStatus} from '../state/Dataset';
 import {Avatar, avatarPath} from './PixelAvatar';
 import {HeroCard} from './HeroCard';
@@ -25,10 +25,26 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
 
   // 只有真实头像的人物才适合当主角；占位人像留给两侧，避免首页第一眼就是剪影。
   const withPortrait = useMemo(() => nodes.filter(n => !!avatarPath(n)), [nodes]);
-  const [heroId, setHeroId] = useState(() => withPortrait[0]?.id || nodes[0]?.id || 'air');
+  // 今日主角改为随机：每次进首页抽取一位，不再固定第一张。
+  const [heroId, setHeroId] = useState(() => {
+    const pool = withPortrait.length >= 2 ? withPortrait : nodes;
+    return pool[Math.floor(Math.random() * pool.length)]?.id || 'air';
+  });
   const [detailOpen, setDetailOpen] = useState(false);
   const [openBeef, setOpenBeef] = useState<BeefEvent | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * 跟手位移 + 阻尼吸附引擎（参考 Embla / Keen Slider / motion 的共同机制：
+   * 输入先作用到一个连续的位移量，再由弹簧把它拉回目标，而不是让内容瞬间跳变）。
+   * pos 当前位移 / vel 速度 / target 目标（静止时恒为 0）。
+   * 每帧把 pos 写进 --dragX，卡阵整体平移，形成"抽出一张、推入一张"的连续质感。
+   */
+  const drag = useRef({pos: 0, vel: 0, target: 0, raf: 0, lastMs: 0});
+  const snapTimer = useRef<number | undefined>(undefined);
+  // step 每次渲染都会重建，放进 ref 让常驻的 rAF/wheel 监听读到最新版本，
+  // 这样监听只挂载一次，不会因为 heroId 变化反复解绑重绑。
+  const stepRef = useRef<(dir: -1 | 1) => void>(() => {});
 
   const nodeById = useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
 
@@ -72,12 +88,74 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
   const hero = nodeById.get(heroId) || fan[0] || nodes[0];
   const heroIndex = hero ? nodes.findIndex(n => n.id === hero.id) : 0;
 
-  const next = () => {
+  /**
+   * 一张一张地切换。dir=-1 上一张 / +1 下一张。
+   * 换主角的同时给弹簧一个反向"甩出"位移：卡阵先顺着翻页方向让出一点，
+   * 再由弹簧带阻尼回到 0。整个过程是连续插值，不再是固定时长的 CSS 关键帧。
+   */
+  const step = (dir: -1 | 1) => {
     const pool = withPortrait.length >= 2 ? withPortrait : nodes;
     if (pool.length < 2) return;
     const at = pool.findIndex(n => n.id === heroId);
-    setHeroId(pool[(at + 1) % pool.length].id);
+    if (at < 0) return;
+    setHeroId(pool[(at + dir + pool.length) % pool.length].id);
+    // 甩出：下一张(-1 位移，卡片向左让位) / 上一张(+1 位移)。
+    const stage = stageRef.current;
+    const kick = stage ? Math.max(28, Math.min(stage.clientWidth * 0.09, 96)) : 56;
+    drag.current.pos = -dir * kick;
+    drag.current.vel = dir * 6;
+    drag.current.target = 0;
   };
+  stepRef.current = step;
+
+  // 卡阵弹簧引擎：一个常驻 rAF 把 pos 用临界阻尼拉回 target，写进 --dragX。
+  // 参数取接近临界阻尼（略欠阻尼，回弹极轻），手感和 Embla/Keen 的默认吸附一致。
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    let raf = 0;
+    let last = 0;
+    const STIFFNESS = 150; // 越大越快到位
+    const DAMPING = 22;    // 越大越不晃；22/150 ≈ 略欠阻尼
+    const tick = (now: number) => {
+      const dt = last ? Math.min((now - last) / 1000, 0.04) : 0.016;
+      last = now;
+      const d = drag.current;
+      // 半隐式欧拉：先加速度到速度，再由速度更新位置，低帧率下也稳定。
+      d.vel += ((-STIFFNESS * d.pos - DAMPING * d.vel) * dt);
+      d.pos += d.vel * dt;
+      // 到位后吸附，避免浮点残余导致永远有微小位移。
+      if (Math.abs(d.pos) < 0.15 && Math.abs(d.vel) < 0.4 && d.target === 0) {
+        d.pos = 0; d.vel = 0;
+      }
+      stage.style.setProperty('--dragX', `${d.pos.toFixed(2)}px`);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    // 滚轮切卡：滚轮量先推到 target（跟手位移），停止滚动后再吸附到最近一张。
+    // 用原生非被动监听才能 preventDefault，阻止整页跟着滚。
+    const onWheel = (event: WheelEvent) => {
+      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+      event.preventDefault();
+      const d = drag.current;
+      // 累加位移并限幅：连续滚动会持续推动卡阵，而不是每 48px 硬跳一张。
+      d.target = Math.max(-160, Math.min(160, d.target + delta * 1.15));
+      window.clearTimeout(snapTimer.current);
+      snapTimer.current = window.setTimeout(() => {
+        // 停止滚动后：位移越过阈值就走一张，然后统一弹回 0。
+        const cur = drag.current;
+        if (Math.abs(cur.target) > 46) stepRef.current(cur.target > 0 ? 1 : -1);
+        cur.target = 0;
+      }, 140);
+    };
+    stage.addEventListener('wheel', onWheel, {passive: false});
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(snapTimer.current);
+      stage.removeEventListener('wheel', onWheel);
+    };
+  }, []);
 
   // 指针位置 → 舞台上的两个 CSS 变量。直接写 style，不触发 React 重渲染。
   const trackPointer = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -120,7 +198,6 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
         <button className="thv-primary" onClick={() => setDetailOpen(true)} tabIndex={0}>
           翻开 {hero?.name} 的卡 <ArrowRight size={15} />
         </button>
-        <button className="thv-ghost" onClick={next}><RefreshCw size={14} />换一位</button>
       </div>
       <p className="thv-meta">
         <b>{hero?.name}</b>
@@ -129,7 +206,20 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
       </p>
     </div>
 
-    <div className="thv-stage" ref={stageRef} onPointerMove={trackPointer} onPointerLeave={resetPointer}>
+    <div className="thv-stage" ref={stageRef}
+      onPointerMove={trackPointer} onPointerLeave={resetPointer}
+      tabIndex={0} aria-label="人物卡阵，点击左右两侧翻页，或用左右方向键"
+      onClick={e => {
+        // 点在卡片上交给卡片自己处理：正面开档案、侧卡切到那张。
+        // 点在卡片之外的空白处，则按左右半区翻页——这就是"点左右两边切换"。
+        if ((e.target as HTMLElement).closest('.thc')) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        step(e.clientX < rect.left + rect.width / 2 ? -1 : 1);
+      }}
+      onKeyDown={e => {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+      }}>
       <div className="thv-fan">
         {fan.map((node, i) => <HeroCard key={node.id} node={node}
           index={nodes.findIndex(n => n.id === node.id)} total={nodes.length}

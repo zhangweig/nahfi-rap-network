@@ -216,26 +216,29 @@ export default function App() {
       </div>
     </header>
 
-    {section !== 'today' && section !== 'rank' && <div className="workspace-toolbar">
-      <div className="search-area">
+    {section !== 'today' && section !== 'rank' && <div className={`workspace-toolbar ${section === 'artists' ? 'is-catalog-toolbar' : ''}`}>
+      {/* 人物页由 CatalogPanel 自带搜索框，这里只保留地图页的全局搜索，避免两个搜索框叠在一起 */}
+      {section === 'map' && <div className="search-area">
         <Search size={17} />
         <input aria-label="搜索人物或省份" placeholder="搜索人物 / 别名" value={query} onChange={e => setQuery(e.target.value)} />
         {query && <button aria-label="清除搜索" onClick={() => setQuery('')}><X size={15} /></button>}
-        {query.trim() && section === 'map' && <div className="search-results">
+        {query.trim() && <div className="search-results">
           {matches.map(n => <button key={n.id} onClick={() => flyPick(n.id)}>
             <Avatar node={n} /><span><strong>{n.name}</strong><small>{provinceLabel(provinceOf(n.city))}</small></span>
           </button>)}
           {!matches.length && <p>没有找到相关人物。</p>}
         </div>}
-      </div>
+      </div>}
       <label className="city-filter">
         <MapPin size={16} />
         <select aria-label="省份聚落" value={province} onChange={e => { setProvince(e.target.value); clearPath(); }}>
           {[ALL_PROVINCES, ...provinces].map(p => <option key={p} value={p}>{p === ALL_PROVINCES ? p : provinceLabel(p)}</option>)}
         </select>
       </label>
-      <button onClick={() => setFilters(!filters)} aria-expanded={filters}><SlidersHorizontal size={16} /><span>关系筛选</span></button>
-      <button onClick={() => setPathOpen(true)}><Route size={16} /><span>寻找路径</span></button>
+      {section === 'map' && <>
+        <button onClick={() => setFilters(!filters)} aria-expanded={filters}><SlidersHorizontal size={16} /><span>关系筛选</span></button>
+        <button onClick={() => setPathOpen(true)}><Route size={16} /><span>寻找路径</span></button>
+      </>}
     </div>}
 
     {filters && section !== 'today' && section !== 'rank' && <div className="filter-strip">

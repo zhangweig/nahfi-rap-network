@@ -120,3 +120,31 @@ html,body{overflow-x:clip}
   .site-header,
   .submit-pop{backdrop-filter:none}
 }
+
+/* ── C. 移动端导航与首屏空间 ─────────────────────────────────────────
+   原 header 在 390px 下 logo 单独一行、导航再折一行，占约 96px。
+   这里把 brand / 导航 / 投稿压回一行，省下约 40px 首屏空间。
+   整段只在窄屏生效，桌面完全不受影响。 */
+@media (max-width: 620px){
+  .app .site-header{
+    height:58px !important;
+    min-height:58px !important;
+    padding:0 12px !important;
+    gap:8px !important;
+    flex-wrap:nowrap !important;
+  }
+  .app .site-header .brand strong{font-size:15px !important;letter-spacing:1px !important}
+  .app .site-header .brand .vinyl-logo{width:22px !important;height:22px !important}
+  .app .site-header nav{
+    gap:0 !important;margin-left:auto !important;margin-right:4px !important;height:100% !important;
+  }
+  .app .site-header nav button{
+    font-size:13px !important;letter-spacing:0 !important;
+    padding:4px 8px 0 !important;border-bottom-width:2px !important;
+  }
+  .app .site-header .submit-trigger span,
+  .app .site-header .submit-trigger .submit-caret{display:none !important}
+  .app .site-header .submit-trigger{width:34px !important;height:34px !important;padding:0 !important;justify-content:center !important}
+  /* 首屏给紧凑导航让位 */
+  .app .today-hero{height:calc(100dvh - 96px) !important}
+}

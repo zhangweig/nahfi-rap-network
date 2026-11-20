@@ -471,9 +471,20 @@
 
 /* 窄屏：只留正中三张，避免卡片被压成纸片 */
 @media(max-width:560px){
-  .thv-fan{--w:clamp(104px,27vw,132px)}
+  /* 手机端只留中间三张，但把卡放大到能看清主角——原先 104–132px 太小、
+     舞台仅 183px，扇形下半截被 .today-hero 的 overflow:hidden 裁掉，像加载失败。
+     这里给卡阵留足高度，并把下沉幅度收小，避免侧卡越出舞台。 */
+  .today-hero{padding:42px 14px 20px;gap:14px}
+  .thv-fan{--w:clamp(132px,37vw,160px)}
   .thc:nth-child(1),.thc:nth-child(5){display:none}
-  .thv-copy h1{font-size:26px}
+  .thv-stage{min-height:0;height:auto;padding:22px 0 34px}
+  /* 三张卡时 --a 最大为 1，收小逐级下沉，侧卡不会掉出舞台被裁 */
+  .thv-stage .thc:not(.is-front){--a:1}
+  /* BEEF 面板与卡阵之间留一道气口，避免名字牌被面板顶边压住 */
+  .thv-beef{margin-top:8px}
+  .thv-copy{gap:10px}
+  .thv-copy h1{font-size:25px}
+  .thv-hook{font-size:13px;line-height:1.7}
 }
 
 /* ── 降级：高 DPR / 4K 与减少动效 ──────────────────────────────────────

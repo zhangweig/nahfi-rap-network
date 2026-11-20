@@ -60,5 +60,10 @@
 }
 
 @media(max-width:780px){
-  .holo-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .holo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 12px;padding:20px 14px 30px}
+}
+/* 窄屏固定两列：auto-fill 在 390px 下会塌成单列，24 张卡竖排让 WebGL
+   画布高达上万像素、相机被推远导致卡片全黑。两列 + 每页 12 张把画布压回可透视的范围。 */
+@media(max-width:600px){
+  .holo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px}
 }

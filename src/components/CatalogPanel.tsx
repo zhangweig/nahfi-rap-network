@@ -1,4 +1,4 @@
-import {lazy, Suspense, useMemo, useState} from 'react';
+import {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {Search, Music2} from 'lucide-react';
 import {artistMatches} from '../lib/catalog';
 import {useDatasetData, useDatasetStatus} from '../state/Dataset';
@@ -29,7 +29,15 @@ export function CatalogPanel({query,onQuery,onPick,province}:{query:string;onQue
   const nodeById=useMemo(()=>new Map(nodes.map(n=>[n.id,n])),[nodes]);
   const [page,setPage]=useState(1);
   const [detailId,setDetailId]=useState<string|null>(null);
-  const pageSize=24;
+  // 窄屏每页少放几张：WebGL 画布高度随网格行数增长，单列 24 张会让画布高达
+  // 上万像素，相机被推到极远导致卡片全被裁掉（首屏全黑）。小页配合两列网格，
+  // 把画布高度压回可视范围。
+  const [pageSize,setPageSize]=useState(()=>typeof window!=='undefined'&&window.innerWidth<=600?12:24);
+  useEffect(()=>{
+    const onResize=()=>setPageSize(window.innerWidth<=600?12:24);
+    window.addEventListener('resize',onResize);
+    return ()=>window.removeEventListener('resize',onResize);
+  },[]);
   const artists=useMemo(()=>nodes.filter(node=>(province===ALL_PROVINCES||provinceOf(node.city)===province)&&artistMatches(node,query)),[nodes,province,query]);
   const total=artists.length;
   const pageCount=Math.max(1,Math.ceil(total/pageSize));

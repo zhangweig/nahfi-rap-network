@@ -87,10 +87,53 @@ const merged = applyApproved(
 /** 未叠加任何人工编辑的基线，供导入脚本做「只写改动行」的比对。 */
 export const baseDataset = {nodes: baseNodes, relations: baseRelations, works: baseWorks};
 
+/**
+ * 同一艺人在不同来源各建了一条节点（报告里的浅档案 + 平台目录的完整档案）。
+ * 这里在组装末尾统一到一条 canonical ID：保留资料更全的主节点，把别名与描述
+ * 并入，再把关系端点重定向过去。数据源文件不动，仍可按 id 溯源各条的来历。
+ * 注意：邓典（pending-190，河南流行歌手）与邓典果DDG（ddg，成都说唱）是两个
+ * 不同的人，不在合并范围内。
+ */
+const CANONICAL: Record<string,string> = {wanida:'vinida', yanghesu:'keyng'};
+
+function canonicalize(nodes:ArtistNode[], rels:Relationship[], works:Work[]) {
+  const redirect = (id:string) => CANONICAL[id] || id;
+  const byId = new Map(nodes.map(node => [node.id, node]));
+  // 把别名节点的 aliases / description 信息并入主节点，避免丢报告里的线索。
+  for (const [from, to] of Object.entries(CANONICAL)) {
+    const dup = byId.get(from);
+    const main = byId.get(to);
+    if (!main) continue;
+    if (dup) {
+      main.aliases = [...new Set([...(main.aliases || []), ...(dup.aliases || []), dup.name])];
+      const extra = dup.description?.trim();
+      if (extra && !main.description.includes(extra)) {
+        main.description = `${main.description}\n${extra}`;
+      }
+    }
+  }
+  const kept = nodes.filter(node => !CANONICAL[node.id]);
+  const remapIds = (ids:string[]) => [...new Set(ids.map(redirect))];
+  return {
+    nodes: kept,
+    relations: rels.map(rel => {
+      const source = redirect(rel.source), target = redirect(rel.target);
+      const changed = source !== rel.source || target !== rel.target;
+      return changed ? {...rel, source, target, id: `${rel.id}~canon`} : rel;
+    }).filter(rel => rel.source !== rel.target), // 合并后若出现自环则丢弃
+    works: works.map(work => {
+      const artistIds = remapIds(work.artistIds);
+      return artistIds.length === work.artistIds.length && artistIds.every((id,i) => id === work.artistIds[i])
+        ? work : {...work, artistIds};
+    }),
+  };
+}
+const canon = canonicalize(merged.nodes, merged.relations, merged.works);
+
 // 按省份名单是用户明确指定的口径，最后再叠一次，确保盖过旧的飞书人工编辑。
-export const nodes:ArtistNode[] = merged.nodes.map(applyXlsxProvince);
-export const relations:Relationship[] = merged.relations;
-export const works:Work[] = merged.works;
+export const nodes:ArtistNode[] = canon.nodes.map(applyXlsxProvince);
+export const relations:Relationship[] = canon.relations;
+export const works:Work[] = canon.works;
 export const workById = new Map(works.map(work => [work.id, work]));
 export const nodeById = new Map(nodes.map(node => [node.id, node]));
 export const cities = [...new Set(nodes.map(node => node.city))].sort((a,b) => a === '未标注' ? 1 : b === '未标注' ? -1 : a.localeCompare(b,'zh-CN'));

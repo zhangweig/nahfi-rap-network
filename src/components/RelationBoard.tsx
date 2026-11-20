@@ -69,6 +69,8 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   /** 当前 transform 的镜像，供省份框拖拽 / flyTo 读取（panzoom 自身才是唯一数据源）。 */
   const viewRef = useRef({scale: 0.8, x: 0, y: 0});
   const [hover, setHover] = useState<string | null>(null);
+  /** 省份框 hover：驱动整块省份的弹性抬升与无关省份降噪（hover 单个人物走上面的 hover）。 */
+  const [hoverProvince, setHoverProvince] = useState<string | null>(null);
   const [year, setYear] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
   /** 跨过缩放阈值时才更新，避免 pan 过程中反复重渲染整棵节点树。 */
@@ -519,6 +521,22 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     return set;
   }, [edges, focusId, shownBeefs]);
 
+  /**
+   * 省份 hover 的降噪集合：本省 + 当前筛选/年份下有连线直达的省份。
+   * 基于 edges 而非全量 relations，所以「有连线」始终指画面上看得见的连线。
+   */
+  const zoneFocus = useMemo(() => {
+    if (!hoverProvince) return null;
+    const provinces = new Set<string>([hoverProvince]);
+    for (const edge of edges) {
+      const a = positions.get(edge.source)?.province;
+      const b = positions.get(edge.target)?.province;
+      if (a === hoverProvince && b) provinces.add(b);
+      else if (b === hoverProvince && a) provinces.add(a);
+    }
+    return provinces;
+  }, [hoverProvince, edges, positions]);
+
   const isFocusEdge = (edge: {source: string; target: string}) =>
     !!focusId && (edge.source === focusId || edge.target === focusId);
 
@@ -580,8 +598,11 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
         <div className={`board-world ${zoomed ? 'is-zoomed' : ''}`}
           style={{width: world.width, height: world.height}}>
           {zones.map(zone => <div key={zone.def.province}
-            className={`bz ${zone.def.mini ? 'mini' : ''} ${zone.def.empty ? 'empty' : ''} ${zone.def.tiny ? 'tiny' : ''} ${dragProvince === zone.def.province ? 'is-dragging' : ''}`}
-            style={{left: zone.def.x, top: zone.def.y, width: zone.def.w, height: zone.def.h, borderRadius: zone.def.radius ?? 10, ['--c' as string]: zone.def.color, zIndex: dragProvince === zone.def.province ? 4 : undefined}}
+            className={`bz ${zone.def.mini ? 'mini' : ''} ${zone.def.empty ? 'empty' : ''} ${zone.def.tiny ? 'tiny' : ''} ${dragProvince === zone.def.province ? 'is-dragging' : ''} ${hoverProvince === zone.def.province ? 'is-zone-lit' : ''} ${zoneFocus && !zoneFocus.has(zone.def.province) ? 'is-zone-dim' : ''}`}
+            style={{left: zone.def.x, top: zone.def.y, width: zone.def.w, height: zone.def.h, borderRadius: zone.def.radius ?? 10, ['--c' as string]: zone.def.color, zIndex: dragProvince === zone.def.province || hoverProvince === zone.def.province ? 4 : undefined}}
+            // 只在鼠标设备触发：触屏点完没有 leave，省份高亮会一直卡住。
+            onPointerEnter={event => { if (event.pointerType === 'mouse') setHoverProvince(zone.def.province); }}
+            onPointerLeave={event => { if (event.pointerType === 'mouse') setHoverProvince(null); }}
             onPointerDown={event => startZoneDrag(event, zone.def.province)}>
             <div className="bz-tag" title="拖动移动这个省份框 · 单击展开名单">
               {zone.def.tiny && !zone.def.mini
@@ -605,16 +626,23 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
               const onPath = isPathEdge(edge);
               const color = relationMeta[edge.type].color;
               const strong = hotEdges.has(edge.id);
+              // 省份 hover：只让与该省直连的线发亮，其余压到近乎不可见。
+              const zoneEdge = !!hoverProvince && (
+                positions.get(edge.source)?.province === hoverProvince ||
+                positions.get(edge.target)?.province === hoverProvince
+              );
               return <path key={edge.id} d={edgePath(edge)} fill="none"
                 stroke={onPath ? '#ffffff' : color}
-                strokeWidth={onPath ? 2.4 : strong ? 1.9 : focus ? 1 : 0.9}
-                strokeOpacity={onPath ? 0.95 : strong ? 0.9 : focus ? 0.22 : Math.min(0.26, 0.06 + edge.count * 0.015)}
+                strokeWidth={onPath ? 2.4 : zoneEdge ? 2 : strong ? 1.9 : focus ? 1 : 0.9}
+                strokeOpacity={onPath ? 0.95 : zoneEdge ? 0.88 : strong ? 0.9 : focus ? 0.22 : zoneFocus ? 0.05 : Math.min(0.26, 0.06 + edge.count * 0.015)}
                 strokeDasharray={edge.type === 'member' ? undefined : edge.type === 'production' ? '3 4' : '6 5'}
                 style={{color: onPath ? '#ffffff' : color}}
-                className={focus || onPath ? `edge-live edge-focus ${onPath ? 'edge-path' : ''}` : focusId ? 'edge-rest' : ''} />;
+                className={focus || onPath ? `edge-live edge-focus ${onPath ? 'edge-path' : ''}` : zoneEdge ? 'edge-zone-live' : focusId ? 'edge-rest' : ''} />;
             })}
             {/* Selected person: light runs along every connected line, inward toward the face. */}
             {selected && edges.filter(edge => edge.source === selected || edge.target === selected).map((edge, index) => {
+              // 省份降噪时，选中人物的流光若落在无关省份也一起隐去。
+              if (zoneFocus && !zoneFocus.has(positions.get(edge.source)?.province || '') && !zoneFocus.has(positions.get(edge.target)?.province || '')) return null;
               const color = relationMeta[edge.type].color;
               // Edges are drawn from the alphabetically-first end; reverse when needed so the
               // dash flow always travels *into* the selected node.
@@ -676,13 +704,16 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
             const active = node.id === selected;
             const inBeef = beefIds.has(node.id);
             const dim = !!focusId && node.id !== focusId && !neighbours.has(node.id) && !path?.includes(node.id);
+            const zoneDim = !!zoneFocus && !zoneFocus.has(place.province);
+            const zoneLit = hoverProvince === place.province;
             const latin = /^[\x20-\x7F]+$/.test(node.name);
             const featured = node.kind === 'group';
             const raised = dragProvince === place.province;
             // Focused plates may wrap further so the full name can be read.
             const labelFocus = node.id === hover || active;
-            return <button key={node.id} className={`bn ${place.mini ? 'mini' : ''} ${place.tight ? 'tight' : ''} ${active ? 'is-active' : ''} ${node.id === focusId ? 'is-focus' : ''} ${neighbours.has(node.id) ? 'is-neighbour' : ''} ${dim ? 'is-dim' : ''} ${featured ? 'is-group' : ''} ${inBeef ? 'has-beef' : ''}`}
-              style={{left: place.x - place.size / 2, top: place.y - place.size / 2, ['--c' as string]: place.color, ['--s' as string]: `${place.size}px`, zIndex: raised ? 3 : undefined}}
+            return <button key={node.id} className={`bn ${place.mini ? 'mini' : ''} ${place.tight ? 'tight' : ''} ${active ? 'is-active' : ''} ${node.id === focusId ? 'is-focus' : ''} ${neighbours.has(node.id) ? 'is-neighbour' : ''} ${dim ? 'is-dim' : ''} ${zoneDim ? 'is-zone-dim' : ''} ${zoneLit ? 'is-zone-lit' : ''} ${featured ? 'is-group' : ''} ${inBeef ? 'has-beef' : ''}`}
+              // 省份框 hover 时抬到 z-index 4，本省头像必须同步抬到 5，否则会被自己的框盖住点不到。
+              style={{left: place.x - place.size / 2, top: place.y - place.size / 2, ['--c' as string]: place.color, ['--s' as string]: `${place.size}px`, zIndex: raised ? 3 : zoneLit ? 5 : undefined}}
               onClick={() => { if (suppressClick.current) return; onSelect(node.id); }}
               // An avatar works as a handle for its whole province card: dragging any face
               // moves the card, a plain click still selects the person.

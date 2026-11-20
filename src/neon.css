@@ -33,9 +33,21 @@
 /* settlement zone */
 .bz{position:absolute;border:1px solid color-mix(in srgb,var(--c) 45%,transparent);border-radius:14px;
   background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--c) 13%,transparent),transparent 72%);
-  box-shadow:inset 0 0 44px color-mix(in srgb,var(--c) 9%,transparent),0 0 22px color-mix(in srgb,var(--c) 12%,transparent)}
+  box-shadow:inset 0 0 44px color-mix(in srgb,var(--c) 9%,transparent),0 0 22px color-mix(in srgb,var(--c) 12%,transparent);
+  transition:transform .32s cubic-bezier(.34,1.56,.64,1),box-shadow .32s cubic-bezier(.34,1.56,.64,1),background .32s ease,opacity .2s ease}
 .bz::before{content:"";position:absolute;inset:7px;border:1px dashed color-mix(in srgb,var(--c) 22%,transparent);border-radius:9px}
 .bz.mini{border-style:dashed;border-color:color-mix(in srgb,var(--c) 30%,transparent)}
+/* 省份 hover：弹性抬升 + 边框暖光加曝；无关省份退到背景，只留有连线的省份清晰 */
+.bz.is-zone-lit{
+  transform:scale(1.04) translateY(-4px);
+  background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--c) 22%,transparent),transparent 76%);
+  border-color:color-mix(in srgb,var(--c) 88%,transparent);
+  box-shadow:inset 0 0 52px color-mix(in srgb,var(--c) 18%,transparent),
+    0 0 0 1px color-mix(in srgb,var(--c) 30%,transparent),
+    0 0 36px color-mix(in srgb,var(--c) 38%,transparent),
+    0 14px 34px #000000a6}
+.bz.is-zone-lit::before{border-color:color-mix(in srgb,var(--c) 38%,transparent)}
+.bz.is-zone-dim{opacity:.4}
 .bz-tag{position:absolute;top:5px;left:7px;display:flex;align-items:center;gap:6px;padding:2px 8px;
   background:#050a12;border:1px solid color-mix(in srgb,var(--c) 55%,transparent);border-radius:4px;
   font-size:9px;letter-spacing:1.2px;white-space:nowrap}
@@ -46,6 +58,8 @@
 /* edges */
 .board-edges{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
 .edge-live{animation:edgePulse 1.8s ease-in-out infinite;filter:drop-shadow(0 0 4px currentColor)}
+/* 省份 hover：相关连线只做静态发光，不叠加逐帧 pulse，避免几十条线同时闪 */
+.board-edges .edge-zone-live{filter:drop-shadow(0 0 3px currentColor)}
 @keyframes edgePulse{0%,100%{stroke-opacity:.55}50%{stroke-opacity:1}}
 
 /* node */
@@ -71,6 +85,11 @@
 .bn-flag{position:absolute;top:-7px;right:-9px;font-size:6.5px;letter-spacing:.8px;color:#04070d;background:var(--c);
   padding:0 3px;border-radius:2px;font-weight:800;line-height:1.5}
 .bn.is-dim{opacity:.32}
+/* 省份 hover：无关省份的人退成背景；本省头像提亮一档，和发光框呼应 */
+.bn.is-zone-dim{opacity:.4}
+.bn.is-zone-lit .bn-pic{
+  filter:brightness(1.16) saturate(1.1);
+  box-shadow:0 0 20px color-mix(in srgb,var(--c) 68%,transparent)}
 .bn.is-active{z-index:5}
 .bn.is-active .bn-pic{box-shadow:0 0 34px color-mix(in srgb,var(--c) 75%,transparent);
   filter:drop-shadow(0 10px 26px #000000b3)}

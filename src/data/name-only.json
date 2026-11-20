@@ -1389,7 +1389,11 @@
     {
       "id": "pending-089",
       "name": "Mac",
-      "aliases": [],
+      "aliases": [
+        "mac ova seas",
+        "MAC OVA SEAS",
+        "MACOVASEAS"
+      ],
       "kind": "artist",
       "city": "未标注",
       "category": "说唱 / 音乐人",
@@ -3217,7 +3221,10 @@
     {
       "id": "pending-210",
       "name": "BOBBYNOPEACE",
-      "aliases": [],
+      "aliases": [
+        "bobbynopeace",
+        "鲍比"
+      ],
       "kind": "artist",
       "city": "未标注",
       "category": "说唱 / 音乐人",

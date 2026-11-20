@@ -1,0 +1,256 @@
+{
+  "generatedFrom": "用户在「说唱人物总表」新增的人物与关系（2026-11-20）",
+  "note": "流水线最终追加区。任何人名/关系新增一律写在这里，排在 late-nodes.json 之后，确保已有档案号不变。重复人物不另建节点，别名并入已有档案、关系端点重定向到已有 id。",
+  "artists": [
+    {
+      "id": "asianastar",
+      "name": "AsianAstar",
+      "aliases": [
+        "a星",
+        "A星"
+      ],
+      "kind": "group",
+      "city": "四川",
+      "category": "厂牌 / 团体",
+      "color": "#8ea8bd",
+      "initials": "AS",
+      "description": "用户在总表新增的团体，别名 a星。用户提供籍贯：四川。成员与作品资料待补充。"
+    },
+    {
+      "id": "uzzy",
+      "name": "uzzy",
+      "aliases": [
+        "乌泽"
+      ],
+      "kind": "artist",
+      "city": "重庆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "UZ",
+      "description": "用户在总表新增，别名乌泽。用户提供籍贯：重庆。作品与详细履历待补充。"
+    },
+    {
+      "id": "luoyan",
+      "name": "罗言",
+      "aliases": [],
+      "kind": "artist",
+      "city": "安徽",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "罗",
+      "description": "用户在总表新增。用户提供籍贯：安徽。作品与详细履历待补充。"
+    },
+    {
+      "id": "skiondaroad",
+      "name": "SkiOnDaRoad",
+      "aliases": [
+        "黄云龙"
+      ],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "SK",
+      "description": "用户在总表新增，别名黄云龙。用户提供籍贯：四川。作品与详细履历待补充。"
+    },
+    {
+      "id": "lsgcsikoriot",
+      "name": "LSGCsikoriot",
+      "aliases": [
+        "四口"
+      ],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "LS",
+      "description": "用户在总表新增，别名四口。用户提供籍贯：四川。作品与详细履历待补充。"
+    },
+    {
+      "id": "lvfugui",
+      "name": "吕富贵",
+      "aliases": [],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "吕",
+      "description": "用户在总表新增。用户提供籍贯：四川。作品与详细履历待补充。"
+    },
+    {
+      "id": "lilasian",
+      "name": "lilasian",
+      "aliases": [
+        "小亚洲"
+      ],
+      "kind": "artist",
+      "city": "重庆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "LI",
+      "description": "用户在总表新增，别名小亚洲。用户提供籍贯：重庆。作品与详细履历待补充。"
+    },
+    {
+      "id": "cashtrippy",
+      "name": "cashtrippy",
+      "aliases": [],
+      "kind": "artist",
+      "city": "云南",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "CA",
+      "description": "用户在总表新增。用户提供籍贯：云南。作品与详细履历待补充。"
+    },
+    {
+      "id": "apmozart",
+      "name": "apmozart",
+      "aliases": [
+        "ap"
+      ],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "AP",
+      "description": "用户在总表新增，别名 ap。用户提供籍贯：四川。作品与详细履历待补充。"
+    },
+    {
+      "id": "oneone",
+      "name": "oneone",
+      "aliases": [],
+      "kind": "artist",
+      "city": "重庆",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "ON",
+      "description": "用户在总表新增。用户提供籍贯：重庆。作品与详细履历待补充。"
+    },
+    {
+      "id": "ash-1",
+      "name": "Ash-1",
+      "aliases": [],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "A1",
+      "description": "用户在总表新增。用户提供籍贯：四川。作品与详细履历待补充。"
+    },
+    {
+      "id": "bsh-1",
+      "name": "bsh-1",
+      "aliases": [],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "B1",
+      "description": "用户在总表新增。用户提供籍贯：四川。作品与详细履历待补充。"
+    },
+    {
+      "id": "jiankunyoung",
+      "name": "建坤young",
+      "aliases": [
+        "建坤"
+      ],
+      "kind": "artist",
+      "city": "四川",
+      "category": "说唱 / 音乐人",
+      "color": "#8ea8bd",
+      "initials": "建",
+      "description": "用户在总表新增，别名建坤。用户提供籍贯：四川。作品与详细履历待补充。"
+    }
+  ],
+  "relations": [
+    {
+      "id": "user-20261120-kenrobb-ash1",
+      "source": "kenrobb",
+      "target": "ash-1",
+      "type": "collaboration",
+      "label": "《车子remix》",
+      "evidence": [
+        {
+          "title": "用户提供：说唱人物总表「关系明细」第 538 行",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长在总表新增的关系；曲目按原表文字标注，原表未附公开来源链接、年份与版本，未做外部核实。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "user-20261120-kenrobb-apmozart",
+      "source": "kenrobb",
+      "target": "apmozart",
+      "type": "collaboration",
+      "label": "《All》",
+      "evidence": [
+        {
+          "title": "用户提供：说唱人物总表「关系明细」第 539 行",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长在总表新增的关系；曲目按原表文字标注，原表未附公开来源链接、年份与版本，未做外部核实。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "user-20261120-kenrobb-lilasian",
+      "source": "kenrobb",
+      "target": "lilasian",
+      "type": "collaboration",
+      "label": "《hoodstar》",
+      "evidence": [
+        {
+          "title": "用户提供：说唱人物总表「关系明细」第 540 行",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长在总表新增的关系；曲目按原表文字标注，原表未附公开来源链接、年份与版本，未做外部核实。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "user-20261120-kenrobb-mac",
+      "source": "kenrobb",
+      "target": "pending-089",
+      "type": "affiliation",
+      "label": "曾经兄弟,已决裂",
+      "evidence": [
+        {
+          "title": "用户提供：说唱人物总表「关系明细」第 541 行",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长在总表填写，原表类型列为「合作」、连线标签为「曾经兄弟,已决裂」且无曲目。按非曲目关联收录，未推断年份与经过；如需作为独立 BEEF 事件可另行迁移。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "user-20261120-lilasian-uzzy",
+      "source": "lilasian",
+      "target": "uzzy",
+      "type": "collaboration",
+      "label": "《有娃儿》",
+      "evidence": [
+        {
+          "title": "用户提供：说唱人物总表「关系明细」第 542 行",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长在总表新增的关系；曲目按原表文字标注，原表未附公开来源链接、年份与版本，未做外部核实。"
+        }
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "user-20261120-kenrobb-zhangfangzhao",
+      "source": "kenrobb",
+      "target": "zhangfangzhao",
+      "type": "collaboration",
+      "label": "《现在 你才不幸福》《简单的》",
+      "evidence": [
+        {
+          "title": "用户提供：说唱人物总表「关系明细」第 543 行",
+          "url": "https://github.com/zhangweig/nahfi-rap-network",
+          "note": "2026-11-20 站长在总表新增的关系；原表一行列出两首曲目，此处按一条关系合并标注，未推断年份与版本。"
+        }
+      ],
+      "status": "verified"
+    }
+  ]
+}

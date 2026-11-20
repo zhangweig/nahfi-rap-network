@@ -6,6 +6,7 @@ import nameOnly from './name-only.json';
 import xlsxProvinces from './xlsx-province.json';
 import crewRelations from './crew-relations.json';
 import lateNodes from './late-nodes.json';
+import rosterAdditions from './roster-additions.json';
 import community from './community-approved.json';
 import sheetOverrides from './sheet-overrides.json';
 import {applyApproved, applyOverrides, type ApprovedFile, type OverrideFile} from './merge-approved';
@@ -132,17 +133,23 @@ function canonicalize(nodes:ArtistNode[], rels:Relationship[], works:Work[]) {
 const canon = canonicalize(merged.nodes, merged.relations, merged.works);
 
 /**
- * 追加区（late-nodes.json）必须挂在整条流水线的最后一步。
+ * 追加区必须挂在整条流水线的最后两步，顺序不能调换：
+ *   late-nodes.json（早期五人组补档） → roster-additions.json（用户从总表新增）
  * 节点下标就是卡面档案号（serial），这样新收录的人只会拿到更大的号，
  * 已有编号永不后移；如果插到上面任何一段（catalog / report / name-only / 厂牌），
- * 后面所有人的号都会整体 +1。
+ * 或插在另一个追加区的团体之前，后面所有人的号都会整体 +1。
  */
 const lateArtists = lateNodes.artists as ArtistNode[];
 const lateGroups = lateNodes.groups as ArtistNode[];
+const addedArtists = rosterAdditions.artists as ArtistNode[];
 
 // 按省份名单是用户明确指定的口径，最后再叠一次，确保盖过旧的飞书人工编辑。
-export const nodes:ArtistNode[] = [...canon.nodes.map(applyXlsxProvince), ...lateArtists, ...lateGroups];
-export const relations:Relationship[] = [...canon.relations, ...(lateNodes.relations as Relationship[])];
+export const nodes:ArtistNode[] = [
+  ...canon.nodes.map(applyXlsxProvince), ...lateArtists, ...lateGroups, ...addedArtists,
+];
+export const relations:Relationship[] = [
+  ...canon.relations, ...(lateNodes.relations as Relationship[]), ...(rosterAdditions.relations as Relationship[]),
+];
 
 /**
  * 后建档者的作品署名补丁：目录抓取时这些人还没有节点，平台署名里他们的名字被丢掉了。

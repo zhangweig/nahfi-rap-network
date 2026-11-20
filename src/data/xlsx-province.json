@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-11-16",
   "source": "用户名单（按省份）xlsx",
-  "totalRows": 174,
+  "totalRows": 175,
   "assignments": [
     {
       "id": "xiedi",
@@ -1742,6 +1742,16 @@
       "verify": "用户改表",
       "origin": "云南",
       "note": "用户于 2026-11-20 在总表 F 列填写"
+    },
+    {
+      "id": "pending-089",
+      "name": "Mac",
+      "province": "四川",
+      "row": 0,
+      "via": "mac ova seas",
+      "verify": "用户改表",
+      "origin": "未标注",
+      "note": "用户于 2026-11-20 在总表新增「mac ova seas」标注四川；经核对与新说唱100强名单中的 Mac 为同一人（MAC OVA SEAS），合并档案并采用用户填写的籍贯。"
     }
   ]
 }

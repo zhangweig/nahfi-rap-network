@@ -141,16 +141,17 @@ interface GeoBox {
 function geoLay(seeds: {province: string; count: number; weight: number; mini: boolean}[]): [typeof seeds[number], Rect][] {
   // provinceSpots 原始范围约 x∈[-500,648] y∈[-355,400]，先乘比例再平移为正。
   // SCALE 收紧到接近视口比例，避免画布过大导致 fit 后所有框缩成小块。
-  const SCALE = 1.0;
+  const SCALE = 1.5;
   const OX = 560, OY = 420;
   const boxes: GeoBox[] = seeds.map(seed => {
     const spot = spotOf(seed.province);
-    // 面积∝人数，但对大框开方压缩，避免在有限画布里挤爆；空省保留小占位。
+    // 面积∝人数，但严格封顶：地图表达的是方位，不是面积或距离。
+    // 框过大时碰撞推挤会把省份推离锚点，反而破坏"重庆在四川东南"这类基本方位。
     const raw = seed.mini
-      ? Math.min(260, 92 + seed.count * 1.15) ** 2
+      ? Math.min(140, 78 + seed.count * 0.8) ** 2
       : seed.count > 0
-        ? Math.min(240, 66 + Math.sqrt(seed.count) * 30) ** 2
-        : 46 ** 2;
+        ? Math.min(132, 52 + Math.sqrt(seed.count) * 17) ** 2
+        : 40 ** 2;
     const w = Math.round(Math.sqrt(raw) * 1.12);
     const h = Math.round(Math.sqrt(raw) / 1.12);
     const ax = spot.x * SCALE + OX;
@@ -159,7 +160,7 @@ function geoLay(seeds: {province: string; count: number; weight: number; mini: b
   });
 
   // 迭代分离 + 锚点弹簧：重叠的框沿最小重叠轴推开，随后被弱弹簧拉回正确方位。
-  const PAD = 12;
+  const PAD = 8;
   for (let iter = 0; iter < 120; iter++) {
     for (let i = 0; i < boxes.length; i++) {
       for (let j = i + 1; j < boxes.length; j++) {
@@ -179,7 +180,7 @@ function geoLay(seeds: {province: string; count: number; weight: number; mini: b
         }
       }
     }
-    const SPRING = 0.06;
+    const SPRING = 0.14;
     for (const box of boxes) {
       box.x += (box.ax - box.x) * SPRING;
       box.y += (box.ay - box.y) * SPRING;

@@ -17,7 +17,12 @@ import {provinceLabel, provinceOf} from '../lib/province';
 
 export interface HoloCardData {
   node: ArtistNode;
-  index: number;
+  /**
+   * 全局档案号（1-based，等于该人物在 nodes 里的固定位置 + 1）。
+   * 与展示顺序彻底解耦：卡面 NO.、镭射相位、占位人像 seed、纹理缓存 key
+   * 全部绑它，排序或分页变化后每张卡的身份视觉不会跟着换位。
+   */
+  serial: number;
   workCount: number;
   relationCount: number;
   inBeef?: boolean;
@@ -168,8 +173,8 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
   canvas.width = TEX_W;
   canvas.height = TEX_H;
   const ctx = canvas.getContext('2d')!;
-  const {node, index, workCount, relationCount, inBeef} = card;
-  const serial = String(index + 1).padStart(3, '0');
+  const {node, serial: serialNo, workCount, relationCount, inBeef} = card;
+  const serial = String(serialNo).padStart(3, '0');
   const kind = node.kind === 'group' ? 'CREW' : 'RAPPER';
   const province = provinceLabel(provinceOf(node.city));
 
@@ -223,10 +228,10 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
   art.addColorStop(1, '#0a0807');
   ctx.fillStyle = art;
   ctx.fillRect(artX, artY, artW, artH);
-  drawFoilPatch(ctx, artX, artY, artW, artH, index + 1);
+  drawFoilPatch(ctx, artX, artY, artW, artH, serialNo);
   // 双色丝网印剪影：明确表示「暂无照片」，但看起来是一版设计而不是缺图。
   // 以前这里是一个 190px 的首字，三百多人里三百张都长那样。
-  drawPortrait(ctx, artX, artY, artW, artH, {seed: index + 3, accent: node.color});
+  drawPortrait(ctx, artX, artY, artW, artH, {seed: serialNo + 3, accent: node.color});
   ctx.strokeStyle = '#4d382a';
   ctx.lineWidth = 2;
   ctx.strokeRect(artX, artY, artW, artH);
@@ -299,7 +304,7 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
   }
 
   // 档案条码：增加实体卡的信息密度
-  let bs = (index + 1) * 104729;
+  let bs = serialNo * 104729;
   const brand = () => { bs = (bs * 48271) % 2147483647; return (bs - 1) / 2147483646; };
   ctx.fillStyle = '#6b5c4d';
   for (let i = 0; i < 44; i++) {
@@ -396,8 +401,10 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const onPickRef = useRef(onPick);
   onPickRef.current = onPick;
-  // 数据内容稳定签名：避免父组件每次渲染新建数组导致 WebGL 场景重建
-  const cardsKey = cards.map(c => `${c.node.id}:${c.workCount}:${c.relationCount}:${c.inBeef ? 1 : 0}`).join('|');
+  // 数据内容稳定签名：避免父组件每次渲染新建数组导致 WebGL 场景重建。
+  // 用「档案号 + 展示位置」双键：排序/换页导致位置变化时仍重建场景（卡片要换坐标），
+  // 但纹理缓存 key 不含位置，所以重建时能命中旧纹理，不会重绘 640×896 的卡面。
+  const cardsKey = cards.map(c => `${c.serial}@${c.node.id}:${c.workCount}:${c.relationCount}:${c.inBeef ? 1 : 0}`).join('|');
 
   useEffect(() => {
     const grid = gridRef.current;
@@ -489,8 +496,8 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
         const group = new THREE.Group();
         group.position.set(baseX, baseY, 0);
 
-        // 卡面纹理：数据签名做 key，命中缓存就不重绘那张 640×896 画布。
-        const faceKey = `${data.node.id}:${data.index}:${data.workCount}:${data.relationCount}:${data.inBeef ? 1 : 0}`;
+        // 卡面纹理：档案号做 key（不含展示位置），排序变化后仍能命中缓存。
+        const faceKey = `${data.serial}:${data.node.id}:${data.workCount}:${data.relationCount}:${data.inBeef ? 1 : 0}`;
         let face = faceCache.get(faceKey);
         if (!face) {
           face = makeFaceTexture(data);
@@ -513,8 +520,8 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
         const url = avatarPath(data.node);
         if (url) applyAvatar(id, url, maxAniso);
 
-        // 每张卡给不同初始相位，静态时各卡镭射纹理各异、但都完全静止
-        const initPhase = data.index * 0.618;
+        // 每张卡按档案号给不同初始相位：排序/换页后同一张卡的镭射花纹保持不变
+        const initPhase = data.serial * 0.618;
         const holo = new THREE.ShaderMaterial({
           uniforms: {
             uPhase: {value: initPhase},

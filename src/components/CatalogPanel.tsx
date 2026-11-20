@@ -1,6 +1,7 @@
 import {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {Search, Music2} from 'lucide-react';
 import {artistMatches} from '../lib/catalog';
+import {heatWeight} from '../lib/heat';
 import {useDatasetData, useDatasetStatus} from '../state/Dataset';
 import {ALL_PROVINCES,provinceLabel,provinceOf} from '../lib/province';
 import type {HoloCardData} from './HoloCards';
@@ -27,6 +28,9 @@ export function CatalogPanel({query,onQuery,onPick,province}:{query:string;onQue
   },[works,relations]);
   const beefIds=useMemo(()=>beefNodeIds(allBeefs(beefs,loadLocalBeefs())),[beefs]);
   const nodeById=useMemo(()=>new Map(nodes.map(n=>[n.id,n])),[nodes]);
+  // 档案号 = 该人物在全局 nodes 里的固定位置 + 1，不随筛选/排序/分页变化。
+  // 与今日卡片页的 NO. 口径一致，也和卡面印的编号一致。
+  const serialById=useMemo(()=>new Map(nodes.map((n,i)=>[n.id,i+1])),[nodes]);
   const [page,setPage]=useState(1);
   const [detailId,setDetailId]=useState<string|null>(null);
   // 窄屏每页少放几张：WebGL 画布高度随网格行数增长，单列 24 张会让画布高达
@@ -38,18 +42,28 @@ export function CatalogPanel({query,onQuery,onPick,province}:{query:string;onQue
     window.addEventListener('resize',onResize);
     return ()=>window.removeEventListener('resize',onResize);
   },[]);
-  const artists=useMemo(()=>nodes.filter(node=>(province===ALL_PROVINCES||provinceOf(node.city)===province)&&artistMatches(node,query)),[nodes,province,query]);
+  // 展示顺序按热度从高到低；热度相同用档案号兜底，保证排序稳定不抖动。
+  // 卡面编号（serial）另算，与这里的展示顺序互不干扰。
+  const artists=useMemo(()=>{
+    const filtered=nodes.filter(node=>(province===ALL_PROVINCES||provinceOf(node.city)===province)&&artistMatches(node,query));
+    return filtered.sort((a,b)=>{
+      const ha=heatWeight(relationCounts.get(a.id)||0,worksByArtist.get(a.id)?.length||0,ratings[a.id]);
+      const hb=heatWeight(relationCounts.get(b.id)||0,worksByArtist.get(b.id)?.length||0,ratings[b.id]);
+      return hb-ha || (serialById.get(a.id)||0)-(serialById.get(b.id)||0);
+    });
+  },[nodes,province,query,relationCounts,worksByArtist,ratings,serialById]);
   const total=artists.length;
   const pageCount=Math.max(1,Math.ceil(total/pageSize));
   const currentPage=Math.min(page,pageCount);
   const offset=(currentPage-1)*pageSize;
-  // 当前页卡片数据：useMemo 让 HoloCardStage 的 WebGL 场景只在换页/筛选时重建
-  const cards:HoloCardData[]=useMemo(()=>artists.slice(offset,offset+pageSize).map((node,index)=>({
-    node,index:offset+index,
+  // 当前页卡片数据：useMemo 让 HoloCardStage 的 WebGL 场景只在换页/筛选时重建。
+  // serial 取全局档案号，不是这里 slice 之后的展示序号。
+  const cards:HoloCardData[]=useMemo(()=>artists.slice(offset,offset+pageSize).map(node=>({
+    node,serial:serialById.get(node.id)||0,
     workCount:worksByArtist.get(node.id)?.length||0,
     relationCount:relationCounts.get(node.id)||0,
     inBeef:beefIds.has(node.id),
-  })),[artists,offset,worksByArtist,relationCounts,beefIds]);
+  })),[artists,offset,serialById,worksByArtist,relationCounts,beefIds]);
 
   const detail = detailId ? nodeById.get(detailId) || null : null;
 

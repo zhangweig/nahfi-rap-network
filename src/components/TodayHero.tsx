@@ -13,6 +13,33 @@ import type {ArtistNode} from '../data/types';
 const FAN = 5;
 
 /**
+ * 抽卡权重：关系数与作品数是主要热度，评分人数作为补充。
+ * 数据长尾很重（325 人里 186 人零关系），开平方压缩后头部约为零线索者的 30 倍，
+ * 保底的 1 保证任何人都还有机会被翻到，而不是永远只出那几十个热门。
+ */
+function heatWeight(rel: number, work: number, rating?: {average: number; count: number}) {
+  const heat = rel * 2 + work * 1.5 + Math.min(rating?.count || 0, 30) * 0.6
+    + ((rating?.average || 0) >= 4 ? 4 : 0);
+  return 1 + Math.sqrt(heat) * 3;
+}
+
+/** 按权重抽一个；exclude 里的人不参与。 */
+function weightedPick<T extends {id: string}>(
+  pool: T[], weights: Map<string, number>, exclude?: Set<string>,
+): T | undefined {
+  const choices = exclude ? pool.filter(n => !exclude.has(n.id)) : pool;
+  if (!choices.length) return undefined;
+  let total = 0;
+  for (const n of choices) total += weights.get(n.id) ?? 1;
+  let r = Math.random() * total;
+  for (const n of choices) {
+    r -= weights.get(n.id) ?? 1;
+    if (r <= 0) return n;
+  }
+  return choices[choices.length - 1];
+}
+
+/**
  * 今日首屏：左侧今日翻牌与说明，正中五张卡摊开，右侧 BEEF 线索。
  *
  * 卡是实体感的：指针移过整个舞台时，五张卡按各自的前后层级倾斜，
@@ -25,10 +52,35 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
 
   // 只有真实头像的人物才适合当主角；占位人像留给两侧，避免首页第一眼就是剪影。
   const withPortrait = useMemo(() => nodes.filter(n => !!avatarPath(n)), [nodes]);
-  // 今日主角改为随机：每次进首页抽取一位，不再固定第一张。
+  const nodeById = useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
+
+  // 一次遍历建好索引，避免每张卡各自 filter 一遍全量作品与关系。
+  const {workCounts, relationCounts} = useMemo(() => {
+    const w = new Map<string, number>();
+    for (const work of works) for (const id of work.artistIds) w.set(id, (w.get(id) || 0) + 1);
+    const r = new Map<string, number>();
+    for (const rel of relations) {
+      r.set(rel.source, (r.get(rel.source) || 0) + 1);
+      r.set(rel.target, (r.get(rel.target) || 0) + 1);
+    }
+    return {workCounts: w, relationCounts: r};
+  }, [works, relations]);
+
+  // 热度表先算好再抽人，这样主角、侧卡、翻页用的是同一套权重。
+  const weights = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const n of nodes) map.set(n.id, heatWeight(
+      relationCounts.get(n.id) || 0,
+      workCounts.get(n.id) || 0,
+      ratings[n.id],
+    ));
+    return map;
+  }, [nodes, workCounts, relationCounts, ratings]);
+
+  // 今日主角：每次进首页按热度加权抽一位，关系多、呼声高的更容易被翻到。
   const [heroId, setHeroId] = useState(() => {
     const pool = withPortrait.length >= 2 ? withPortrait : nodes;
-    return pool[Math.floor(Math.random() * pool.length)]?.id || 'air';
+    return weightedPick(pool, weights)?.id || 'air';
   });
   const [detailOpen, setDetailOpen] = useState(false);
   const [openBeef, setOpenBeef] = useState<BeefEvent | null>(null);
@@ -46,59 +98,41 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
   // 这样监听只挂载一次，不会因为 heroId 变化反复解绑重绑。
   const stepRef = useRef<(dir: -1 | 1) => void>(() => {});
 
-  const nodeById = useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
-
-  // 一次遍历建好索引，避免每张卡各自 filter 一遍全量作品与关系。
-  const {workCounts, relationCounts} = useMemo(() => {
-    const w = new Map<string, number>();
-    for (const work of works) for (const id of work.artistIds) w.set(id, (w.get(id) || 0) + 1);
-    const r = new Map<string, number>();
-    for (const rel of relations) {
-      r.set(rel.source, (r.get(rel.source) || 0) + 1);
-      r.set(rel.target, (r.get(rel.target) || 0) + 1);
-    }
-    return {workCounts: w, relationCounts: r};
-  }, [works, relations]);
-
   const beefList = useMemo(() => allBeefs(beefs, loadLocalBeefs()), [beefs]);
   const beefSet = useMemo(() => beefNodeIds(beefList), [beefList]);
 
-  // 卡阵：主角固定在正中，再按 ±1、±2 向两侧取人，凑成 5 张。
-  // 位置数组按「左 → 右」排好，中心索引由 FAN 推出来，不依赖取人的顺序。
+  // 卡阵：主角固定在正中，另外四张各自按热度加权独立抽取，互不重复。
+  // 不再取数组邻居——旧逻辑会让同省的人连成一串，看着像按地区派发。
   const fan = useMemo(() => {
-    if (!nodes.length) return [] as ArtistNode[];
     const pool = withPortrait.length >= 2 ? withPortrait : nodes;
-    const anchor = Math.max(0, pool.findIndex(n => n.id === heroId));
-    const mid = Math.floor(FAN / 2);
-    const slots: (ArtistNode | undefined)[] = Array.from({length: FAN});
-    slots[mid] = pool[anchor];
-    for (let k = 1; k <= mid; k++) {
-      slots[mid - k] = pool[(anchor - k + pool.length * 2) % pool.length];
-      slots[mid + k] = pool[(anchor + k) % pool.length];
+    const head = nodeById.get(heroId) || pool[0];
+    if (!head) return [] as ArtistNode[];
+    const used = new Set([head.id]);
+    const sides: ArtistNode[] = [];
+    for (let i = 1; i < FAN; i++) {
+      const pick = weightedPick(pool, weights, used);
+      if (!pick) break;
+      used.add(pick.id);
+      sides.push(pick);
     }
-    // pool 比 FAN 小时两侧会取到同一个人，去重后阵型自动收窄。
-    const seen = new Set<string>();
-    return slots.filter((n): n is ArtistNode => {
-      if (!n || seen.has(n.id)) return false;
-      seen.add(n.id);
-      return true;
-    });
-  }, [nodes, withPortrait, heroId]);
+    const mid = Math.floor((FAN - 1) / 2);
+    return [...sides.slice(0, mid), head, ...sides.slice(mid)];
+  }, [nodes, withPortrait, heroId, weights, nodeById]);
 
   const hero = nodeById.get(heroId) || fan[0] || nodes[0];
   const heroIndex = hero ? nodes.findIndex(n => n.id === hero.id) : 0;
 
   /**
-   * 一张一张地切换。dir=-1 上一张 / +1 下一张。
+   * 每次按热度加权另抽一张，dir 只决定甩出方向，不再沿数组顺移。
    * 换主角的同时给弹簧一个反向"甩出"位移：卡阵先顺着翻页方向让出一点，
    * 再由弹簧带阻尼回到 0。整个过程是连续插值，不再是固定时长的 CSS 关键帧。
    */
   const step = (dir: -1 | 1) => {
     const pool = withPortrait.length >= 2 ? withPortrait : nodes;
     if (pool.length < 2) return;
-    const at = pool.findIndex(n => n.id === heroId);
-    if (at < 0) return;
-    setHeroId(pool[(at + dir + pool.length) % pool.length].id);
+    const next = weightedPick(pool, weights, new Set([heroId]));
+    if (!next) return;
+    setHeroId(next.id);
     // 甩出：下一张(-1 位移，卡片向左让位) / 上一张(+1 位移)。
     const stage = stageRef.current;
     const kick = stage ? Math.max(28, Math.min(stage.clientWidth * 0.09, 96)) : 56;

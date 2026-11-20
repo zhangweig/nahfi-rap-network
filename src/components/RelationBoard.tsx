@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import panzoom, {type PanZoom, type Transform} from 'panzoom';
 import {LayoutGrid, RotateCcw, Search, Sparkles, Users, X} from 'lucide-react';
 import {useDatasetData} from '../state/Dataset';
 import {Avatar} from './PixelAvatar';
@@ -61,36 +62,20 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
 }) {
   const data = useDatasetData();
   const viewport = useRef<HTMLDivElement>(null);
-  const [view, setView] = useState({scale: 0.8, x: 0, y: 0});
-
-  /* ── 高频手势节流 ──────────────────────────────────────────────────────
-     拖拽/滚轮每秒能发上百个事件，而每次 setView 都会让 ~7000 个节点+连线
-     做一次 React 重渲染。这里把一帧内的多次更新合并成一次提交：
-     用 ref 累积最新目标，单个 rAF 里统一 setView。视觉无差，重渲染降到 60fps 上限。 */
-  const viewRef = useRef(view);
-  const pendingView = useRef<{scale:number; x:number; y:number} | null>(null);
-  const viewFrame = useRef<number | null>(null);
-  useEffect(() => { viewRef.current = view; }, [view]);
-  const queueView = useCallback((fn:(old:{scale:number; x:number; y:number})=>{scale:number; x:number; y:number}) => {
-    const next = fn(pendingView.current ?? viewRef.current);
-    pendingView.current = next;
-    if (viewFrame.current === null) {
-      viewFrame.current = requestAnimationFrame(() => {
-        viewFrame.current = null;
-        const target = pendingView.current;
-        pendingView.current = null;
-        if (target) { viewRef.current = target; setView(target); }
-      });
-    }
-  }, []);
-  // 飞入动画/自动适配走直接 setView，先清掉未提交的拖拽帧，避免两者互相覆盖。
-  const cancelQueuedView = useCallback(() => {
-    if (viewFrame.current !== null) { cancelAnimationFrame(viewFrame.current); viewFrame.current = null; }
-    pendingView.current = null;
-  }, []);
+  const stage = useRef<HTMLDivElement>(null);
+  const bg = useRef<HTMLDivElement>(null);
+  /** panzoom 实例：平移/缩放直接写 DOM transform，不触发 React 重渲染——这是拖动丝滑的关键。 */
+  const pz = useRef<PanZoom | null>(null);
+  /** 当前 transform 的镜像，供省份框拖拽 / flyTo 读取（panzoom 自身才是唯一数据源）。 */
+  const viewRef = useRef({scale: 0.8, x: 0, y: 0});
   const [hover, setHover] = useState<string | null>(null);
   const [year, setYear] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
+  /** 跨过缩放阈值时才更新，避免 pan 过程中反复重渲染整棵节点树。 */
+  const [zoomed, setZoomed] = useState(false);
+  const zoomedRef = useRef(false);
+  const onClearRef = useRef(onClear);
+  onClearRef.current = onClear;
   const [offsets, setOffsets] = useState<Record<string, Offset>>(loadOffsets);
   const [dragProvince, setDragProvince] = useState<string | null>(null);
   const [roster, setRoster] = useState<RosterState | null>(null);
@@ -105,6 +90,67 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     sync();
     query.addEventListener('change', sync);
     return () => query.removeEventListener('change', sync);
+  }, []);
+
+  /* ── panzoom：接管画布平移/缩放 ────────────────────────────────────────
+     事件监听绑在 viewport，transform 写到 stage（两层分离，靠自定义 controller）。
+     关键收益：拖拽/滚轮/惯性全部由库直接改 DOM matrix，React 零重渲染。
+     .bn 节点 / .bz 省份框 / .roster 名单上的按下被 beforeMouseDown 拦下，
+     继续走它们各自的 pointer 拖拽逻辑，不会被画布 pan 抢走。 */
+  useEffect(() => {
+    const surface = viewport.current;
+    const layer = stage.current;
+    if (!surface || !layer) return;
+    const instance = panzoom(layer, {
+      controller: {
+        getOwner: () => surface,
+        applyTransform: (t: Transform) => {
+          layer.style.transform = `translate3d(${t.x}px,${t.y}px,0) scale(${t.scale})`;
+        },
+      } as never,
+      minZoom: MIN_ZOOM,
+      maxZoom: MAX_ZOOM,
+      zoomDoubleClickSpeed: 1,          // 关闭双击缩放（点击节点要聚焦，不是放大）
+      disableKeyboardInteraction: true, // 方向键留给页面，不劫持
+      zoomSpeed: 0.12,                  // 滚轮缩放更跟手
+      // 松手后的惯性：kinetic 只认 minVelocity / amplitude（@types 仅声明 boolean，故断言）。
+      // minVelocity=5 只让明显的甩动触发；amplitude=0.14 让滑行短促顺滑、收得住。
+      smoothScroll: {minVelocity: 5, amplitude: 0.14} as never,
+      beforeMouseDown: (e: MouseEvent) => {
+        const target = e.target as HTMLElement | null;
+        if (!target) return false;
+        // 交互元素：节点、省份框、名单、控件——不启动画布 pan。
+        const interactive = target.closest('.bn, .bz, .roster, .board-rail, .board-timeline, .board-zoom, .board-title, button');
+        return !!interactive;
+      },
+      onTouch: (e: TouchEvent) => {
+        const target = e.target as HTMLElement | null;
+        // 触摸同样放过交互元素，让原生 click / 拖拽生效。
+        return !(target && target.closest('.bn, .bz, .roster, button'));
+      },
+    });
+    pz.current = instance;
+
+    const syncTransform = () => {
+      const t = instance.getTransform();
+      viewRef.current = t;
+      // 背景视差直接写 CSS 变量，避免 setView 触发整棵树重渲染。
+      if (bg.current) {
+        bg.current.style.setProperty('--px', `${(t.x * 0.08).toFixed(1)}px`);
+        bg.current.style.setProperty('--py', `${(t.y * 0.08).toFixed(1)}px`);
+      }
+      // 只有跨过缩放阈值才 setState，避免 pan 过程中反复重渲染。
+      const z = t.scale >= 1.22;
+      if (z !== zoomedRef.current) { zoomedRef.current = z; setZoomed(z); }
+    };
+    instance.on('transform', syncTransform);
+    instance.on('panstart', () => setDragging(true));
+    instance.on('panend', () => setDragging(false));
+
+    return () => {
+      instance.dispose();
+      pz.current = null;
+    };
   }, []);
 
   useEffect(() => {
@@ -219,31 +265,33 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   const boundsRef = useRef(bounds);
   boundsRef.current = bounds;
 
+  const clampScale = useCallback((value: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value)), []);
+
+  /** 唯一的 transform 出口：所有程序化视图变更都经 panzoom，DOM transform 由它直接写。 */
+  const applyView = useCallback((scale: number, x: number, y: number) => {
+    const instance = pz.current;
+    if (!instance) return;
+    instance.zoomAbs(0, 0, clampScale(scale));   // 先定比例（锚在原点，x/y 随后覆盖）
+    instance.moveTo(x, y);                        // 再精确平移，得到目标 transform
+  }, [clampScale]);
+
   const fit = useCallback(() => {
     const element = viewport.current;
-    if (!element) return;
+    if (!element || !pz.current) return;
     const rect = element.getBoundingClientRect();
     const box = boundsRef.current;
     // Phones stack the provinces vertically: fit the width and let the user pan down,
     // otherwise the whole list is squeezed into an unreadable thumbnail.
     if (narrow) {
       const scale = Math.min(1, (rect.width - 20) / box.w);
-      setView({
-        scale,
-        x: (rect.width - box.w * scale) / 2 - box.x * scale,
-        y: 42 - box.y * scale,
-      });
+      applyView(scale, (rect.width - box.w * scale) / 2 - box.x * scale, 42 - box.y * scale);
       return;
     }
     // Leave room for the compact year strip pinned to the bottom edge.
     const usable = Math.max(240, rect.height - 58);
     const scale = Math.min(1.2, Math.min((rect.width - 28) / box.w, usable / box.h));
-    setView({
-      scale,
-      x: (rect.width - box.w * scale) / 2 - box.x * scale,
-      y: 8 - box.y * scale,
-    });
-  }, [narrow]);
+    applyView(scale, (rect.width - box.w * scale) / 2 - box.x * scale, 8 - box.y * scale);
+  }, [narrow, applyView]);
 
   // Fit once (and on a real viewport resize). Selecting someone must NOT reset the zoom:
   // the previous dependency on `bounds` re-ran this on every selection.
@@ -264,65 +312,37 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     fit();
   }, [province, fit]);
 
-  const clampScale = (value: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value));
-
   /** Zoom around a screen-space anchor so the point under the cursor stays put. */
   const zoomAround = useCallback((px: number, py: number, factor: number) => {
-    setView(old => {
-      const next = clampScale(old.scale * factor);
-      const ratio = next / old.scale;
-      return {scale: next, x: px - (px - old.x) * ratio, y: py - (py - old.y) * ratio};
-    });
+    const instance = pz.current;
+    if (!instance) return;
+    instance.smoothZoom(px, py, factor);
   }, []);
 
-  // Wheel zoom needs a non-passive listener to keep the page still.
+  /* ── 空白点击关闭详情 ─────────────────────────────────────────────────
+     panzoom 已经接管滚轮缩放与画布拖拽（含松手惯性）。这里只补一个"点空白关抽屉"，
+     用原生 pointer 监听：不调 preventDefault、不拦 panzoom 的 mousedown。 */
   useEffect(() => {
-    const element = viewport.current;
-    if (!element) return;
-    const onWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      const rect = element.getBoundingClientRect();
-      queueView(old => {
-        const next = clampScale(old.scale * Math.exp(-event.deltaY * 0.0014));
-        const ratio = next / old.scale;
-        return {
-          scale: next,
-          x: event.clientX - rect.left - (event.clientX - rect.left - old.x) * ratio,
-          y: event.clientY - rect.top - (event.clientY - rect.top - old.y) * ratio,
-        };
-      });
+    const surface = viewport.current;
+    if (!surface) return;
+    let sx = 0, sy = 0, blank = false;
+    const down = (e: PointerEvent) => {
+      const target = e.target as HTMLElement | null;
+      blank = !!target && !target.closest('.bn, .bz, .roster, button');
+      sx = e.clientX; sy = e.clientY;
+      if (blank) setRoster(null);
     };
-    element.addEventListener('wheel', onWheel, {passive: false});
-    return () => element.removeEventListener('wheel', onWheel);
-  }, [queueView]);
-
-  /* ── canvas panning ─────────────────────────────────────────────────── */
-  const pan = useRef({x: 0, y: 0, ox: 0, oy: 0, active: false, moved: false, blank: false});
-  const onPointerDown = (event: React.PointerEvent) => {
-    // Node clicks belong to the node; everything else is canvas.
-    if ((event.target as HTMLElement).closest('.bn')) return;
-    setRoster(null);
-    pan.current = {x: event.clientX, y: event.clientY, ox: view.x, oy: view.y, active: true, moved: false, blank: true};
-    setDragging(true);
-    (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
-  };
-  const onPointerMove = (event: React.PointerEvent) => {
-    if (!pan.current.active) return;
-    if (Math.hypot(event.clientX - pan.current.x, event.clientY - pan.current.y) > 4) pan.current.moved = true;
-    const px = event.clientX, py = event.clientY;
-    queueView(old => ({
-      ...old,
-      x: pan.current.ox + (px - pan.current.x),
-      y: pan.current.oy + (py - pan.current.y),
-    }));
-  };
-  const onPointerUp = () => {
-    const {active, blank, moved} = pan.current;
-    pan.current.active = false;
-    setDragging(false);
-    // A tap (not a drag) closes the detail drawer — the map keeps its layout either way.
-    if (active && blank && !moved) onClear();
-  };
+    const up = (e: PointerEvent) => {
+      if (blank && Math.hypot(e.clientX - sx, e.clientY - sy) < 5) onClearRef.current();
+      blank = false;
+    };
+    surface.addEventListener('pointerdown', down);
+    surface.addEventListener('pointerup', up);
+    return () => {
+      surface.removeEventListener('pointerdown', down);
+      surface.removeEventListener('pointerup', up);
+    };
+  }, []);
 
   /* ── province cards are draggable, PureRef style ─────────────────────── */
   const zoneDrag = useRef<{
@@ -396,8 +416,8 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       if (!state.moved && Math.hypot(event.clientX - state.sx, event.clientY - state.sy) > 3) state.moved = true;
       pendingDrag.current = {
         province: state.province,
-        dx: state.ox + (event.clientX - state.sx) / view.scale,
-        dy: state.oy + (event.clientY - state.sy) / view.scale,
+        dx: state.ox + (event.clientX - state.sx) / viewRef.current.scale,
+        dy: state.oy + (event.clientY - state.sy) / viewRef.current.scale,
       };
       if (dragFrame.current === null) dragFrame.current = requestAnimationFrame(flushDrag);
     };
@@ -427,7 +447,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       window.removeEventListener('pointerup', finish);
       window.removeEventListener('pointercancel', finish);
     };
-  }, [dragProvince, view.scale]);
+  }, [dragProvince]);
 
   const resetArrangement = () => {
     setOffsets({});
@@ -435,41 +455,37 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     requestAnimationFrame(fit);
   };
 
-  /* ── fly to a node (search results, roster entries, path hops) ────────── */
+  /* ── fly to a node (search results, roster entries, path hops) ──────────
+     飞入也走 panzoom：rAF 里直接调 zoomAbs/moveTo 写 DOM，不触发 React 重渲染。 */
   const animation = useRef<number | null>(null);
   const flyTo = useCallback((id: string) => {
     const place = positions.get(id);
     const element = viewport.current;
-    if (!place || !element) return;
+    const instance = pz.current;
+    if (!place || !element || !instance) return;
     const rect = element.getBoundingClientRect();
-    const scale = Math.max(view.scale, 1.15);
+    const start = instance.getTransform();
+    const scale = Math.max(start.scale, 1.15);
     const target = {
       scale,
       x: rect.width / 2 - place.x * scale,
       y: rect.height / 2 - place.y * scale,
     };
     if (animation.current !== null) cancelAnimationFrame(animation.current);
-    // 若拖拽最后一帧尚未提交，用它做起点，避免飞入瞬间回跳。
-    const start = pendingView.current ?? view;
-    cancelQueuedView();
     const begin = performance.now();
     const step = () => {
-      const k = Math.min(1, (performance.now() - begin) / 360);
+      const k = Math.min(1, (performance.now() - begin) / 420);
       const ease = 1 - Math.pow(1 - k, 3);
-      setView({
-        scale: start.scale + (target.scale - start.scale) * ease,
-        x: start.x + (target.x - start.x) * ease,
-        y: start.y + (target.y - start.y) * ease,
-      });
+      instance.zoomAbs(0, 0, start.scale + (target.scale - start.scale) * ease);
+      instance.moveTo(start.x + (target.x - start.x) * ease, start.y + (target.y - start.y) * ease);
       animation.current = k < 1 ? requestAnimationFrame(step) : null;
     };
     animation.current = requestAnimationFrame(step);
-  }, [positions, view, cancelQueuedView]);
+  }, [positions]);
 
   useEffect(() => () => {
     if (animation.current !== null) cancelAnimationFrame(animation.current);
     if (dragFrame.current !== null) cancelAnimationFrame(dragFrame.current);
-    if (viewFrame.current !== null) cancelAnimationFrame(viewFrame.current);
   }, []);
 
   const focusNonce = useRef(0);
@@ -540,14 +556,11 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       .sort((a, b) => (degree.get(b.id) || 0) - (degree.get(a.id) || 0) || a.name.localeCompare(b.name, 'zh'));
   }, [roster, rosterQuery, data.nodes, degree]);
 
-  const zoomed = view.scale >= 1.22;
-
   return <div className={`board ${focusId ? 'has-focus' : ''}`}>
-    <div className={`board-viewport ${dragging ? 'dragging' : ''} ${dragProvince ? 'zone-dragging' : ''}`} ref={viewport}
-      onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
-      {/* Ambient backdrop: drifts slower than the board so the canvas gets depth. */}
-      <div className={`board-bg ${selected ? 'is-soft' : ''}`} aria-hidden="true"
-        style={{['--px' as string]: `${(view.x * 0.08).toFixed(1)}px`, ['--py' as string]: `${(view.y * 0.08).toFixed(1)}px`}}>
+    <div className={`board-viewport ${dragging ? 'dragging' : ''} ${dragProvince ? 'zone-dragging' : ''}`} ref={viewport}>
+      {/* Ambient backdrop: drifts slower than the board so the canvas gets depth.
+          视差偏移由 panzoom 的 transform 事件直接写 CSS 变量，不经过 React。 */}
+      <div className={`board-bg ${selected ? 'is-soft' : ''}`} aria-hidden="true" ref={bg}>
         <div className="bg-par">
           <div className="bg-depth-plane" />
           <div className="bg-aurora"><i /><i /><i /></div>
@@ -563,9 +576,9 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
           </div>
         </div>
       </div>
-      <div className="board-stage" style={{transform: `translate3d(${view.x}px,${view.y}px,0)`}}>
+      <div className="board-stage" ref={stage}>
         <div className={`board-world ${zoomed ? 'is-zoomed' : ''}`}
-          style={{width: world.width, height: world.height, transform: `scale(${view.scale})`}}>
+          style={{width: world.width, height: world.height}}>
           {zones.map(zone => <div key={zone.def.province}
             className={`bz ${zone.def.mini ? 'mini' : ''} ${zone.def.empty ? 'empty' : ''} ${zone.def.tiny ? 'tiny' : ''} ${dragProvince === zone.def.province ? 'is-dragging' : ''}`}
             style={{left: zone.def.x, top: zone.def.y, width: zone.def.w, height: zone.def.h, borderRadius: zone.def.radius ?? 10, ['--c' as string]: zone.def.color, zIndex: dragProvince === zone.def.province ? 4 : undefined}}

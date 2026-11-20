@@ -30,6 +30,7 @@
     "graphology": "^0.26.0",
     "graphology-shortest-path": "^2.0.1",
     "lucide-react": "^0.468.0",
+    "panzoom": "^9.4.4",
     "playwright-core": "^1.49.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

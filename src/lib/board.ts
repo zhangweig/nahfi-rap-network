@@ -1,5 +1,5 @@
 import type {ArtistNode, RelationType} from '../data/types';
-import {ALL_PROVINCES, PROVINCE_NAMES, UNKNOWN_PROVINCE, provinceOf} from './province';
+import {ALL_PROVINCES, PROVINCE_NAMES, UNKNOWN_PROVINCE, provinceOf, spotOf} from './province';
 
 /** The board is a flat design space; the viewport scales it to fit. */
 export const BOARD = {width: 1260, height: 650};
@@ -122,6 +122,78 @@ function squarify<T>(items: T[], weight: (item: T) => number, rect: Rect): [T, R
 
 const GAP = 4;
 
+/**
+ * 地理方位布局：把每个省份框的中心锚定到 provinceSpots 的真实相对方位
+ * （新疆最西、黑龙江最北、广东/海南在南），面积仍随人数变化。
+ * 锚点坐标以 0,0 为中心且有负数，这里整体平移到正数画布空间。
+ */
+interface GeoBox {
+  seed: {province: string; count: number; weight: number; mini: boolean};
+  ax: number; ay: number; // 锚点中心
+  x: number; y: number;   // 当前中心（迭代中会被碰撞推开）
+  w: number; h: number;
+}
+
+/**
+ * 依真实方位摆放省份框：先按锚点放好，再迭代分离重叠框，同时用弱弹簧拉回锚点，
+ * 使最终位置"大致在正确的方位、但不互相盖住"。返回和 squarify 同样的 [seed, rect] 结构。
+ */
+function geoLay(seeds: {province: string; count: number; weight: number; mini: boolean}[]): [typeof seeds[number], Rect][] {
+  // provinceSpots 原始范围约 x∈[-500,648] y∈[-355,400]，先乘比例再平移为正。
+  // SCALE 收紧到接近视口比例，避免画布过大导致 fit 后所有框缩成小块。
+  const SCALE = 1.0;
+  const OX = 560, OY = 420;
+  const boxes: GeoBox[] = seeds.map(seed => {
+    const spot = spotOf(seed.province);
+    // 面积∝人数，但对大框开方压缩，避免在有限画布里挤爆；空省保留小占位。
+    const raw = seed.mini
+      ? Math.min(260, 92 + seed.count * 1.15) ** 2
+      : seed.count > 0
+        ? Math.min(240, 66 + Math.sqrt(seed.count) * 30) ** 2
+        : 46 ** 2;
+    const w = Math.round(Math.sqrt(raw) * 1.12);
+    const h = Math.round(Math.sqrt(raw) / 1.12);
+    const ax = spot.x * SCALE + OX;
+    const ay = spot.y * SCALE + OY;
+    return {seed, ax, ay, x: ax, y: ay, w, h};
+  });
+
+  // 迭代分离 + 锚点弹簧：重叠的框沿最小重叠轴推开，随后被弱弹簧拉回正确方位。
+  const PAD = 12;
+  for (let iter = 0; iter < 120; iter++) {
+    for (let i = 0; i < boxes.length; i++) {
+      for (let j = i + 1; j < boxes.length; j++) {
+        const a = boxes[i], b = boxes[j];
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const ox = (a.w + b.w) / 2 + PAD - Math.abs(dx);
+        const oy = (a.h + b.h) / 2 + PAD - Math.abs(dy);
+        if (ox > 0 && oy > 0) {
+          // 沿重叠较小的轴分离，位移由两框尺寸分摊
+          if (ox < oy) {
+            const push = (ox / 2 + 0.5) * (dx >= 0 ? 1 : -1);
+            a.x -= push; b.x += push;
+          } else {
+            const push = (oy / 2 + 0.5) * (dy >= 0 ? 1 : -1);
+            a.y -= push; b.y += push;
+          }
+        }
+      }
+    }
+    const SPRING = 0.06;
+    for (const box of boxes) {
+      box.x += (box.ax - box.x) * SPRING;
+      box.y += (box.ay - box.y) * SPRING;
+    }
+  }
+
+  return boxes.map(box => [box.seed, {
+    x: Math.round(box.x - box.w / 2),
+    y: Math.round(box.y - box.h / 2),
+    w: box.w,
+    h: box.h,
+  }]);
+}
+
 /** Deterministic per-province RNG so the "hand placed" look survives every render. */
 function seededRng(key: string) {
   let h = 2166136261;
@@ -208,27 +280,39 @@ export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false)
     return {zones, positions, world: {width, height: y + 20}};
   }
 
-  // A single province keeps a comfortable card size instead of stretching edge to edge.
-  const totalWeight = seeds.reduce((sum, seed) => sum + seed.weight, 0);
-  const boardRatio = filter === ALL_PROVINCES ? CANVAS_RATIO : 1.6;
-  const worldW = Math.max(BOARD.width, Math.round(Math.sqrt(totalWeight * boardRatio)));
-  const worldH = Math.max(BOARD.height, Math.round(Math.sqrt(totalWeight / boardRatio)));
-  const rect = filter === ALL_PROVINCES
-    ? {x: GAP, y: GAP, w: worldW - GAP * 2, h: worldH - GAP * 2}
-    : {x: GAP, y: GAP, w: worldW - GAP * 2, h: worldH - GAP * 2};
-  const laid = squarify(seeds, seed => seed.weight, rect);
+  const geo = filter === ALL_PROVINCES;
+  let laid: [typeof seeds[number], Rect][];
+
+  if (geo) {
+    // 全部省份：按真实地理方位摆放。框位置由 geoLay 定稿，不再做 treemap 的随机漂移。
+    laid = geoLay(seeds);
+    // 归一化到正数画布（锚点带负偏移，碰撞后可能有框落到负坐标）。
+    const minX = Math.min(...laid.map(([, r]) => r.x));
+    const minY = Math.min(...laid.map(([, r]) => r.y));
+    const shiftX = GAP - minX, shiftY = GAP - minY;
+    laid = laid.map(([seed, r]) => [seed, {...r, x: r.x + shiftX, y: r.y + shiftY}]);
+  } else {
+    // 单省视图：保留原 treemap，让这一个省的卡片舒适地铺开。
+    const totalWeight = seeds.reduce((sum, seed) => sum + seed.weight, 0);
+    const worldW = Math.max(BOARD.width, Math.round(Math.sqrt(totalWeight * 1.6)));
+    const worldH = Math.max(BOARD.height, Math.round(Math.sqrt(totalWeight / 1.6)));
+    const rect = {x: GAP, y: GAP, w: worldW - GAP * 2, h: worldH - GAP * 2};
+    laid = squarify(seeds, seed => seed.weight, rect);
+  }
+
   for (const [seed, zoneRect] of laid) {
-    // Scattered, hand-placed look: each zone shrinks and drifts inside its own cell,
-    // so the treemap weighting stays intact but nothing lines up on a grid.
     const rng = seededRng(seed.province + seed.count);
-    const pad = Math.min(GAP / 2, zoneRect.w * 0.08, zoneRect.h * 0.08);
-    const innerW = Math.max(0.5, zoneRect.w - pad * 2);
-    const innerH = Math.max(0.5, zoneRect.h - pad * 2);
-    // Never exceed the cell: slivers would otherwise spill into their neighbour.
-    const w = innerW * (0.84 + rng() * 0.13);
-    const h = innerH * (0.84 + rng() * 0.13);
-    const x = zoneRect.x + pad + rng() * (innerW - w);
-    const y = zoneRect.y + pad + rng() * (innerH - h);
+    let x = zoneRect.x, y = zoneRect.y, w = zoneRect.w, h = zoneRect.h;
+    if (!geo) {
+      // treemap 模式：每个框在自己的格子里轻微缩小漂移，打散网格感。
+      const pad = Math.min(GAP / 2, zoneRect.w * 0.08, zoneRect.h * 0.08);
+      const innerW = Math.max(0.5, zoneRect.w - pad * 2);
+      const innerH = Math.max(0.5, zoneRect.h - pad * 2);
+      w = innerW * (0.84 + rng() * 0.13);
+      h = innerH * (0.84 + rng() * 0.13);
+      x = zoneRect.x + pad + rng() * (innerW - w);
+      y = zoneRect.y + pad + rng() * (innerH - h);
+    }
     const def: ZoneDef = {
       province: seed.province,
       code: seed.mini ? 'ARCHIVE' : PROVINCE_CODE[seed.province] || '?',
@@ -249,6 +333,16 @@ export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false)
     zones.push({def, count});
   }
 
+  // 世界尺寸：地理布局按框的实际边界 + 留白；treemap 保持原尺寸。
+  let worldW: number, worldH: number;
+  if (geo) {
+    worldW = Math.round(Math.max(BOARD.width, ...laid.map(([, r]) => r.x + r.w)) + GAP * 3);
+    worldH = Math.round(Math.max(BOARD.height, ...laid.map(([, r]) => r.y + r.h)) + GAP * 3);
+  } else {
+    const totalWeight = seeds.reduce((sum, seed) => sum + seed.weight, 0);
+    worldW = Math.max(BOARD.width, Math.round(Math.sqrt(totalWeight * 1.6)));
+    worldH = Math.max(BOARD.height, Math.round(Math.sqrt(totalWeight / 1.6)));
+  }
   return {zones, positions, world: {width: worldW, height: worldH}};
 }
 

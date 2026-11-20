@@ -148,3 +148,17 @@ html,body{overflow-x:clip}
   /* 首屏给紧凑导航让位 */
   .app .today-hero{height:calc(100dvh - 96px) !important}
 }
+
+/* ── D. 地图沉浸式：去掉最外层边界 ───────────────────────────────────
+   .map-room 原本叠了 1px 外框 + 14/16px 圆角 + 三层投影 + ::after 内描边，
+   四层叠加形成明显的"面板框"。这里统一去掉，让星丛画布直接铺满、与页面
+   背景连成一体；地图内部的省份区块、关系线、工具栏一律不动。删此段即可回退。 */
+.app .map-room,
+.neon-mode .map-room{
+  border:0 !important;
+  outline:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+.app .map-room::after,
+.neon-mode .map-room::after{display:none !important}

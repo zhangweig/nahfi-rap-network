@@ -82,7 +82,7 @@ export function HeroCard({
   return <article
     className={`thc ${isFront ? 'is-front' : ''}`}
     style={{'--k': slot, '--a': Math.abs(slot)} as React.CSSProperties}
-    aria-hidden={!isFront}
+    data-slot={slot}
   >
     <button className="thc-hit" onClick={isFront ? onOpen : onPromote}
       tabIndex={isFront ? 0 : -1}

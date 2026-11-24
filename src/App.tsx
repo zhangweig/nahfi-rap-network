@@ -169,11 +169,15 @@ export default function App() {
     clearPath();
   };
 
-  return <div className={`app pixel-app neon-mode ${section === 'map' ? 'board-mode' : ''}`}>
+  return <div className={`app pixel-app neon-mode immersive-app ${section === 'map' ? 'board-mode' : ''}`}>
     <div className="ascii-field" aria-hidden="true" />
     <header className="site-header">
-      <a href="#" className="brand" onClick={e => { e.preventDefault(); openSection('map'); }}>
-        <span className="vinyl-logo" /><strong>FLOWLINE<span>®</span></strong>
+      <a href="#" className="brand" onClick={e => { e.preventDefault(); openSection('today'); }} aria-label="FLOWLINE 首页">
+        <svg className="flow-mark" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+          <path d="M6 32V13L16 7H37L31 15H17V21H29L23 29H17V37" stroke="currentColor" strokeWidth="3.2" strokeLinejoin="round"/>
+          <path d="M25 35H38M31 29H38" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+        <span className="flow-wordmark"><strong>FLOW<span>LINE</span><i>®</i></strong><small>中文说唱人物与关系档案</small></span>
       </a>
       <nav aria-label="主要导航">
         {NAV.map(([key, label]) => <button key={key} className={section === key ? 'active' : ''} onClick={() => openSection(key)}>{label}</button>)}
@@ -268,7 +272,7 @@ export default function App() {
               找到 {path.length - 1} 步路径：{path.map((id, i) => <span key={id}>{i > 0 ? ' → ' : ''}<button onClick={() => setSelected(id)}>{nodeById.get(id)?.name}</button></span>)}
               <button aria-label="清除路径" onClick={() => setPath(null)}>×</button>
             </div>}
-            {current && <div className="board-drawer">
+            {current && <div className="map-person-popover" role="dialog" aria-label={`${current.name} · 人物档案`} onKeyDown={event => { if (event.key === 'Escape') closeDetail(); }}>
               <ArtistPanel current={current} works={works} relations={relations} nodeById={nodeById} types={types}
                 canContribute={writable}
                 onPick={pick} onEdit={node => setEditor({kind: 'artist', record: node})}

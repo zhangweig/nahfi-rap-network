@@ -3,7 +3,7 @@ import panzoom, {type PanZoom, type Transform} from 'panzoom';
 import {LayoutGrid, RotateCcw, Search, Sparkles, Users, X} from 'lucide-react';
 import {useDatasetData} from '../state/Dataset';
 import {Avatar} from './PixelAvatar';
-import {ALL_PROVINCES, UNKNOWN_PROVINCE, provinceLabel, provinceOf} from '../lib/province';
+import {ALL_PROVINCES, PROVINCE_NAMES, UNKNOWN_PROVINCE, provinceLabel, provinceOf} from '../lib/province';
 import {boardLayout, buildEdges, edgeMid, edgePath, beefPath, relationMeta, type NodePlace} from '../lib/board';
 import type {RelationType} from '../data/types';
 import type {BeefEvent} from '../data/beefs';
@@ -11,10 +11,7 @@ import {beefNodeIds} from '../data/beefs';
 
 const YEARS = Array.from({length: 10}, (_, index) => 2017 + index);
 
-/** Free-canvas arrangement: each province can be nudged anywhere, edges follow. */
-type Offset = {dx: number; dy: number};
-const OFFSET_KEY = 'nahfi.board.offsets.v2';
-const MIN_ZOOM = 0.3;
+const MIN_ZOOM = 0.08;
 const MAX_ZOOM = 3;
 
 /** Ambient dust for the canvas backdrop. Deterministic so renders never reshuffle it. */
@@ -25,16 +22,6 @@ const SPARKS = Array.from({length: 18}, (_, index) => ({
   duration: 12 + (index % 6) * 2.4,
   size: index % 4 === 0 ? 2.5 : 1.6,
 }));
-
-const loadOffsets = (): Record<string, Offset> => {
-  try {
-    const raw = localStorage.getItem(OFFSET_KEY);
-    const parsed = raw ? JSON.parse(raw) : null;
-    return parsed && typeof parsed === 'object' ? parsed : {};
-  } catch {
-    return {};
-  }
-};
 
 interface RosterState {
   province: string;
@@ -71,6 +58,9 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   const [hover, setHover] = useState<string | null>(null);
   /** 省份框 hover：驱动整块省份的弹性抬升与无关省份降噪（hover 单个人物走上面的 hover）。 */
   const [hoverProvince, setHoverProvince] = useState<string | null>(null);
+  const [pinnedProvince, setPinnedProvince] = useState<string | null>(null);
+  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set([...PROVINCE_NAMES, UNKNOWN_PROVINCE]));
+  const activeProvince = pinnedProvince || hoverProvince;
   const [year, setYear] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
   /** 跨过缩放阈值时才更新，避免 pan 过程中反复重渲染整棵节点树。 */
@@ -78,13 +68,91 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   const zoomedRef = useRef(false);
   const onClearRef = useRef(onClear);
   onClearRef.current = onClear;
-  const [offsets, setOffsets] = useState<Record<string, Offset>>(loadOffsets);
-  const [dragProvince, setDragProvince] = useState<string | null>(null);
+  const dragProvince: string | null = null;
+  /**
+   * 省份框内滚动：滚轮只写一个 track 元素的 translate3d，React 完全不参与。
+   * 当前值向目标值做插值，rAF 合帧 → GPU 合成层，密集省份也能保持高帧率。
+   */
+  const peekScroll = useRef({host: null as HTMLElement | null, track: null as HTMLElement | null, current: 0, target: 0, max: 0, raf: 0});
+  const touchY = useRef<number | null>(null);
+  const scrollTick = () => {
+    const s = peekScroll.current;
+    if (!s.track) { s.raf = 0; return; }
+    const delta = s.target - s.current;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || Math.abs(delta) < 0.4) { s.current = s.target; s.raf = 0; }
+    else { s.current += delta * 0.26; s.raf = requestAnimationFrame(scrollTick); }
+    s.track.style.transform = `translate3d(0,${-s.current.toFixed(2)}px,0)`;
+  };
+  const beginPeekScroll = (host: HTMLElement, delta: number) => {
+    const s = peekScroll.current;
+    if (s.host !== host) {
+      s.host = host;
+      s.track = host.querySelector<HTMLElement>('.peek-track');
+      s.current = 0; s.target = 0;
+      s.max = Math.max(0, (s.track?.offsetHeight || 0) - host.clientHeight);
+    }
+    s.target = Math.max(0, Math.min(s.max, s.target + delta));
+    if (!s.raf) s.raf = requestAnimationFrame(scrollTick);
+  };
+  useEffect(() => {
+    const surface = viewport.current;
+    if (!surface) return;
+    // capture 阶段先于 panzoom 的滚轮缩放：落在预览框内就拦截，框外照常缩放地图。
+    const onWheel = (event: WheelEvent) => {
+      const host = (event.target as HTMLElement | null)?.closest<HTMLElement>('.zone-nodes.is-peek');
+      if (!host) return;
+      event.preventDefault();
+      event.stopPropagation();
+      beginPeekScroll(host, event.deltaY);
+    };
+    const onTouchStart = (event: TouchEvent) => {
+      const host = (event.target as HTMLElement | null)?.closest<HTMLElement>('.zone-nodes.is-peek');
+      touchY.current = host && event.touches[0] ? event.touches[0].clientY : null;
+    };
+    const onTouchMove = (event: TouchEvent) => {
+      if (touchY.current === null || !event.touches[0]) return;
+      const host = (event.target as HTMLElement | null)?.closest<HTMLElement>('.zone-nodes.is-peek');
+      if (!host) return;
+      const y = event.touches[0].clientY;
+      const delta = (touchY.current - y) * 1.5;
+      touchY.current = y;
+      event.preventDefault();
+      beginPeekScroll(host, delta);
+    };
+    surface.addEventListener('wheel', onWheel, {passive: false, capture: true});
+    surface.addEventListener('touchstart', onTouchStart, {passive: true, capture: true});
+    surface.addEventListener('touchmove', onTouchMove, {passive: false, capture: true});
+    return () => {
+      surface.removeEventListener('wheel', onWheel, true);
+      surface.removeEventListener('touchstart', onTouchStart, true);
+      surface.removeEventListener('touchmove', onTouchMove, true);
+    };
+  }, []);
+  // 切换省份时复位上一个框的滚动位置。
+  useEffect(() => {
+    const s = peekScroll.current;
+    if (s.raf) cancelAnimationFrame(s.raf);
+    if (s.track) s.track.style.transform = '';
+    s.host = null; s.track = null; s.current = 0; s.target = 0; s.max = 0; s.raf = 0;
+    touchY.current = null;
+  }, [activeProvince]);
   const [roster, setRoster] = useState<RosterState | null>(null);
+  const [regionView, setRegionView] = useState<string | null>(null);
   const [rosterQuery, setRosterQuery] = useState('');
   const [narrow, setNarrow] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 780);
   /** 当前焦点：悬停或选中。普通关系线与 BEEF 边共用这一个变量，行为完全一致。 */
-  const focusId = hover || selected;
+  const focusId = selected;
+
+  // Search / related-person links reveal an artist even if their region was collapsed.
+  useEffect(() => {
+    const node = data.nodes.find(node => node.id === selected || (!selected && node.id === focus?.id));
+    if (!node) return;
+    const ids = new Set([node.id]);
+    for(const relation of data.relations) { if(relation.source===node.id) ids.add(relation.target); if(relation.target===node.id) ids.add(relation.source); }
+    const regions = new Set(data.nodes.filter(person=>ids.has(person.id)).map(person=>provinceOf(person.city)));
+    setCollapsed(old => { if(![...regions].some(region=>old.has(region)))return old; const next=new Set(old); for(const region of regions)next.delete(region); return next; });
+  }, [selected, focus?.id, focus?.n, data.nodes]);
 
   useEffect(() => {
     const query = window.matchMedia('(max-width: 780px)');
@@ -117,18 +185,18 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       zoomSpeed: 0.12,                  // 滚轮缩放更跟手
       // 松手后的惯性：kinetic 只认 minVelocity / amplitude（@types 仅声明 boolean，故断言）。
       // minVelocity=5 只让明显的甩动触发；amplitude=0.14 让滑行短促顺滑、收得住。
-      smoothScroll: {minVelocity: 5, amplitude: 0.14} as never,
+      smoothScroll: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? false : {minVelocity: 8, amplitude: 0.18} as never,
       beforeMouseDown: (e: MouseEvent) => {
         const target = e.target as HTMLElement | null;
         if (!target) return false;
         // 交互元素：节点、省份框、名单、控件——不启动画布 pan。
-        const interactive = target.closest('.bn, .bz, .roster, .board-rail, .board-timeline, .board-zoom, .board-title, button');
+        const interactive = target.closest('.bn, .roster, .board-rail, .board-timeline, .board-zoom, .board-title, button');
         return !!interactive;
       },
       onTouch: (e: TouchEvent) => {
         const target = e.target as HTMLElement | null;
         // 触摸同样放过交互元素，让原生 click / 拖拽生效。
-        return !(target && target.closest('.bn, .bz, .roster, button'));
+        return !(target && target.closest('.bn, .roster, button'));
       },
     });
     pz.current = instance;
@@ -155,14 +223,6 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     };
   }, []);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(OFFSET_KEY, JSON.stringify(offsets));
-    } catch {
-      /* private mode — the arrangement just won't survive a reload */
-    }
-  }, [offsets]);
-
   const degree = useMemo(() => {
     const map = new Map<string, number>();
     for (const relation of data.relations) {
@@ -177,27 +237,39 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     const located = data.nodes.filter(node => province === ALL_PROVINCES || provinceOf(node.city) === province);
     // 完整展示：地域待考据的每一个人都上画板，不再按关系数截取前 12 个。
     // 框面积与世界尺寸由 boardLayout 按实际人数计算。
-    return boardLayout(located, province, narrow);
-  }, [data.nodes, province, narrow]);
+    return boardLayout(located, province, narrow, collapsed, activeProvince);
+  }, [data.nodes, province, narrow, collapsed, activeProvince]);
 
-  /** Layout with the hand-nudged province offsets folded in. */
-  const {zones, positions, world} = useMemo(() => {
-    const movedZones = base.zones.map(zone => {
-      const offset = offsets[zone.def.province];
-      return offset ? {...zone, def: {...zone.def, x: zone.def.x + offset.dx, y: zone.def.y + offset.dy}} : zone;
-    });
-    const movedPositions = new Map<string, NodePlace>();
-    base.positions.forEach((place, id) => {
-      const offset = offsets[place.province];
-      movedPositions.set(id, offset ? {...place, x: place.x + offset.dx, y: place.y + offset.dy} : place);
-    });
-    return {zones: movedZones, positions: movedPositions, world: base.world};
-  }, [base, offsets]);
+  const {zones, positions, world} = base;
 
-  const edges = useMemo(
-    () => buildEdges(data, types, province, year, positions),
-    [data, types, province, year, positions],
+  // 悬停预览会把该省人物在框内纵向铺开（临时坐标），关系线若跟着连过去会拉成长扇形。
+  // 建线时把该省所有端点收敛到框的顶部锚点，线就汇聚成从省份框射出的星爆。
+  const edgePositions = useMemo(() => {
+    if (!activeProvince || !collapsed.has(activeProvince)) return positions;
+    const zone = zones.find(item => item.def.province === activeProvince);
+    if (!zone || zone.count <= 6) return positions;
+    const ax = zone.def.x + zone.def.w / 2;
+    const ay = zone.def.y + 70;
+    const next = new Map(positions);
+    for (const [id, place] of positions) {
+      if (place.province === activeProvince) next.set(id, {...place, x: ax, y: ay});
+    }
+    return next;
+  }, [positions, activeProvince, collapsed, zones]);
+  const allEdges = useMemo(
+    () => buildEdges(data, types, province, year, edgePositions),
+    [data, types, province, year, edgePositions],
   );
+  // 默认态：只留跨省、合作次数 top20 的线作暗纹。省内线不画，避免格子内部糊成一团。
+  const ambientEdges = useMemo(() => allEdges
+    .filter(edge => positions.get(edge.source)?.province !== positions.get(edge.target)?.province)
+    .sort((a, b) => b.count - a.count).slice(0, 20), [allEdges, positions]);
+  const edges = useMemo(() => {
+    if (!selected) return ambientEdges;
+    const merged = new Map(ambientEdges.map(edge => [edge.id, edge]));
+    for (const edge of allEdges) if (edge.source === selected || edge.target === selected) merged.set(edge.id, edge);
+    return [...merged.values()];
+  }, [ambientEdges, allEdges, selected]);
 
   /**
    * BEEF 是关系网的一种边，跟普通关系线共用聚焦逻辑：
@@ -266,6 +338,9 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   /** Latest bounds, read by fit() without making it a new function on every layout change. */
   const boundsRef = useRef(bounds);
   boundsRef.current = bounds;
+  const mapCenterRef = useRef({x:0,y:0});
+  const centralRegion = zones.find(zone=>zone.def.province==='湖北')?.def;
+  mapCenterRef.current = centralRegion ? {x:centralRegion.x+centralRegion.w/2,y:centralRegion.y+centralRegion.h/2} : {x:world.width/2,y:world.height/2};
 
   const clampScale = useCallback((value: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value)), []);
 
@@ -284,16 +359,36 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     const box = boundsRef.current;
     // Phones stack the provinces vertically: fit the width and let the user pan down,
     // otherwise the whole list is squeezed into an unreadable thumbnail.
-    if (narrow) {
+    if (narrow && province !== ALL_PROVINCES) {
       const scale = Math.min(1, (rect.width - 20) / box.w);
       applyView(scale, (rect.width - box.w * scale) / 2 - box.x * scale, 42 - box.y * scale);
       return;
     }
+    // Phones start at a readable regional scale; pan and province search cover the country.
+    if(narrow && province===ALL_PROVINCES){
+      const scale=.68;
+      applyView(scale,rect.width/2-mapCenterRef.current.x*scale,rect.height/2-mapCenterRef.current.y*scale);
+      return;
+    }
     // Leave room for the compact year strip pinned to the bottom edge.
-    const usable = Math.max(240, rect.height - 58);
-    const scale = Math.min(1.2, Math.min((rect.width - 28) / box.w, usable / box.h));
-    applyView(scale, (rect.width - box.w * scale) / 2 - box.x * scale, 8 - box.y * scale);
-  }, [narrow, applyView]);
+    const left = narrow ? 14 : 88;
+    const usableW = rect.width-left-20, usableH=Math.max(180,rect.height-140);
+    const scale=Math.min(1.2,usableW/box.w,usableH/box.h);
+    applyView(scale,left+(usableW-box.w*scale)/2-box.x*scale,70+(usableH-box.h*scale)/2-box.y*scale);
+  }, [narrow, province, applyView]);
+
+  useEffect(() => {
+    if(!regionView)return;
+    const region=zones.find(zone=>zone.def.province===regionView)?.def;
+    const frame=viewport.current?.getBoundingClientRect();
+    if(!region || !frame)return;
+    if(region.collapsed)fit();
+    else {
+      const scale=Math.min(1.3,(frame.width-36)/region.w,(frame.height-140)/region.h);
+      applyView(scale,frame.width/2-(region.x+region.w/2)*scale,70+(frame.height-140)/2-(region.y+region.h/2)*scale);
+    }
+    setRegionView(null);
+  },[regionView,zones,fit,applyView]);
 
   // Fit once (and on a real viewport resize). Selecting someone must NOT reset the zoom:
   // the previous dependency on `bounds` re-ran this on every selection.
@@ -311,6 +406,11 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
   useEffect(() => {
     if (provinceRef.current === province) return;
     provinceRef.current = province;
+    setPinnedProvince(null);
+    if(province!==ALL_PROVINCES){
+      setCollapsed(old=>{const next=new Set(old);next.delete(province);return next;});
+      setRegionView(province);
+    }
     fit();
   }, [province, fit]);
 
@@ -330,12 +430,13 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     let sx = 0, sy = 0, blank = false;
     const down = (e: PointerEvent) => {
       const target = e.target as HTMLElement | null;
-      blank = !!target && !target.closest('.bn, .bz, .roster, button');
+      blank = !!target && !target.closest('.bn, .roster, button');
       sx = e.clientX; sy = e.clientY;
       if (blank) setRoster(null);
     };
     const up = (e: PointerEvent) => {
-      if (blank && Math.hypot(e.clientX - sx, e.clientY - sy) < 5) onClearRef.current();
+      if (blank && Math.hypot(e.clientX - sx, e.clientY - sy) < 5) { onClearRef.current(); setPinnedProvince(null); }
+      if (Math.hypot(e.clientX-sx,e.clientY-sy)>=5) { suppressClick.current=true; setTimeout(()=>{suppressClick.current=false;},0); }
       blank = false;
     };
     surface.addEventListener('pointerdown', down);
@@ -346,24 +447,11 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     };
   }, []);
 
-  /* ── province cards are draggable, PureRef style ─────────────────────── */
-  const zoneDrag = useRef<{
-    province: string; sx: number; sy: number; ox: number; oy: number; moved: boolean; el: HTMLElement;
-  } | null>(null);
-  const pendingDrag = useRef<{province: string; dx: number; dy: number} | null>(null);
-  const dragFrame = useRef<number | null>(null);
-  const dragFromTag = useRef(false);
-  // A drag that started on an avatar must not also count as a click on that avatar.
+  // A finished canvas drag must not also open the region under the pointer.
   const suppressClick = useRef(false);
 
-  const flushDrag = () => {
-    dragFrame.current = null;
-    const pending = pendingDrag.current;
-    if (!pending) return;
-    setOffsets(old => ({...old, [pending.province]: {dx: pending.dx, dy: pending.dy}}));
-  };
-
   const openRoster = (provinceName: string, zoneEl: HTMLElement | null) => {
+    setPinnedProvince(provinceName);
     const frame = viewport.current?.getBoundingClientRect();
     const rect = zoneEl?.getBoundingClientRect();
     if (!frame || !rect) return;
@@ -388,72 +476,10 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     });
   };
 
-  const startZoneDrag = (event: React.PointerEvent<HTMLElement>, zoneProvince: string) => {
-    // Both the canvas pan and the zone drag listen for pointerdown — the zone wins.
-    event.stopPropagation();
-    if ((event.target as HTMLElement).closest('.roster-open')) return;
-    const offset = offsets[zoneProvince] || {dx: 0, dy: 0};
-    const el = event.currentTarget;
-    zoneDrag.current = {
-      province: zoneProvince, sx: event.clientX, sy: event.clientY,
-      ox: offset.dx, oy: offset.dy, moved: false, el,
-    };
-    dragFromTag.current = !!(event.target as HTMLElement).closest('.bz-tag');
-    setRoster(null);
-    setDragProvince(zoneProvince);
-    // Capture keeps the drag alive once the pointer leaves the card; the window listeners
-    // in the effect below are the safety net when the browser drops that capture.
-    try { el.setPointerCapture(event.pointerId); } catch { /* older engines */ }
-  };
-
-  // The move/up phase listens on the window instead of the card itself: no backdrop layer,
-  // pointer-capture edge case or fast exit past the canvas edge can strand a card mid-drag
-  // (which feels like "省份框拖不动了"). The canvas itself stays free — a card may be parked
-  // outside the designed grid; TIDY brings everything home.
-  useEffect(() => {
-    if (!dragProvince) return;
-    const onMove = (event: PointerEvent) => {
-      const state = zoneDrag.current;
-      if (!state) return;
-      if (!state.moved && Math.hypot(event.clientX - state.sx, event.clientY - state.sy) > 3) state.moved = true;
-      pendingDrag.current = {
-        province: state.province,
-        dx: state.ox + (event.clientX - state.sx) / viewRef.current.scale,
-        dy: state.oy + (event.clientY - state.sy) / viewRef.current.scale,
-      };
-      if (dragFrame.current === null) dragFrame.current = requestAnimationFrame(flushDrag);
-    };
-    const finish = () => {
-      const state = zoneDrag.current;
-      zoneDrag.current = null;
-      setDragProvince(null);
-      if (!state) return;
-      if (dragFrame.current !== null) {
-        cancelAnimationFrame(dragFrame.current);
-        dragFrame.current = null;
-        flushDrag();
-      }
-      // A tap on the name tag (not a drag) opens the roster for that province.
-      if (!state.moved && dragFromTag.current) openRoster(state.province, state.el);
-      // Swallow the click the browser fires right after a real drag (avatars included).
-      if (state.moved) {
-        suppressClick.current = true;
-        setTimeout(() => { suppressClick.current = false; }, 0);
-      }
-    };
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', finish);
-    window.addEventListener('pointercancel', finish);
-    return () => {
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', finish);
-      window.removeEventListener('pointercancel', finish);
-    };
-  }, [dragProvince]);
-
   const resetArrangement = () => {
-    setOffsets({});
-    setRoster(null);
+    onClearRef.current();
+    setCollapsed(new Set([...PROVINCE_NAMES, UNKNOWN_PROVINCE]));
+    setRoster(null); setPinnedProvince(null);
     requestAnimationFrame(fit);
   };
 
@@ -470,7 +496,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     const scale = Math.max(start.scale, 1.15);
     const target = {
       scale,
-      x: rect.width / 2 - place.x * scale,
+      x: (rect.width > 700 ? (rect.width-380)/2 : rect.width/2) - place.x * scale,
       y: rect.height / 2 - place.y * scale,
     };
     if (animation.current !== null) cancelAnimationFrame(animation.current);
@@ -487,16 +513,21 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
 
   useEffect(() => () => {
     if (animation.current !== null) cancelAnimationFrame(animation.current);
-    if (dragFrame.current !== null) cancelAnimationFrame(dragFrame.current);
   }, []);
+
+  useEffect(() => {
+    if(!selected || positions.get(selected)?.size===0)return;
+    const frame=requestAnimationFrame(()=>flyTo(selected));
+    return ()=>cancelAnimationFrame(frame);
+  },[selected,positions,flyTo]);
 
   const focusNonce = useRef(0);
   useEffect(() => {
-    if (!focus || focus.n === focusNonce.current) return;
+    if (!focus || focus.n === focusNonce.current || collapsed.has(positions.get(focus.id)?.province || '')) return;
     focusNonce.current = focus.n;
     const frame = requestAnimationFrame(() => flyTo(focus.id));
     return () => cancelAnimationFrame(frame);
-  }, [focus, positions, flyTo]);
+  }, [focus, positions, flyTo, collapsed]);
 
   const pathPairs = useMemo(() => {
     const pairs = new Set<string>();
@@ -525,17 +556,17 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
    * 省份 hover 的降噪集合：本省 + 当前筛选/年份下有连线直达的省份。
    * 基于 edges 而非全量 relations，所以「有连线」始终指画面上看得见的连线。
    */
-  const zoneFocus = useMemo(() => {
-    if (!hoverProvince) return null;
-    const provinces = new Set<string>([hoverProvince]);
-    for (const edge of edges) {
+  const zoneFocus = useMemo<Set<string> | null>(() => {
+    if (!activeProvince) return null;
+    const set = new Set<string>([activeProvince]);
+    for (const edge of allEdges) {
       const a = positions.get(edge.source)?.province;
       const b = positions.get(edge.target)?.province;
-      if (a === hoverProvince && b) provinces.add(b);
-      else if (b === hoverProvince && a) provinces.add(a);
+      if (a === activeProvince && b) set.add(b);
+      if (b === activeProvince && a) set.add(a);
     }
-    return provinces;
-  }, [hoverProvince, edges, positions]);
+    return set;
+  }, [activeProvince, allEdges, positions]);
 
   const isFocusEdge = (edge: {source: string; target: string}) =>
     !!focusId && (edge.source === focusId || edge.target === focusId);
@@ -547,7 +578,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
     const ids = new Set<string>();
     const ranked = [...edges].sort((a, b) => b.count - a.count);
     for (const edge of ranked) {
-      if (isPathEdge(edge)) ids.add(edge.id);
+      if (isFocusEdge(edge) && isPathEdge(edge)) ids.add(edge.id);
       else if (isFocusEdge(edge) && edge.count >= 3) ids.add(edge.id);
       else if (!focusId && ids.size < 4 && edge.count >= 4) ids.add(edge.id);
       if (ids.size >= 7) break;
@@ -561,7 +592,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       .sort((a, b) => b.count - a.count).slice(0, 10).map(edge => edge.id));
   }, [edges, focusId]);
 
-  const visibleNodes = useMemo(() => data.nodes.filter(node => positions.has(node.id)), [data.nodes, positions]);
+  const visibleNodes = useMemo(() => data.nodes.filter(node => positions.has(node.id) && positions.get(node.id)!.size > 0), [data.nodes, positions, collapsed]);
   const locatedCount = useMemo(() => data.nodes.reduce((sum, node) => sum + (provinceOf(node.city) !== UNKNOWN_PROVINCE ? 1 : 0), 0), [data.nodes]);
 
   /* ── roster: every artist inside one province, searchable ─────────────── */
@@ -597,25 +628,72 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       <div className="board-stage" ref={stage}>
         <div className={`board-world ${zoomed ? 'is-zoomed' : ''}`}
           style={{width: world.width, height: world.height}}>
-          {zones.map(zone => <div key={zone.def.province}
-            className={`bz ${zone.def.mini ? 'mini' : ''} ${zone.def.empty ? 'empty' : ''} ${zone.def.tiny ? 'tiny' : ''} ${dragProvince === zone.def.province ? 'is-dragging' : ''} ${hoverProvince === zone.def.province ? 'is-zone-lit' : ''} ${zoneFocus && !zoneFocus.has(zone.def.province) ? 'is-zone-dim' : ''}`}
-            style={{left: zone.def.x, top: zone.def.y, width: zone.def.w, height: zone.def.h, borderRadius: zone.def.radius ?? 10, ['--c' as string]: zone.def.color, zIndex: dragProvince === zone.def.province || hoverProvince === zone.def.province ? 4 : undefined}}
+          {zones.map(zone => {
+            // 折叠省被悬停：框尺寸不变，框内铺开全部人物并可滚轮浏览。
+            const peeking = !!activeProvince && activeProvince === zone.def.province && collapsed.has(zone.def.province) && zone.count > 6;
+            const members = visibleNodes.filter(node => positions.get(node.id)!.province === zone.def.province);
+            return <div key={zone.def.province} data-province={zone.def.province}
+            tabIndex={0} role="group" aria-label={`${provinceLabel(zone.def.province)}，${zone.count} 人，按回车查看名单`}
+            onKeyDown={event => { if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); openRoster(zone.def.province, event.currentTarget); } }}
+            className={`bz ${zone.def.mini ? 'mini' : ''} ${zone.def.empty ? 'empty' : ''} ${zone.def.tiny ? 'tiny' : ''} ${dragProvince === zone.def.province ? 'is-dragging' : ''} ${hoverProvince === zone.def.province ? 'is-zone-lit' : ''} ${pinnedProvince === zone.def.province ? 'is-zone-selected' : ''} ${zone.def.collapsed ? 'is-collapsed' : ''} ${peeking ? 'is-peeking' : ''} ${zoneFocus && !zoneFocus.has(zone.def.province) ? 'is-zone-dim' : ''}`}
+            style={{left: zone.def.x, top: zone.def.y, width: zone.def.w, height: zone.def.h, borderRadius: zone.def.radius ?? 10, ['--c' as string]: zone.def.color, zIndex: dragProvince === zone.def.province || activeProvince === zone.def.province ? 4 : undefined}}
             // 只在鼠标设备触发：触屏点完没有 leave，省份高亮会一直卡住。
             onPointerEnter={event => { if (event.pointerType === 'mouse') setHoverProvince(zone.def.province); }}
             onPointerLeave={event => { if (event.pointerType === 'mouse') setHoverProvince(null); }}
-            onPointerDown={event => startZoneDrag(event, zone.def.province)}>
-            <div className="bz-tag" title="拖动移动这个省份框 · 单击展开名单">
+            onClick={event => { if (!suppressClick.current && !(event.target as HTMLElement).closest('button')) openRoster(zone.def.province,event.currentTarget); }}>
+            <div className="bz-tag" title="点击查看省份人物名单">
               {zone.def.tiny && !zone.def.mini
                 ? <em className="only-name">{provinceLabel(zone.def.province)}</em>
                 : <><b>{zone.def.code}</b><em>{provinceLabel(zone.def.province)}</em></>}
               <i>{zone.def.mini ? `${zone.count}/${archiveTotal}` : zone.def.empty ? '' : zone.count}</i>
+              {zone.count > 3 && <button className="zone-collapse" aria-expanded={!zone.def.collapsed}
+                aria-label={`${zone.def.collapsed ? '展开' : '收起'}${provinceLabel(zone.def.province)}`}
+                onClick={event => { event.stopPropagation(); setCollapsed(old => { const next = new Set(old); if(next.has(zone.def.province)) next.delete(zone.def.province); else next.add(zone.def.province); return next; }); setRegionView(zone.def.province); setRoster(null); }}>
+                {zone.def.collapsed ? `展开全部` : '收起'}</button>}
               {zone.def.mini ? <button onClick={onLocate}>全部 →</button>
                 : <button className="roster-open" onClick={event => {
                   event.stopPropagation();
                   openRoster(zone.def.province, event.currentTarget.closest('.bz') as HTMLElement | null);
-                }} aria-label={`展开 ${provinceLabel(zone.def.province)} 名单`}>名单</button>}
+                }} aria-expanded={roster?.province === zone.def.province} aria-label={`展开 ${provinceLabel(zone.def.province)} 名单`}>名单</button>}
             </div>
-          </div>)}
+            {peeking && <div className="peek-hint" aria-hidden="true">滚轮浏览全部 {zone.count} 人<i /></div>}
+            <div className={`zone-nodes ${peeking ? 'is-peek' : ''}`}>
+             <div className="peek-track" style={peeking ? {height: 82 + Math.ceil(zone.count / 3) * 76 + 12} : undefined}>
+              {members.map(node => {
+                const place = positions.get(node.id)!;
+                const active = node.id === selected;
+                const inBeef = beefIds.has(node.id);
+                const dim = !!focusId && node.id !== focusId && !neighbours.has(node.id) && !path?.includes(node.id);
+                const zoneDim = !!zoneFocus && !zoneFocus.has(place.province);
+                const zoneLit = activeProvince === place.province;
+                const latin = /^[\x20-\x7F]+$/.test(node.name);
+                const featured = node.kind === 'group';
+                const labelFocus = node.id === hover || active;
+                return <button key={node.id}
+                  className={`bn ${place.mini ? 'mini' : ''} ${place.tight ? 'tight' : ''} ${active ? 'is-active' : ''} ${node.id === focusId ? 'is-focus' : ''} ${neighbours.has(node.id) ? 'is-neighbour' : ''} ${dim ? 'is-dim' : ''} ${zoneDim ? 'is-zone-dim' : ''} ${zoneLit ? 'is-zone-lit' : ''} ${featured ? 'is-group' : ''} ${inBeef ? 'has-beef' : ''}`}
+                  data-node-id={node.id}
+                  style={{left: place.x - zone.def.x - place.size / 2, top: place.y - zone.def.y - place.size / 2,
+                    ['--c' as string]: place.color, ['--s' as string]: `${place.size}px`,
+                    zIndex: zoneLit ? 5 : undefined}}
+                  onClick={() => { if (suppressClick.current) return; setRoster(null); onSelect(node.id); }}
+                  onMouseEnter={() => setHover(node.id)} onMouseLeave={() => setHover(null)}
+                  title={`${node.name} · ${provinceLabel(provinceOf(node.city))}`}>
+                  <span className="bn-focus-base" aria-hidden="true" />
+                  <span className="bn-pic"><Avatar node={node} />
+                    {featured && <span className="bn-flag">CREW</span>}
+                    {inBeef && <span className="bn-beef-ring" aria-hidden="true" />}
+                    {inBeef && <span className="bn-beef-flag">⚡BEEF</span>}
+                  </span>
+                  <span className="bn-name" title={node.name} style={{
+                    maxWidth: labelFocus ? Math.max(place.labelW, 168) : place.labelW,
+                    fontSize: latin ? (node.name.length > 9 ? 9.5 : 10.5) : place.dense || place.lines === 1 ? 10.5 : 12,
+                    WebkitLineClamp: latin && !node.name.includes(' ') ? 1 : labelFocus ? 3 : place.lines,
+                  }}>{node.name}</span>
+                </button>;
+              })}
+             </div>
+            </div>
+          </div>; })}
 
           {/* 透视地面压在省份框之上、连线与节点之下：有焦点时才显影，不接收指针事件。 */}
           <div className="board-floor" aria-hidden="true" />
@@ -627,9 +705,9 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
               const color = relationMeta[edge.type].color;
               const strong = hotEdges.has(edge.id);
               // 省份 hover：只让与该省直连的线发亮，其余压到近乎不可见。
-              const zoneEdge = !!hoverProvince && (
-                positions.get(edge.source)?.province === hoverProvince ||
-                positions.get(edge.target)?.province === hoverProvince
+              const zoneEdge = !!activeProvince && (
+                positions.get(edge.source)?.province === activeProvince ||
+                positions.get(edge.target)?.province === activeProvince
               );
               return <path key={edge.id} d={edgePath(edge)} fill="none"
                 stroke={onPath ? '#ffffff' : color}
@@ -699,42 +777,6 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
             </g>
           </svg>
 
-          {visibleNodes.map(node => {
-            const place = positions.get(node.id)!;
-            const active = node.id === selected;
-            const inBeef = beefIds.has(node.id);
-            const dim = !!focusId && node.id !== focusId && !neighbours.has(node.id) && !path?.includes(node.id);
-            const zoneDim = !!zoneFocus && !zoneFocus.has(place.province);
-            const zoneLit = hoverProvince === place.province;
-            const latin = /^[\x20-\x7F]+$/.test(node.name);
-            const featured = node.kind === 'group';
-            const raised = dragProvince === place.province;
-            // Focused plates may wrap further so the full name can be read.
-            const labelFocus = node.id === hover || active;
-            return <button key={node.id} className={`bn ${place.mini ? 'mini' : ''} ${place.tight ? 'tight' : ''} ${active ? 'is-active' : ''} ${node.id === focusId ? 'is-focus' : ''} ${neighbours.has(node.id) ? 'is-neighbour' : ''} ${dim ? 'is-dim' : ''} ${zoneDim ? 'is-zone-dim' : ''} ${zoneLit ? 'is-zone-lit' : ''} ${featured ? 'is-group' : ''} ${inBeef ? 'has-beef' : ''}`}
-              // 省份框 hover 时抬到 z-index 4，本省头像必须同步抬到 5，否则会被自己的框盖住点不到。
-              style={{left: place.x - place.size / 2, top: place.y - place.size / 2, ['--c' as string]: place.color, ['--s' as string]: `${place.size}px`, zIndex: raised ? 3 : zoneLit ? 5 : undefined}}
-              onClick={() => { if (suppressClick.current) return; onSelect(node.id); }}
-              // An avatar works as a handle for its whole province card: dragging any face
-              // moves the card, a plain click still selects the person.
-              onPointerDown={event => startZoneDrag(event, place.province)}
-              onMouseEnter={() => setHover(node.id)} onMouseLeave={() => setHover(null)}
-              title={`${node.name} · ${provinceLabel(provinceOf(node.city))}`}>
-              <span className="bn-focus-base" aria-hidden="true" />
-              <span className="bn-pic"><Avatar node={node} />
-                {featured && <span className="bn-flag">CREW</span>}
-                {inBeef && <span className="bn-beef-ring" aria-hidden="true" />}
-                {inBeef && <span className="bn-beef-flag">⚡BEEF</span>}
-              </span>
-              <span className="bn-name" title={node.name} style={{
-                maxWidth: labelFocus ? Math.max(place.labelW, 168) : place.labelW,
-                // A single long Latin word breaks into ugly orphans — clip it instead.
-                // Multi-word Latin names still wrap cleanly at their spaces.
-                fontSize: latin ? (node.name.length > 9 ? 9.5 : 10.5) : place.dense || place.lines === 1 ? 10.5 : 12,
-                WebkitLineClamp: latin && !node.name.includes(' ') ? 1 : labelFocus ? 3 : place.lines,
-              }}>{node.name}</span>
-            </button>;
-          })}
         </div>
       </div>
 
@@ -775,7 +817,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
       </div>
       <div className="rail-group">
         <button onClick={onLocate} title="地域待考据名单"><Search size={15} /><span>?</span></button>
-        <button onClick={resetArrangement} title="恢复自动排版（拖远、找不到的省份框也会回到原位）"><LayoutGrid size={15} /><span>TIDY</span></button>
+        <button onClick={resetArrangement} title="恢复地理总览，收起人物列表"><LayoutGrid size={15} /><span>总览</span></button>
         <button onClick={fit} title="复位视图"><RotateCcw size={15} /><span>FIT</span></button>
       </div>
       <div className="rail-meter">
@@ -787,7 +829,7 @@ export function RelationBoard({selected, onSelect, onClear, types, province, pat
 
     <div className="board-title">
       <h2>中文说唱圈关系网</h2>
-      <p>34 PROVINCES · 已定位 {locatedCount} 人 · {data.nodes.length - locatedCount} 人待考据</p>
+      <p>{narrow ? '拖动探索各省 · 双指缩放 · 搜索定位人物' : '地理方位示意 · 点击省份查看名单 · 选中人物显示关系'}</p>
     </div>
 
     <div className="board-timeline">

@@ -27,6 +27,12 @@ export function ArtistPanel({current, works, relations, nodeById, types, canCont
   onClose: () => void;
 }) {
   const [tab, setTab] = useState<'works' | 'relations'>('works');
+  useEffect(() => {
+    if (!current) return;
+    const closeOnEscape = (event: KeyboardEvent) => { if(event.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [current?.id, onClose]);
   const [share, setShare] = useState(false);
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState('');

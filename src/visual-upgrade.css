@@ -1,0 +1,781 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   FLOWLINE · Visual Upgrade v2
+   目标：从"普通霓虹"升级到"宇宙级街头感数据看板"
+   
+   改造方向：
+   A — 背景分层：三层深空渐变 + 噪声颗粒
+   B — 省份卡片：玻璃折射 + 更厚实的彩光边框
+   C — 字体：Bebas Neue（标题）/ Barlow Condensed（数字）
+   D — 人物卡网格：悬停更有力的 3D 感
+   E — 连接线：更高 opacity + 流动感
+   F — 全站微动效：hover 更弹、按钮更有手感
+   
+   只新增 override，不删原有规则，回退删此文件即可。
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────
+   A. 字体变量
+────────────────────────────────────────────────────────────────────── */
+:root {
+  --font-display: 'Bebas Neue', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono:    'Barlow Condensed', 'Space Grotesk', ui-monospace, Consolas, monospace;
+  --font-body:    'Space Grotesk', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+
+  /* 深空配色补丁 */
+  --space-bg:     #03040d;
+  --space-mid:    #090c1e;
+  --space-purple: #120e28;
+  --space-blue:   #071626;
+  --accent-fire:  #ff7a4d;
+  --accent-gold:  #c9a873;
+  --neon-cyan:    #3dd8f8;
+  --neon-purple:  #a855f7;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   B. 全站深空背景
+────────────────────────────────────────────────────────────────────── */
+/* body 层：三色渐变宇宙感 */
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, #0d1a3a 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 85% 85%, #1a0a2e 0%, transparent 50%),
+    radial-gradient(ellipse 50% 60% at 55% 50%, #07131e 0%, transparent 65%),
+    #03040d !important;
+}
+
+/* 应用容器：细微网格 + 更深的底色 */
+.app {
+  background:
+    linear-gradient(90deg, #ffffff03 1px, transparent 1px),
+    linear-gradient(0deg,  #ffffff02 1px, transparent 1px),
+    radial-gradient(ellipse 100% 60% at 50% 0%, #0a1428 0%, transparent 60%),
+    #03040d !important;
+  background-size: 44px 44px, 44px 44px, 100% 100%, 100% 100% !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   C. 顶部导航：增加厚度感 + 玻璃质感
+────────────────────────────────────────────────────────────────────── */
+.neon-mode .site-header {
+  background: linear-gradient(180deg, #0a0f1e 0%, #060810 100%) !important;
+  border-bottom: 1px solid #1a2744 !important;
+  box-shadow:
+    0 1px 0 #000000dd,
+    0 4px 24px #000000cc,
+    inset 0 -1px 0 #ffffff06 !important;
+  backdrop-filter: blur(16px);
+}
+
+/* FLOWLINE 品牌字：换成 Bebas Neue */
+.neon-mode .brand strong {
+  font-family: var(--font-display) !important;
+  font-size: 36px !important;
+  letter-spacing: 4px !important;
+  color: #fff !important;
+  text-shadow:
+    0 0 20px #ff7a4d88,
+    0 0 40px #ff7a4d44 !important;
+}
+
+/* 导航按钮字体升级 */
+.neon-mode .site-header nav button {
+  font-family: var(--font-display) !important;
+  font-size: 17px !important;
+  letter-spacing: 3px !important;
+}
+
+.neon-mode .site-header nav button.active {
+  color: #ff8f63 !important;
+  border-bottom-color: #ff7a4d !important;
+  text-shadow: 0 0 18px #ff7a4daa, 0 0 32px #ff7a4d55 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   D. 地图背景：深空三层 + 星点 + 扫描线
+────────────────────────────────────────────────────────────────────── */
+.map-room {
+  background:
+    linear-gradient(180deg, #060c1a 0%, #030409 100%) !important;
+  border: 1px solid #1a2744 !important;
+  box-shadow:
+    0 0 0 1px #0a0f1e,
+    0 26px 70px #000000cc,
+    inset 0 0 120px #03040dcc !important;
+}
+
+.board-viewport {
+  background:
+    radial-gradient(ellipse 70% 45% at 25% 20%, #0d1f3f 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 78% 72%, #1e0d38 0%, transparent 55%),
+    radial-gradient(ellipse 40% 50% at 55% 45%, #061927 0%, transparent 60%),
+    #04060f !important;
+}
+
+/* 扫描线覆盖层：模拟 CRT 感 */
+.board-viewport::before {
+  background-image:
+    linear-gradient(#4fc3f710 1px, transparent 1px),
+    linear-gradient(90deg, #4fc3f708 1px, transparent 1px) !important;
+  background-size: 44px 44px !important;
+  opacity: 0.6 !important;
+}
+
+/* 星点层：双密度 */
+.board-viewport::after {
+  background-image:
+    radial-gradient(#ffffff55 0.6px, transparent 0.7px),
+    radial-gradient(#aad4ff44 0.4px, transparent 0.5px),
+    radial-gradient(#ff8f6322 0.8px, transparent 0.9px) !important;
+  background-size: 120px 100px, 200px 170px, 350px 280px !important;
+  background-position: 10px 20px, 60px 55px, 180px 90px !important;
+  opacity: 0.55 !important;
+}
+
+/* CRT 扫描线 overlay */
+.board::after {
+  background: repeating-linear-gradient(
+    0deg,
+    #000000 0, #000000 1px,
+    transparent 1px, transparent 3px
+  ) !important;
+  opacity: 0.08 !important;
+  mix-blend-mode: multiply !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   E. 省份卡片：玻璃折射 + 彩光边框加厚
+────────────────────────────────────────────────────────────────────── */
+.bz {
+  border-width: 1.5px !important;
+  border-color: color-mix(in srgb, var(--c) 65%, transparent) !important;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--c) 10%, #ffffff06) 0%,
+      color-mix(in srgb, var(--c) 4%, transparent) 100%
+    ) !important;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--c) 20%, #ffffff12),
+    inset 0 0 60px color-mix(in srgb, var(--c) 10%, transparent),
+    0 0 28px color-mix(in srgb, var(--c) 20%, transparent),
+    0 8px 32px #000000bb !important;
+  /* 玻璃效果：需要浏览器支持 */
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .bz {
+    backdrop-filter: blur(2px) saturate(1.2);
+  }
+}
+
+/* 内描边：顶部高光线 */
+.bz::before {
+  border-color: color-mix(in srgb, var(--c) 35%, transparent) !important;
+}
+
+/* 省份 hover：更大幅度的抬升 */
+.bz.is-zone-lit {
+  transform: scale(1.07) translateY(-6px) !important;
+  border-color: color-mix(in srgb, var(--c) 95%, transparent) !important;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--c) 35%, #ffffff20),
+    inset 0 0 70px color-mix(in srgb, var(--c) 20%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--c) 40%, transparent),
+    0 0 48px color-mix(in srgb, var(--c) 50%, transparent),
+    0 20px 48px #000000cc !important;
+}
+
+/* 拖动时更亮 */
+.bz.is-dragging {
+  box-shadow:
+    inset 0 0 70px color-mix(in srgb, var(--c) 28%, transparent),
+    0 0 52px color-mix(in srgb, var(--c) 65%, transparent),
+    0 0 0 2px color-mix(in srgb, var(--c) 80%, transparent) !important;
+}
+
+/* 省份标签：更清晰 */
+.bz-tag {
+  background: rgba(4, 6, 15, 0.92) !important;
+  border: 1px solid color-mix(in srgb, var(--c) 60%, transparent) !important;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--c) 35%, transparent) !important;
+  backdrop-filter: blur(4px);
+}
+
+.bz-tag b {
+  font-family: var(--font-display) !important;
+  font-size: 13px !important;
+  letter-spacing: 0.5px !important;
+  text-shadow: 0 0 10px currentColor !important;
+}
+
+.bz-tag em {
+  font-family: var(--font-body) !important;
+  font-size: 11px !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   F. 节点头像：更强的光晕
+────────────────────────────────────────────────────────────────────── */
+.bn-pic {
+  box-shadow: 0 0 16px color-mix(in srgb, var(--c) 55%, transparent) !important;
+  border-radius: 6px !important;
+}
+
+.bn:hover .bn-pic {
+  box-shadow: 0 0 26px color-mix(in srgb, var(--c) 85%, transparent) !important;
+}
+
+.bn.is-active .bn-pic {
+  box-shadow:
+    0 0 40px color-mix(in srgb, var(--c) 90%, transparent),
+    0 0 80px color-mix(in srgb, var(--c) 40%, transparent),
+    0 12px 30px #000000cc !important;
+}
+
+.bn.is-zone-lit .bn-pic {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--c) 75%, transparent) !important;
+  filter: brightness(1.2) saturate(1.15) !important;
+}
+
+/* 节点名牌：更清晰 + 更街头 */
+.bn-name {
+  font-family: var(--font-body) !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  background: rgba(3, 4, 13, 0.92) !important;
+  border-color: color-mix(in srgb, var(--c) 52%, transparent) !important;
+  backdrop-filter: blur(4px);
+  letter-spacing: 0.2px !important;
+}
+
+.bn.is-active .bn-name {
+  background: var(--c) !important;
+  color: #030410 !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--c) 60%, transparent) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   G. 连接线：更强对比 + 流动感
+────────────────────────────────────────────────────────────────────── */
+.board-edges {
+  opacity: 1 !important;
+}
+
+/* 高亮边的发光加强 */
+.edge-live {
+  animation: edgePulseV2 2s ease-in-out infinite !important;
+  filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 2px currentColor) !important;
+}
+
+@keyframes edgePulseV2 {
+  0%, 100% { stroke-opacity: 0.5; }
+  50%       { stroke-opacity: 1;   }
+}
+
+/* 区域高亮连线 */
+.board-edges .edge-zone-live {
+  filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 10px currentColor) !important;
+  stroke-opacity: 0.85 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   H. 看板标题：Bebas Neue 大字
+────────────────────────────────────────────────────────────────────── */
+.board-title {
+  background: linear-gradient(180deg, #0a0f1eee, #060810ee) !important;
+  border: 1px solid #1a2744 !important;
+  box-shadow:
+    0 0 24px #000000aa,
+    inset 0 0 20px #0d1a3a44 !important;
+  backdrop-filter: blur(8px);
+}
+
+.board-title h2 {
+  font-family: var(--font-display) !important;
+  font-size: 20px !important;
+  letter-spacing: 6px !important;
+  color: #ff8f63 !important;
+  text-shadow:
+    0 0 12px #ff7a4dcc,
+    0 0 28px #ff7a4d66,
+    0 0 50px #ff7a4d33 !important;
+}
+
+.board-title p {
+  font-family: var(--font-mono) !important;
+  letter-spacing: 2px !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   I. 人物详情面板（game card）：升级背景 + 层次
+────────────────────────────────────────────────────────────────────── */
+.artist-panel.game-card {
+  background:
+    radial-gradient(ellipse 100% 50% at 50% 0%, #0d1a3a 0%, transparent 55%),
+    linear-gradient(180deg, #0a0f1e 0%, #060810 60%, #03040d 100%) !important;
+  border: 1px solid #1a2744 !important;
+  box-shadow:
+    0 24px 60px #000000cc,
+    inset 0 0 60px #0a0f1e55 !important;
+}
+
+/* 艺人头像框 */
+.gc-avatar {
+  border: 2px solid var(--c) !important;
+  box-shadow:
+    0 0 20px color-mix(in srgb, var(--c) 65%, transparent),
+    0 0 40px color-mix(in srgb, var(--c) 30%, transparent) !important;
+}
+
+/* 艺人名字：换用 Bebas 或更有力的字体 */
+.gc-id h2 {
+  font-family: var(--font-display) !important;
+  font-size: 24px !important;
+  letter-spacing: 2px !important;
+  color: #fff !important;
+  text-shadow: 0 0 20px var(--c, #ff7a4d44) !important;
+}
+
+/* 统计数字：Barlow Condensed */
+.gc-stats b {
+  font-family: var(--font-mono) !important;
+  font-size: 18px !important;
+  color: #ff8f63 !important;
+  text-shadow: 0 0 10px #ff7a4d88 !important;
+}
+
+/* 统计格子背景：玻璃感 */
+.gc-stats div {
+  background: rgba(255, 122, 77, 0.06) !important;
+  border: 1px solid rgba(255, 122, 77, 0.15) !important;
+  border-radius: 6px !important;
+}
+
+.gc-stats div:hover {
+  background: rgba(255, 122, 77, 0.12) !important;
+  border-color: rgba(255, 122, 77, 0.35) !important;
+}
+
+/* 能量条：更鲜艳的渐变 */
+.gc-bar i em.on {
+  background: linear-gradient(90deg, #ff7a4d, #ffb347) !important;
+  box-shadow: 0 0 8px #ff7a4daa !important;
+}
+
+/* 音波条：更活跃 */
+.gc-wave i {
+  background: linear-gradient(180deg, #ff8f63 0%, #ff4d00 60%, #0d0b0a 100%) !important;
+}
+
+.gc-wave i:nth-child(3n) {
+  background: linear-gradient(180deg, #a855f7 0%, #7c3aed 60%, #0d0b0a 100%) !important;
+}
+
+/* 标签页 */
+.gc-tabs button.on {
+  color: #ff8f63 !important;
+  border-bottom-color: #ff7a4d !important;
+  text-shadow: 0 0 12px #ff7a4daa !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   J. 人物卡网格（Rapper Cards）：hover 更有力
+────────────────────────────────────────────────────────────────────── */
+/* 增强人物列表页背景 */
+.neon-mode .catalog-panel {
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, #0d1a3a 0%, transparent 50%),
+    linear-gradient(180deg, #0a0f1e 0%, #03040d 100%) !important;
+  border: 1px solid #1a2744 !important;
+  box-shadow:
+    0 24px 60px #000000aa,
+    inset 0 0 80px #03040dcc !important;
+}
+
+/* 人物列表卡：hover 时 3D 抬升 */
+.neon-mode .artist-card {
+  background: rgba(10, 15, 30, 0.8) !important;
+  border: 1px solid #1a2744 !important;
+  border-radius: 10px !important;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease,
+    border-color 0.25s ease !important;
+}
+
+.neon-mode .artist-card:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+  border-color: #ff7a4d55 !important;
+  box-shadow:
+    0 16px 40px #000000cc,
+    0 0 0 1px #ff7a4d33,
+    0 0 24px #ff7a4d22 !important;
+  background: rgba(16, 22, 48, 0.95) !important;
+}
+
+.neon-mode .artist-card-name strong {
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+}
+
+/* 作品卡 hover */
+.neon-mode .work-card {
+  background: rgba(10, 15, 30, 0.8) !important;
+  border: 1px solid #1a2744 !important;
+  border-radius: 10px !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s !important;
+}
+
+.neon-mode .work-card:hover {
+  transform: translateY(-4px) !important;
+  border-color: #ff7a4d44 !important;
+  box-shadow: 0 12px 30px #000000bb, 0 0 20px #ff7a4d1a !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   K. 榜单页：数字更有冲击力
+────────────────────────────────────────────────────────────────────── */
+.rank-no {
+  font-family: var(--font-display) !important;
+  font-size: 22px !important;
+}
+
+.rank-no.is-top {
+  font-size: 28px !important;
+  text-shadow: 0 0 18px #e4572ebb !important;
+}
+
+.rank-score b {
+  font-family: var(--font-mono) !important;
+  font-size: 24px !important;
+  text-shadow: 0 0 12px #e4572e88 !important;
+}
+
+.rank-who b {
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+}
+
+.rank-row {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s !important;
+}
+
+.rank-row:hover {
+  transform: translateX(4px) !important;
+  border-color: #7a4a2b !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   L. 今日首屏：标题升级
+────────────────────────────────────────────────────────────────────── */
+.thv-copy h1 {
+  font-family: var(--font-display) !important;
+  letter-spacing: 2px !important;
+  font-size: clamp(30px, 2.8vw, 52px) !important;
+  line-height: 1.1 !important;
+  text-shadow: 0 0 40px #ff7a4d33 !important;
+}
+
+.thv-rail dd {
+  font-family: var(--font-mono) !important;
+  font-size: clamp(20px, 1.8vw, 28px) !important;
+  text-shadow: 0 0 12px #e4572e88 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   M. 工具栏按钮：更清晰的交互反馈
+────────────────────────────────────────────────────────────────────── */
+.neon-mode .workspace-toolbar > button,
+.neon-mode .city-filter,
+.neon-mode .search-area {
+  background: rgba(10, 15, 30, 0.85) !important;
+  border: 1px solid #1a2744 !important;
+  border-radius: 7px !important;
+  backdrop-filter: blur(8px);
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s !important;
+}
+
+.neon-mode .workspace-toolbar > button:hover {
+  background: rgba(20, 30, 60, 0.95) !important;
+  border-color: #ff7a4d55 !important;
+  box-shadow: 0 0 14px #ff7a4d22 !important;
+  transform: translateY(-1px);
+}
+
+/* 搜索框 focus 光晕 */
+.neon-mode .search-area:focus-within {
+  border-color: #ff7a4d88 !important;
+  box-shadow: 0 0 0 3px #ff7a4d22 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   N. Rail 侧边栏按钮
+────────────────────────────────────────────────────────────────────── */
+.rail-group {
+  background: rgba(6, 8, 20, 0.92) !important;
+  border: 1px solid #1a2744 !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(8px);
+}
+
+.rail-group button {
+  border-radius: 7px !important;
+  transition: background 0.15s, color 0.15s !important;
+}
+
+.rail-group button:hover {
+  background: rgba(255, 122, 77, 0.12) !important;
+  color: #ff8f63 !important;
+}
+
+.rail-group button.on {
+  background: color-mix(in srgb, var(--c, #ff7a4d) 15%, transparent) !important;
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--c, #ff7a4d) 20%, transparent) !important;
+}
+
+/* Rail 文字 */
+.rail-group button span {
+  font-family: var(--font-mono) !important;
+  letter-spacing: 1px !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   O. 时间轴：更有质感
+────────────────────────────────────────────────────────────────────── */
+.board-timeline {
+  background: rgba(6, 8, 20, 0.92) !important;
+  border: 1px solid #1a2744 !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(10px);
+}
+
+.bt-track button.on {
+  background: linear-gradient(180deg, #ff8f63, #ff5500) !important;
+  color: #030410 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 16px #ff7a4dbb !important;
+  font-family: var(--font-mono) !important;
+}
+
+.bt-track button:hover {
+  background: rgba(255, 122, 77, 0.15) !important;
+  color: #f2ede4 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   P. 搜索结果：更精致
+────────────────────────────────────────────────────────────────────── */
+.neon-mode .search-results {
+  background: rgba(6, 8, 20, 0.97) !important;
+  border: 1px solid #1a2744 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 20px 50px #000000cc, 0 0 0 1px #1a2744 !important;
+  backdrop-filter: blur(16px);
+}
+
+.neon-mode .search-results button:hover {
+  background: rgba(255, 122, 77, 0.1) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Q. 弹出对话框：玻璃质感
+────────────────────────────────────────────────────────────────────── */
+.pixel-dialog {
+  border-color: #1a2744 !important;
+  box-shadow:
+    0 40px 80px #000000ee,
+    0 0 0 1px #1a2744 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   R. 省份 roster 弹出：深空感
+────────────────────────────────────────────────────────────────────── */
+.roster {
+  background: linear-gradient(180deg, #0a0f1e, #060810) !important;
+  border: 1px solid #1a2744 !important;
+  box-shadow: 0 20px 50px #000000cc, 0 0 20px #0a0f1e88 !important;
+  backdrop-filter: blur(16px);
+}
+
+.roster header b {
+  font-family: var(--font-display) !important;
+  font-size: 14px !important;
+  letter-spacing: 2px !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   S. hbtn（头部按钮）：更清晰
+────────────────────────────────────────────────────────────────────── */
+.hbtn {
+  background: rgba(10, 15, 30, 0.85) !important;
+  border: 1px solid #1a2744 !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(8px);
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s, transform 0.15s !important;
+}
+
+.hbtn:hover {
+  background: rgba(20, 30, 60, 0.95) !important;
+  border-color: #ff7a4d55 !important;
+  box-shadow: 0 0 16px #ff7a4d22 !important;
+  transform: translateY(-1px) !important;
+}
+
+.hbtn.is-primary {
+  border-color: #ff7a4daa !important;
+  background: rgba(255, 122, 77, 0.12) !important;
+  box-shadow: 0 0 20px #ff7a4d33 !important;
+}
+
+.hbtn.is-primary:hover {
+  background: rgba(255, 122, 77, 0.22) !important;
+  box-shadow: 0 0 28px #ff7a4d55 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   T. 页脚：加深空感
+────────────────────────────────────────────────────────────────────── */
+.neon-mode .site-footer {
+  border-top: 1px solid #1a2744 !important;
+  background: transparent !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   U. 路径查找提示条
+────────────────────────────────────────────────────────────────────── */
+.board-path {
+  background: rgba(6, 8, 20, 0.95) !important;
+  border: 1px solid #1a2744 !important;
+  box-shadow: 0 16px 40px #000000cc !important;
+  backdrop-filter: blur(12px);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   V. trading-card（人物页球星卡）：整体升级
+────────────────────────────────────────────────────────────────────── */
+/* 卡片数字字体 */
+.rc-no {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  letter-spacing: 1px !important;
+}
+
+.rc-name {
+  font-family: var(--font-display) !important;
+  font-size: 20px !important;
+  letter-spacing: 1.5px !important;
+  text-shadow: 0 0 16px #e4572e66 !important;
+}
+
+.rc-stats b {
+  font-family: var(--font-mono) !important;
+  font-size: 18px !important;
+}
+
+/* 卡片 hover 增强 */
+.rapper-card:hover,
+.rapper-card:focus-visible {
+  box-shadow:
+    0 20px 48px #000000dd,
+    0 0 0 1px #e4572eaa,
+    0 0 36px #e4572e44 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   W. 滚动条：统一为深色细条
+────────────────────────────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a3860 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #2a3860;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #ff7a4d55;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   X. 画布头像图片渲染：清晰锐利
+────────────────────────────────────────────────────────────────────── */
+.bn-pic svg,
+.bn-pic img,
+.pixel-avatar img,
+.pixel-avatar svg {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Y. 过渡动效：全局 hover 更弹
+────────────────────────────────────────────────────────────────────── */
+/* 省份 hover 过渡改为弹性 */
+.bz {
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.3s ease,
+    border-color 0.3s ease,
+    opacity 0.2s ease !important;
+}
+
+/* 节点 hover */
+.bn {
+  transition: opacity 0.18s, filter 0.22s !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Z. 板块标题：workspace-heading 升级
+────────────────────────────────────────────────────────────────────── */
+.workspace-heading h1 {
+  font-family: var(--font-display) !important;
+  font-size: 36px !important;
+  letter-spacing: 4px !important;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6) !important;
+}
+
+.heading-stats b {
+  font-family: var(--font-mono) !important;
+  font-size: 32px !important;
+  color: #ff8f63 !important;
+  text-shadow: 0 0 14px #ff7a4d66 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   减少动效：尊重用户系统设置
+────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .bz { transition: opacity 0.2s ease !important; }
+  .neon-mode .artist-card,
+  .neon-mode .work-card { transition: none !important; }
+  @keyframes edgePulseV2 { 0%, 100% { stroke-opacity: 0.7; } }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   移动端降级：关闭成本高的 backdrop-filter
+────────────────────────────────────────────────────────────────────── */
+@media (max-width: 780px) {
+  .bz,
+  .bz-tag,
+  .roster,
+  .board-timeline,
+  .neon-mode .site-header {
+    backdrop-filter: none !important;
+  }
+}

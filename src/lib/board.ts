@@ -1,5 +1,5 @@
 import type {ArtistNode, RelationType} from '../data/types';
-import {ALL_PROVINCES, PROVINCE_NAMES, UNKNOWN_PROVINCE, provinceOf, spotOf} from './province';
+import {ALL_PROVINCES, PROVINCE_NAMES, UNKNOWN_PROVINCE, provinceOf} from './province';
 
 /** The board is a flat design space; the viewport scales it to fit. */
 export const BOARD = {width: 1260, height: 650};
@@ -24,6 +24,7 @@ export interface ZoneDef {
   h: number;
   /** Archive card wall with compact tiles. */
   mini?: boolean;
+  collapsed?: boolean;
   /** No artist located here yet — dim placeholder. */
   empty?: boolean;
   /** Too small for the full name tag. */
@@ -127,72 +128,34 @@ const GAP = 4;
  * （新疆最西、黑龙江最北、广东/海南在南），面积仍随人数变化。
  * 锚点坐标以 0,0 为中心且有负数，这里整体平移到正数画布空间。
  */
-interface GeoBox {
-  seed: {province: string; count: number; weight: number; mini: boolean};
-  ax: number; ay: number; // 锚点中心
-  x: number; y: number;   // 当前中心（迭代中会被碰撞推开）
-  w: number; h: number;
-}
-
 /**
- * 依真实方位摆放省份框：先按锚点放好，再迭代分离重叠框，同时用弱弹簧拉回锚点，
- * 使最终位置"大致在正确的方位、但不互相盖住"。返回和 squarify 同样的 [seed, rect] 结构。
+ * 固定地理方位格网：相邻关系保持稳定，展开头像时扩大对应行列。
+ * 这是方位示意而非等比例地图；不模拟节点物理。
  */
-function geoLay(seeds: {province: string; count: number; weight: number; mini: boolean}[]): [typeof seeds[number], Rect][] {
-  // provinceSpots 原始范围约 x∈[-500,648] y∈[-355,400]，先乘比例再平移为正。
-  // SCALE 收紧到接近视口比例，避免画布过大导致 fit 后所有框缩成小块。
-  const SCALE = 1.5;
-  const OX = 560, OY = 420;
-  const boxes: GeoBox[] = seeds.map(seed => {
-    const spot = spotOf(seed.province);
-    // 面积∝人数，但严格封顶：地图表达的是方位，不是面积或距离。
-    // 框过大时碰撞推挤会把省份推离锚点，反而破坏"重庆在四川东南"这类基本方位。
-    const raw = seed.mini
-      ? Math.min(140, 78 + seed.count * 0.8) ** 2
-      : seed.count > 0
-        ? Math.min(132, 52 + Math.sqrt(seed.count) * 17) ** 2
-        : 40 ** 2;
-    const w = Math.round(Math.sqrt(raw) * 1.12);
-    const h = Math.round(Math.sqrt(raw) / 1.12);
-    const ax = spot.x * SCALE + OX;
-    const ay = spot.y * SCALE + OY;
-    return {seed, ax, ay, x: ax, y: ay, w, h};
+function geoLay(seeds: {province: string; count: number; weight: number; mini: boolean}[], collapsed: ReadonlySet<string>): [typeof seeds[number], Rect][] {
+  // Geographic tile cartogram: fixed neighbour order, variable row/column tracks.
+  // Expansion grows tracks instead of pushing a province to another geographic side.
+  const cells: Record<string,[number,number]> = {
+    新疆:[0,1],西藏:[1,5],青海:[1,3],甘肃:[2,3],宁夏:[3,2],内蒙古:[4,1],
+    黑龙江:[8,0],吉林:[8,1],辽宁:[7,2],北京:[6,2],天津:[7,3],河北:[6,3],
+    山西:[5,3],陕西:[4,4],山东:[7,4],河南:[5,4],江苏:[8,5],安徽:[7,5],
+    上海:[9,5],浙江:[9,6],四川:[2,5],重庆:[3,5],湖北:[5,5],湖南:[5,6],
+    江西:[7,6],福建:[8,7],台湾:[10,8],贵州:[3,6],云南:[2,7],广西:[4,7],
+    广东:[6,7],香港:[7,8],澳门:[6,8],海南:[5,9],[UNKNOWN_PROVINCE]:[11,5],
+  };
+  const boxes = seeds.map(seed => {
+    const compact = collapsed.has(seed.province) && seed.count > 3;
+    // 折叠态从 3 人提到 6 人（3 列 × 2 行）：默认就有人味，又不至于撑爆画布。
+    // 悬停时更多人物只在框内纵向延伸、由容器裁剪滚动，框尺寸始终不变 → 地图不跳动。
+    const shown = compact ? Math.min(6,seed.count) : seed.count;
+    const cols = compact ? 3 : Math.min(8,Math.max(1,Math.ceil(Math.sqrt(shown))));
+    const rows = Math.ceil(shown / cols);
+    return {seed,cell:cells[seed.province],w:compact ? 260 : Math.max(210,cols*76+32),h:compact ? (shown ? 62+rows*76+16 : 74) : shown ? 58+rows*92 : 74};
   });
-
-  // 迭代分离 + 锚点弹簧：重叠的框沿最小重叠轴推开，随后被弱弹簧拉回正确方位。
-  const PAD = 8;
-  for (let iter = 0; iter < 120; iter++) {
-    for (let i = 0; i < boxes.length; i++) {
-      for (let j = i + 1; j < boxes.length; j++) {
-        const a = boxes[i], b = boxes[j];
-        const dx = b.x - a.x, dy = b.y - a.y;
-        const ox = (a.w + b.w) / 2 + PAD - Math.abs(dx);
-        const oy = (a.h + b.h) / 2 + PAD - Math.abs(dy);
-        if (ox > 0 && oy > 0) {
-          // 沿重叠较小的轴分离，位移由两框尺寸分摊
-          if (ox < oy) {
-            const push = (ox / 2 + 0.5) * (dx >= 0 ? 1 : -1);
-            a.x -= push; b.x += push;
-          } else {
-            const push = (oy / 2 + 0.5) * (dy >= 0 ? 1 : -1);
-            a.y -= push; b.y += push;
-          }
-        }
-      }
-    }
-    const SPRING = 0.14;
-    for (const box of boxes) {
-      box.x += (box.ax - box.x) * SPRING;
-      box.y += (box.ay - box.y) * SPRING;
-    }
-  }
-
-  return boxes.map(box => [box.seed, {
-    x: Math.round(box.x - box.w / 2),
-    y: Math.round(box.y - box.h / 2),
-    w: box.w,
-    h: box.h,
-  }]);
+  const widths = Array(12).fill(0), heights = Array(10).fill(0);
+  for (const box of boxes) { widths[box.cell[0]]=Math.max(widths[box.cell[0]],box.w); heights[box.cell[1]]=Math.max(heights[box.cell[1]],box.h); }
+  const track = (values:number[],index:number) => values.slice(0,index).reduce((sum,value)=>sum+value+32,40);
+  return boxes.map(box => [box.seed,{x:track(widths,box.cell[0])+(widths[box.cell[0]]-box.w)/2,y:track(heights,box.cell[1])+(heights[box.cell[1]]-box.h)/2,w:box.w,h:box.h}]);
 }
 
 /** Deterministic per-province RNG so the "hand placed" look survives every render. */
@@ -221,7 +184,11 @@ export interface BoardLayout {
  * many artists are located there. Regions without anyone stay visible as dim placeholders.
  * The archive zone （地域待考据） gets a fixed weight so it stays usable without dwarfing the map.
  */
-export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false): BoardLayout {
+/**
+ * @param reveal 当前悬停/钉住的省份：该省即使在折叠态也铺开全部人物，供框内滚动浏览。
+ *   只影响节点坐标，不影响省份框尺寸与画布世界尺寸，所以切换时地图不会跳动。
+ */
+export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false, collapsed: ReadonlySet<string> = new Set(), reveal: string | null = null): BoardLayout {
   const visible = nodes.filter(node => filter === ALL_PROVINCES || provinceOf(node.city) === filter);
   const groups = new Map<string, ArtistNode[]>();
   for (const node of visible) {
@@ -259,7 +226,7 @@ export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false)
   const positions = new Map<string, NodePlace>();
   const zones: ZoneView[] = [];
 
-  if (narrow) {
+  if (narrow && filter !== ALL_PROVINCES) {
     // Phones: a vertical stack sorted by headcount — full-width rows, four columns.
     const width = 660;
     let y = 64;
@@ -268,14 +235,14 @@ export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false)
       const people = groups.get(seed.province) || [];
       const cols = seed.mini ? 4 : Math.min(4, Math.max(1, seed.count));
       const rows = Math.ceil(people.length / cols);
-      const height = seed.count === 0 ? 48 : 58 + rows * (seed.mini ? 108 : 122) + 10;
+      const height = collapsed.has(seed.province) && seed.count > 3 && reveal !== seed.province ? 230 : seed.count === 0 ? 48 : 58 + rows * (seed.mini ? 108 : 122) + 10;
       const def: ZoneDef = {
         province: seed.province, code: seed.mini ? 'ARCHIVE' : PROVINCE_CODE[seed.province] || '?',
         color: seed.mini ? ARCHIVE_COLOR : seed.count ? (PROVINCE_COLOR[seed.province] || EMPTY_COLOR) : EMPTY_COLOR,
-        x: 30, y, w: width - 60, h: height, mini: seed.mini, empty: seed.count === 0,
+        x: 30, y, w: width - 60, h: height, mini: seed.mini, collapsed: collapsed.has(seed.province) && seed.count > 3, empty: seed.count === 0,
       };
       y += height + 14;
-      placeNodes(def, people, seed.count, cols, rows, positions);
+      placeNodes(def, people, seed.count, cols, rows, positions, reveal === seed.province);
       zones.push({def, count: seed.count});
     }
     return {zones, positions, world: {width, height: y + 20}};
@@ -286,7 +253,7 @@ export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false)
 
   if (geo) {
     // 全部省份：按真实地理方位摆放。框位置由 geoLay 定稿，不再做 treemap 的随机漂移。
-    laid = geoLay(seeds);
+    laid = geoLay(seeds, collapsed);
     // 归一化到正数画布（锚点带负偏移，碰撞后可能有框落到负坐标）。
     const minX = Math.min(...laid.map(([, r]) => r.x));
     const minY = Math.min(...laid.map(([, r]) => r.y));
@@ -314,23 +281,26 @@ export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false)
       x = zoneRect.x + pad + rng() * (innerW - w);
       y = zoneRect.y + pad + rng() * (innerH - h);
     }
+    const isCollapsed = collapsed.has(seed.province) && seed.count > 3 && reveal !== seed.province;
+    if (isCollapsed) { w = 260; h = 230; }
     const def: ZoneDef = {
       province: seed.province,
       code: seed.mini ? 'ARCHIVE' : PROVINCE_CODE[seed.province] || '?',
       color: seed.mini ? ARCHIVE_COLOR : seed.count ? (PROVINCE_COLOR[seed.province] || EMPTY_COLOR) : EMPTY_COLOR,
       x, y, w, h,
       mini: seed.mini,
+      collapsed: isCollapsed,
       empty: seed.count === 0,
       tiny: w < 108 || h < 74,
       radius: 6 + Math.round(rng() * 14),
     };
     const people = groups.get(seed.province) || [];
     const count = people.length;
-    const cols = count
+    const cols = def.collapsed ? 3 : geo ? Math.min(8, Math.max(1, Math.ceil(Math.sqrt(count)))) : count
       ? Math.max(1, Math.min(seed.mini ? 6 : 5, Math.round(Math.sqrt(count * (w / h))) || 1))
       : 1;
     const rows = Math.ceil(count / cols);
-    placeNodes(def, people, count, cols, rows, positions);
+    placeNodes(def, people, count, cols, rows, positions, reveal === seed.province);
     zones.push({def, count});
   }
 
@@ -354,8 +324,28 @@ function placeNodes(
   cols: number,
   rows: number,
   positions: Map<string, NodePlace>,
+  reveal = false,
 ) {
   if (!count) return;
+  if (def.collapsed || reveal) {
+    // 紧凑网格：3 列 × 76px 行距，头像 48px。折叠态只放前 6 个（2 行），
+    // reveal（悬停）时把全部人物继续往下排——框尺寸不变，多出的行被容器裁剪，
+    // 由框内滚轮做 GPU transform 滚动，整张地图因此不会跳动。
+    const ordered = [...people].sort((a, b) => {
+      const groupA = a.kind === 'group' ? 0 : 1;
+      const groupB = b.kind === 'group' ? 0 : 1;
+      return groupA - groupB || b.name.length - a.name.length;
+    });
+    const limit = reveal ? count : Math.min(6, count);
+    ordered.slice(0, limit).forEach((node, index) => positions.set(node.id, {
+      x: def.x + 46 + (index % 3) * 82,
+      y: def.y + 82 + Math.floor(index / 3) * 76,
+      size: 48,
+      province: def.province, mini: !!def.mini, color: def.color,
+      labelW: 68, dense: false, tight: true, lines: 1,
+    }));
+    return;
+  }
   const ordered = [...people].sort((a, b) => {
     const groupA = a.kind === 'group' ? 0 : 1;
     const groupB = b.kind === 'group' ? 0 : 1;
@@ -366,9 +356,7 @@ function placeNodes(
   const padY = def.mini ? 8 : 12;
   const cellW = (def.w - padX * 2) / cols;
   const cellH = (def.h - headH - padY * 2) / rows;
-  let size = def.mini
-    ? Math.min(52, Math.max(30, Math.min(cellW, cellH) * 0.5))
-    : Math.min(96, Math.max(22, Math.min(cellW, cellH) * 0.46));
+  let size = Math.max(22, Math.min(64, cellW * 0.72, cellH - 34));
   const dense = cellW < 74;
   /** Narrow cells drop the plate entirely; it appears on hover / selection. */
   const tight = cellW < 62;
@@ -396,7 +384,7 @@ function placeNodes(
     const x = Math.min(Math.max(rawX, def.x + padX + halfPlate), def.x + def.w - padX - halfPlate);
     positions.set(node.id, {
       x,
-      y: def.y + headH + padY + cellH * (row + 0.5) + jy,
+      y: def.y + headH + padY + cellH * row + size / 2 + jy,
       size,
       province: def.province,
       mini: !!def.mini,

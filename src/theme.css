@@ -49,6 +49,15 @@
     0 14px 34px #000000a6}
 .bz.is-zone-lit::before{border-color:color-mix(in srgb,var(--c) 38%,transparent)}
 .bz.is-zone-dim{opacity:.4}
+/* 折叠省悬停预览：框内两层结构——zone-nodes 是裁剪视口，peek-track 是被 transform 的内容层。
+   滚轮只改 peek-track 的 translate3d，React 零重渲染，GPU 合成保持高帧率。 */
+.zone-nodes{position:absolute;inset:0;pointer-events:none}
+.zone-nodes.is-peek{pointer-events:auto;touch-action:none}
+.peek-track{position:absolute;inset:0;height:100%;will-change:transform}
+.bz.is-peeking{overflow:hidden}
+.peek-hint{position:absolute;left:0;right:0;bottom:4px;z-index:6;display:flex;align-items:center;justify-content:center;gap:5px;
+  font-size:8.5px;letter-spacing:.4px;color:#b99b87;opacity:.78;pointer-events:none;text-shadow:0 1px 3px #000}
+.peek-hint i{width:4px;height:4px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg)}
 .bz-tag{position:absolute;top:5px;left:7px;display:flex;align-items:center;gap:6px;padding:2px 8px;
   background:#080706;border:1px solid color-mix(in srgb,var(--c) 55%,transparent);border-radius:4px;
   font-size:9px;letter-spacing:1.2px;white-space:nowrap}

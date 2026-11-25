@@ -21,7 +21,8 @@ import {allBeefs, loadLocalBeefs, saveLocalBeefs, type BeefEvent} from './data/b
 
 type Section = 'today' | 'map' | 'artists' | 'rank';
 
-const NAV: [Section, string][] = [['today', '今日'], ['map', '地图'], ['artists', '人物'], ['rank', '榜单']];
+// 导航文案沿用四个 Section 键，只换显示用词（序章/版图/档案/声望），路由与各页逻辑不变。
+const NAV: [Section, string][] = [['today', '序章'], ['map', '版图'], ['artists', '档案'], ['rank', '声望']];
 
 /**
  * 人物深链：`?p=<id>`。

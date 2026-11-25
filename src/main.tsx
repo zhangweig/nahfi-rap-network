@@ -18,6 +18,7 @@ import './rank-panel.css';     // 榜单/收藏回访页（删此行+此文件�
 import './skeleton.css';       // 首屏骨架屏 + 错误边界（删此行+此文件即可回退）
 import './visual-upgrade.css'; // 美术升级 v2：深空背景/玻璃卡/街头字体/强化微动效（删此行+此文件即可回退）
 import './immersive.css';
+import './atlas.css';          // 斑块地图：不规则省份轮廓 + 圆形头像随机散布（删此行+此文件即可回退）
 import {DatasetProvider} from './state/Dataset';
 import {ErrorBoundary} from './components/ErrorBoundary';
 createRoot(document.getElementById('root')!).render(

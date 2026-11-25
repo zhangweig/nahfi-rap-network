@@ -57,11 +57,11 @@ export function drawPixelPerson(ctx:CanvasRenderingContext2D,x:number,y:number,s
   ctx.restore();
 }
 
-export function Avatar({node,large=false}:{node:ArtistNode;large?:boolean}){
-  const [failed,setFailed]=useState(false);const path=avatarPath(node);useEffect(()=>setFailed(false),[path]);
+export function Avatar({node,large=false,thumbnail=false}:{node:ArtistNode;large?:boolean;thumbnail?:boolean}){
+  const [failed,setFailed]=useState(false);const path=thumbnail ? thumbPath(node) : avatarPath(node);useEffect(()=>setFailed(false),[path]);
   const {hair,skin,shirt,style,glasses,chain,hat}=pixelSpec(node);
   return <span className={`pixel-avatar ${large?'large':''}`} style={{backgroundColor:node.color+'22'}}>
-    {path&&!failed?<img src={path} alt={`${node.name}头像`} draggable={false} onError={()=>setFailed(true)}/>:<svg viewBox="0 0 16 16" shapeRendering="crispEdges" role="img" aria-label={`${node.name}占位头像`}>
+    {path&&!failed?<img src={path} alt={`${node.name}头像`} decoding="async" draggable={false} onError={()=>setFailed(true)}/>:<svg viewBox="0 0 16 16" shapeRendering="crispEdges" role="img" aria-label={`${node.name}占位头像`}>
       <path fill="#26313d" d="M4 12h3v3H4zM9 12h3v3H9z"/>
       <path fill="#141d26" d="M4 15h3v1H4zM9 15h3v1H9z"/>
       <path fill={shirt} d="M4 8h8v4H4zM3 9h1v3H3zM12 9h1v3h-1z"/>

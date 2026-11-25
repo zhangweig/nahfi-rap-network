@@ -1,0 +1,385 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   ATLAS · 不规则省份斑块地图
+   这一层是整张地图的最终样式，导入顺序必须排在 immersive.css 之后。
+   核心改动：省份框从"矩形卡片"变成"虚线不规则斑块"，框内人物随机散布、
+   头像圆形、名字在悬停/放大时才浮现。删掉这一行即可回退到上一版。
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── 斑块容器：只负责定位与悬停缩放 ──────────────────────────────────── */
+.immersive-app .board .bz {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0;
+  overflow: visible;
+  /* 轮廓之外是空的：所有命中判定都交给 SVG 路径，避免方块四角抢到邻居的点击 */
+  pointer-events: none;
+  cursor: grab;
+  transform: none !important;         /* 位移用 transform 写，悬停放大改用 scale */
+  transform-origin: 50% 50%;
+  transition: scale .26s cubic-bezier(.34,1.4,.64,1), opacity .2s ease;
+  will-change: auto;
+}
+/* 悬停/钉住：整块微微放大（scale 与拖动用的 transform 互不干扰） */
+.immersive-app .board .bz:hover,
+.immersive-app .board .bz.is-zone-lit,
+.immersive-app .board .bz.is-zone-selected {
+  scale: 1.055;
+  z-index: 4;
+}
+.immersive-app .board .bz.is-zone-dim { opacity: .38; }
+.immersive-app .board .bz.is-dragging {
+  cursor: grabbing;
+  z-index: 9;
+  transition: none;
+  will-change: transform;
+}
+
+/* ── 斑块轮廓：不规则的闭合曲线 + 细虚线 ────────────────────────────── */
+.bz-shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  display: block;
+}
+.bz-shape path {
+  pointer-events: auto;
+  cursor: grab;
+  fill: color-mix(in srgb, var(--c) 7%, transparent);
+  stroke: color-mix(in srgb, var(--c) 34%, #cbbda9);
+  stroke-opacity: .55;
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke-opacity .24s ease, fill .24s ease, stroke-dasharray .24s ease;
+}
+.immersive-app .board .bz.is-dragging .bz-shape path { cursor: grabbing; }
+.immersive-app .board .bz:hover .bz-shape path,
+.immersive-app .board .bz.is-zone-lit .bz-shape path,
+.immersive-app .board .bz.is-zone-selected .bz-shape path {
+  fill: color-mix(in srgb, var(--c) 9%, transparent);
+  stroke: color-mix(in srgb, var(--c) 82%, transparent);
+  stroke-opacity: .95;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--c) 45%, transparent));
+}
+.immersive-app .board .bz.is-zone-dim .bz-shape path {
+  stroke-opacity: .16;
+  fill: transparent;
+}
+/* 待考据之岛：更大的虚线节奏，跟真实省份区分开 */
+.immersive-app .board .bz.mini .bz-shape path {
+  stroke-dasharray: 2 7;
+  stroke-opacity: .5;
+  fill: color-mix(in srgb, var(--c) 4%, transparent);
+}
+/* 还没定位到人：几乎只剩一个轮廓点 */
+.immersive-app .board .bz.empty .bz-shape path {
+  stroke-opacity: .18;
+  fill: transparent;
+  stroke-dasharray: 1 6;
+}
+
+/* ── 省份名：挂在斑块外侧上方，像地图上的标注 ───────────────────────── */
+.bz-label {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  transform: translate(-50%, -100%);
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 3;
+  text-shadow: 0 1px 6px #080706, 0 0 14px #080706;
+  transition: opacity .2s ease;
+}
+.bz-label em {
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  color: #cbbcA6;
+}
+.bz-label i {
+  font-style: normal;
+  font-family: 'JetBrains Mono', 'Microsoft YaHei', monospace;
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: color-mix(in srgb, var(--c) 70%, #8a7d6f);
+  opacity: .8;
+}
+.immersive-app .board .bz:hover .bz-label em,
+.immersive-app .board .bz.is-zone-lit .bz-label em,
+.immersive-app .board .bz.is-zone-selected .bz-label em {
+  color: #f4e9d8;
+}
+.immersive-app .board .bz.is-zone-dim .bz-label { opacity: .45; }
+.immersive-app .board .bz.empty .bz-label em { color: #6f6558; font-weight: 500; }
+
+/* ── 框内人物层 ─────────────────────────────────────────────────────── */
+.immersive-app .board .zone-nodes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+/* 框内镜头：滚轮缩放这一层，锚点跟随鼠标（Apple Watch 主屏的手感）。 */
+.immersive-app .board .zone-inner {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+/* 放大后按斑块自身的形状裁切：头像像图标一样从轮廓边缘"溢出去"，拖动才能看到剩下的。 */
+.immersive-app .board .zone-nodes.is-lensing {
+  overflow: hidden;
+  clip-path: var(--clip);
+}
+/* 图标被放大到 2 倍以上时，名字牌会大得离谱——这一层只留头像，名字走 hover 的原生提示。 */
+.immersive-app .board .zone-nodes.is-lensing .bn-name { display: none !important; }
+.immersive-app .board .zone-nodes .bn { pointer-events: auto; }
+
+/* 圆形头像：只裁头像本身，CREW 角标和 BEEF 环留在框外不被切 */
+.immersive-app .board .bz .bn {
+  width: var(--s);
+  align-items: center;
+  transform: none !important;
+  transition: opacity .18s ease;
+}
+.immersive-app .board .bz .bn-pic {
+  border-radius: 50% !important;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 30%, transparent) !important;
+}
+.immersive-app .board .bz .bn-pic > .pixel-avatar {
+  border-radius: 50% !important;
+  overflow: hidden;
+  background: #0b0a09 !important;
+}
+.immersive-app .board .bz .bn-pic > .pixel-avatar svg,
+.immersive-app .board .bz .bn-pic > .pixel-avatar img {
+  border-radius: 50%;
+}
+.immersive-app .board .bz .bn:hover .bn-pic {
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, var(--c) 95%, transparent),
+    0 0 16px color-mix(in srgb, var(--c) 70%, transparent) !important;
+}
+.immersive-app .board .bz .bn.is-active .bn-pic {
+  box-shadow:
+    0 0 0 2px #efc394,
+    0 0 22px #f2ad5490 !important;
+}
+.immersive-app .board .bz .bn.is-neighbour .bn-pic {
+  box-shadow: 0 0 0 1px #e8c18b90 !important;
+}
+.immersive-app .board .bz .bn.is-dim { opacity: .3; }
+.immersive-app .board .bz .bn.is-zone-dim { opacity: .4; }
+
+/* 名字牌：只在"指到这个头像"或"选中"时出现。
+   随机散布下同时显示必然互相压字（55 人的省一次全亮会糊成黑块），
+   所以名字是逐人的悬停信息，不是常驻标签。 */
+.immersive-app .board .bz .bn .bn-name {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--s) + 1px);
+  transform: translateX(-50%);
+  max-width: 104px;
+  padding: 0 4px;
+  border: 0 !important;
+  border-radius: 2px;
+  background: #080706db !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  color: #efe4d3 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0 !important;
+  pointer-events: none;
+  z-index: 6;
+  transition: opacity .14s ease;
+  display: block !important;
+  -webkit-line-clamp: unset;
+}
+.immersive-app .board .bz .bn:hover,
+.immersive-app .board .bz .bn:focus-visible,
+.immersive-app .board .bz .bn.is-active {
+  z-index: 8;
+}
+.immersive-app .board .bz .bn:hover .bn-name,
+.immersive-app .board .bz .bn:focus-visible .bn-name,
+.immersive-app .board .bz .bn.is-active .bn-name {
+  opacity: 1 !important;
+}
+.immersive-app .board .bz .bn.is-active .bn-name {
+  background: var(--c) !important;
+  color: #0a0908 !important;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--c) 60%, transparent) !important;
+}
+
+/* CREW 角标：斑块里已经够密，缩到不抢戏 */
+.immersive-app .board .bz .bn-flag {
+  top: -3px;
+  right: -6px;
+  font-size: 5.5px;
+  padding: 0 2px;
+  border-radius: 2px;
+  line-height: 1.4;
+}
+
+/* ── 省际骨架线：斑块之间极弱的贝塞尔虚线 ──────────────────────────── */
+.immersive-app .board .board-ties path {
+  stroke: #c9a873;
+  stroke-opacity: .09;
+}
+
+/* ── 图例：厂牌用波浪图标，跟画布上的波浪线一致（mask 出的正弦波，颜色仍由 --c 控制）── */
+.bt-legend button[data-type="affiliation"] i,
+.rail-group button[data-type="affiliation"] .rail-line {
+  width: 24px;
+  height: 8px;
+  background: var(--c);
+  border: 0;
+  box-shadow: none;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M0 4 Q3 .6 6 4 T 12 4' fill='none' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M0 4 Q3 .6 6 4 T 12 4' fill='none' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E");
+  -webkit-mask-size: 12px 8px;
+  mask-size: 12px 8px;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+}
+
+/* ── 窄屏：斑块里的字更小一点，避免糊成一团 ────────────────────────── */
+@media (max-width: 780px) {
+  .bz-label em { font-size: 11px; letter-spacing: .1em; }
+  .immersive-app .board .bz:hover,
+  .immersive-app .board .bz.is-zone-lit,
+  .immersive-app .board .bz.is-zone-selected { scale: 1.02; }
+  .immersive-app .board .bz .bn .bn-name { max-width: 84px; }
+}
+
+/* ── 降低动效偏好 ───────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .immersive-app .board .bz { transition: none; }
+  .immersive-app .board .bz:hover,
+  .immersive-app .board .bz.is-zone-lit,
+  .immersive-app .board .bz.is-zone-selected { scale: 1; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   第三轮：框内镜头可见性 / 关系线可读性 / 头像漂浮
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── 框内镜头：选中人物时也必须看得见 ──────────────────────────────────
+   depth.css 有 `.board.has-focus .bz{opacity:.46}`（让地图退后、关系线跳出）。
+   但框内滚轮调的正是这块头像，整块停在 46% 时缩放明明发生了却像「没反应」。 */
+.immersive-app .board.has-focus .bz:is(:hover, .is-zone-lit, .is-zone-selected),
+.immersive-app .board .bz:has(.zone-nodes.is-lensing) {
+  opacity: 1;
+}
+/* 调这一块时自己的人像不再压暗，否则放大也看不清脸 */
+.immersive-app .board.has-focus .bz:has(.zone-nodes.is-lensing) .bn.is-dim,
+.immersive-app .board.has-focus .bz:has(.zone-nodes.is-lensing) .bn.is-zone-dim {
+  opacity: .9;
+}
+/* 调头像时关系线让一让，别横穿人脸 */
+.immersive-app .board:has(.zone-nodes.is-lensing) .board-edges { opacity: .4; }
+
+/* 放大倍率角标：滚轮一动就有数字反馈 */
+.immersive-app .board .bz[data-lens]::after {
+  content: attr(data-lens);
+  display: block;                 /* immersive.css 里 .bz::after 被统一关掉了，这里要显式打开 */
+  position: absolute;
+  right: 3%;
+  bottom: 7%;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #080706eb;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--c) 62%, transparent),
+    0 0 12px #000a;
+  color: #ffe4c2;
+  font-family: 'JetBrains Mono', 'Microsoft YaHei', monospace;
+  font-size: 9.5px;
+  letter-spacing: .04em;
+  pointer-events: none;
+  z-index: 7;
+}
+
+/* ── 关系线：深色描边打底 + 更实的线身 ───────────────────────────────── */
+.immersive-app .board .board-edges .edge-casing-line {
+  stroke: #05070c;
+  stroke-opacity: .78;
+}
+/* 原来的 pulse 会把焦点线压到 55% 透明，一波一波就「看不清」了：
+   改成只做 0.8→1 的轻微起伏，底色恒定。 */
+@keyframes edgePulse {
+  0%, 100% { stroke-opacity: .8; }
+  50% { stroke-opacity: 1; }
+}
+.immersive-app .board .board-edges .edge-live {
+  animation: edgePulse 2.6s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, currentColor 55%, transparent));
+}
+/* 有焦点时其余线压到 .035 等于消失，抬到 .085：还能看出这是一张网 */
+.immersive-app .board.has-focus .board-edges .edge-rest { stroke-opacity: .085; }
+
+/* ── 框内头像的慢速漂浮 ───────────────────────────────────────────────
+   用 translate 属性做动画（与 transform 是两个独立属性）：
+   悬停缩放、斑块拖动写的 transform 都不会被它覆盖。
+   幅度 2.4~6.5px，周期 16~28s，相位靠负延迟错开——只看得出「在呼吸」，
+   不会真的把头像挤出斑块（头像本来就排在内缩 0.78 的范围内）。 */
+@keyframes bnDrift {
+  0%, 100% { translate: 0px 0px; }
+  33% { translate: var(--dx, 0px) var(--dy, 0px); }
+  66% { translate: calc(var(--dx, 0px) * -.6) calc(var(--dy, 0px) * -.75); }
+}
+.immersive-app .board .bz .bn {
+  animation: bnDrift var(--ddur, 18s) ease-in-out var(--ddelay, 0s) infinite;
+  will-change: translate;
+}
+/* 指着谁、拖斑块、框内放大：停下，方便点准 */
+.immersive-app .board .bz .bn:hover,
+.immersive-app .board .bz.is-dragging .bn,
+.immersive-app .board .zone-nodes.is-lensing .bn {
+  animation-play-state: paused;
+}
+/* 指针一进这块，整块先冻住：头像一直缓慢游走会点不准。
+   效果是「画面是活的，你要操作的那一块是静的」。 */
+.immersive-app .board .bz:hover .bn,
+.immersive-app .board .bz.is-zone-lit .bn {
+  animation-play-state: paused;
+}
+/* 手机上 300+ 个合成层不值当，静态图已经够看 */
+@media (max-width: 780px) {
+  .immersive-app .board .bz .bn { animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .immersive-app .board .bz .bn { animation: none; }
+  .immersive-app .board .board-edges .edge-live { animation: none; stroke-opacity: .95; }
+}
+
+/* 默认态（没选中任何人）：只有跨省 top40 这几条底纹线。
+   点空白取消选择后，关系线必须"肉眼退场"——所以柔光去掉、透明度压到 .2，
+   留下的是一层贴在底色上的网纹，而不是还在讲故事的一堆线。
+   只有指针停在某人身上（.edge-hover）才重新亮起来。 */
+.immersive-app .board:not(.has-focus) .board-edges .edge-main {
+  stroke-opacity: .2;
+  filter: none;
+}
+.immersive-app .board .board-edges .edge-hover {
+  filter: drop-shadow(0 0 4px color-mix(in srgb, currentColor 45%, transparent));
+}

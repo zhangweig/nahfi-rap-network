@@ -40,9 +40,15 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
   const beefSet = useMemo(() => beefNodeIds(allBeefs(beefs, loadLocalBeefs())), [beefs]);
   const at = (offset:number) => deck[((index + offset) % deck.length + deck.length) % deck.length];
   // Small datasets retain a centred main card without duplicated React keys.
-  const count = Math.min(13, deck.length);
+  const count = Math.min(15, deck.length);
   const slots = Array.from({length:count}, (_, i) => i - Math.floor((count - 1) / 2));
-  const step = (direction:number) => { if (deck.length > 1) setHeroId(at(direction).id); };
+  const step = (direction:number) => {
+    if(deck.length < 2)return;
+    setHeroId(current => {
+      const from=Math.max(0,deck.findIndex(node=>node.id===current));
+      return deck[((from+direction)%deck.length+deck.length)%deck.length].id;
+    });
+  };
   const stepRef = useRef(step);
   stepRef.current = step;
   const wheelEnabled = useRef(deck.length > 1);

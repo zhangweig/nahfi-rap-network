@@ -81,7 +81,13 @@ export function HeroCard({
 
   return <article
     className={`thc ${isFront ? 'is-front' : ''}`}
-    style={{'--k': slot, '--a': Math.abs(slot)} as React.CSSProperties}
+    style={{'--k': slot, '--a': Math.abs(slot),
+      '--arc-x': slot * (.91 - Math.min(Math.abs(slot), 7) * .025),
+      '--arc-y': -Math.pow(Math.min(Math.abs(slot), 7), 1.45) * .115,
+      '--arc-z': -(Math.abs(slot) * 65 + slot * slot * 9),
+      '--arc-scale': slot === 0 ? 1.1 : Math.max(.5, .85 - Math.abs(slot) * .035),
+      '--arc-opacity': slot === 0 ? 1 : Math.max(0, 1 - Math.pow(Math.abs(slot) / 6, 1.3)),
+    } as React.CSSProperties}
     data-slot={slot}
   >
     <button className="thc-hit" onClick={isFront ? onOpen : onPromote}

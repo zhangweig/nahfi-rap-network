@@ -122,12 +122,15 @@ html,body,#root{min-height:100%;scrollbar-width:none}
 .immersive-hero .hero-caption>b{font-size:18px}
 
 /* A compact nonmodal inspector: one close button inside ArtistPanel. */
-.immersive-app .map-person-popover{position:absolute;right:18px;top:18px;width:min(360px,calc(100% - 32px));max-height:calc(100% - 84px);overflow:auto;z-index:40;border:0;border-radius:12px;background:#0d121bf5;box-shadow:0 16px 60px #0007;backdrop-filter:blur(18px)}
-.immersive-app .map-person-popover .artist-panel{display:flex;flex-direction:column;width:100%;height:auto;min-height:0;max-height:none;padding:16px;border:0!important;border-radius:0;box-shadow:none!important;background:transparent!important}
+.immersive-app .map-person-popover{position:absolute;right:18px;top:18px;width:min(298px,calc(100% - 32px));max-height:calc(100% - 118px);overflow:auto;z-index:40;border:0;border-radius:12px;background:#0d121bf5;box-shadow:0 16px 60px #0007;backdrop-filter:blur(18px)}
+.immersive-app .map-person-popover .artist-panel{display:flex;flex-direction:column;width:100%;height:auto;min-height:0;max-height:none;padding:13px;border:0!important;border-radius:0;box-shadow:none!important;background:transparent!important}
 .immersive-app .map-person-popover .detail-scroll{max-height:none;overflow:visible}
-.immersive-app .map-person-popover .gc-close{width:28px;height:28px}
-.immersive-app .map-person-popover .gc-id h2{font-size:22px}
-.immersive-app .map-person-popover .gc-avatar{width:64px;height:64px}
+.immersive-app .map-person-popover .gc-close{width:23px;height:23px}
+.immersive-app .map-person-popover .gc-id h2{font-size:17.5px;letter-spacing:.5px}
+.immersive-app .map-person-popover .gc-avatar{width:50px;height:50px}
+.immersive-app .map-person-popover .gc-head{gap:9px;padding-bottom:8px}
+.immersive-app .map-person-popover .gc-stats{margin:8px 0 7px}
+.immersive-app .map-person-popover .gc-bio{max-height:44px;font-size:9.5px;line-height:1.7}
 .immersive-app .bz-tag{top:8px;left:10px;right:10px;gap:6px;flex-wrap:wrap;padding:3px;background:transparent!important}
 .immersive-app .bz-tag .zone-collapse{margin-left:auto;white-space:nowrap}
 .immersive-app .bz.is-collapsed .bz-tag{top:14px}
@@ -144,7 +147,7 @@ html,body,#root{min-height:100%;scrollbar-width:none}
  .immersive-hero .thc-plate{margin:4px 5px 5px;padding:4px}
  .immersive-hero .thc-plate b{font-size:10px}
  .immersive-hero .thc-plate i{font-size:6px}
- .immersive-app .map-person-popover{right:8px;top:8px;width:min(320px,calc(100% - 16px));max-height:calc(100% - 66px)}
+ .immersive-app .map-person-popover{right:8px;top:8px;width:min(278px,calc(100% - 16px));max-height:calc(100% - 96px)}
 }
 @media(prefers-reduced-motion:reduce){.immersive-hero .thv-stage .thc{transition:none}}
 
@@ -174,3 +177,67 @@ html,body,#root{min-height:100%;scrollbar-width:none}
 .immersive-app .bz-tag i{font-size:16px}
 .immersive-app .bz-tag button{font-size:13px}
 .immersive-app .site-header .brand strong::after,.immersive-app .site-header .brand strong::before{display:none!important}
+
+/* Arc carousel: a larger hero, receding shoulders and invisible recycling slots. */
+.immersive-hero .thv-stage{--w:clamp(170px,min(18vw,28dvh),290px);height:calc(var(--w)*2.7);margin:10px 0 0;perspective:1500px;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.immersive-hero .thv-fan{height:100%;perspective:1500px;transform-style:preserve-3d}
+.immersive-hero .thv-stage .thc,.immersive-hero .thv-stage:hover .thc,.immersive-hero .thv-stage .thc:not(.is-front):hover{
+ top:59%;opacity:var(--arc-opacity);visibility:visible;z-index:calc(30 - var(--a));
+ transform:translate(-50%,-50%) translate3d(calc(var(--arc-x)*var(--w)),calc(var(--arc-y)*var(--w)),calc(var(--arc-z)*1px)) rotateY(calc(var(--k)*-6deg)) scale(var(--arc-scale));
+ filter:brightness(max(.5,calc(1 - var(--a)*.095))) saturate(max(.6,calc(1 - var(--a)*.07)));
+ transition:transform .62s cubic-bezier(.2,.78,.2,1),opacity .5s ease,filter .3s ease;
+}
+.immersive-hero .thv-stage .thc.is-front,.immersive-hero .thv-stage:hover .thc.is-front{
+ opacity:1;filter:none;transform:translate(-50%,-50%) translateZ(35px) rotateX(calc(var(--fy)*-3deg)) rotateY(calc(var(--fx)*4deg)) scale(1.1);
+}
+.immersive-hero .thv-stage .thc:is([data-slot="-6"],[data-slot="6"],[data-slot="-7"],[data-slot="7"]){pointer-events:none}
+.immersive-hero .thc.is-front .thc-body{box-shadow:0 32px 65px #0009,0 2px 0 #b8763f,0 0 36px #e4572e14}
+.immersive-hero .thv-stage::before{opacity:.09}
+.immersive-hero .thv-stage::after{opacity:.5}
+.immersive-hero .hero-heading{margin-bottom:0}
+.immersive-hero .hero-navigation{margin-top:4px}
+
+/* Relationship reading: stable line weights, restrained highlights, bounded animation. */
+.immersive-app .board-edges{z-index:2}
+.immersive-app .bz{z-index:3}
+.immersive-app .bz-tag{z-index:7}
+.immersive-app .board-edges .edge-live,.immersive-app .board-edges .edge-zone-live{animation:none!important;filter:none!important}
+.immersive-app .board-edges .edge-flow{filter:none!important;animation-duration:3.2s!important;stroke-dasharray:2 22;opacity:.75}
+.immersive-app .board.has-focus .board-ties{opacity:0}
+.immersive-app .board.has-focus .bg-sparks,.immersive-app .board.has-focus .bg-traces,.immersive-app .board.has-focus .board-floor{opacity:.08}
+.immersive-app .board.has-focus .bn.is-dim{opacity:.2}
+.immersive-app .bn.is-active .bn-pic{transform:scale(1.16)!important;box-shadow:0 0 0 2px #f3c99d,0 0 16px #f2ad5430!important;will-change:auto}
+.immersive-app .bn.is-active .bn-flag{transform:none!important;top:0;right:0}
+.immersive-app .bn.is-neighbour .bn-pic{box-shadow:0 0 0 1px #e8c18b80!important}
+.immersive-app .bn.is-active .bn-name{animation:none!important}
+.immersive-app .board.is-interacting .edge-flow,.immersive-app .board.is-interacting .beef-spark,.immersive-app .board.is-interacting .bg-par *{animation-play-state:paused!important}
+.immersive-app .peek-track{will-change:auto}
+.immersive-app .zone-nodes.is-peek .peek-track{will-change:transform}
+@media(max-width:620px){
+ .immersive-hero .thv-stage{--w:clamp(130px,35vw,175px);height:calc(var(--w)*2.9);margin:10px 0 0}
+ .immersive-hero .thc-plate b{font-size:clamp(11px,8cqi,16px)}
+ .immersive-hero .thc-head{font-size:7px}
+}
+@media(prefers-reduced-motion:reduce){
+ .immersive-hero .thv-stage .thc,.immersive-hero .thv-fan{transition:none!important}
+ .immersive-app .board-edges .edge-flow{animation:none!important}
+}
+
+.immersive-app .zone-nodes .bn{pointer-events:auto}
+
+/* Map labels move with the canvas: backdrop blur here forces a repaint per label. */
+.immersive-app .board .bn-name,.immersive-app .board .bz-tag{backdrop-filter:none!important}
+.immersive-app .board .bn-pic{filter:none!important;box-shadow:none!important}
+.immersive-app .board .bn.is-active .bn-pic{box-shadow:0 0 0 2px #efc394!important}
+.immersive-app .board .bn.is-neighbour .bn-pic{box-shadow:0 0 0 1px #e8c18b80!important}
+.immersive-app .board .bn.is-zone-lit .bn-pic{filter:none!important}
+.immersive-app .board .bn-name{color:#ddd1bf!important}
+.immersive-app .board .bn.is-active .bn-name{color:#101116!important}
+.immersive-app .board-stage{will-change:transform}
+.immersive-app .board.is-interacting .board-bg{opacity:.2}
+.immersive-app .board.is-interacting .bn-pic{transition:none!important}
+.immersive-app .board.has-focus .bn:is(.is-active,.is-neighbour) .bn-pic{scale:var(--focus-magnify,1);transform:none!important;transform-origin:50% 50%}
+@media(max-width:700px){
+ .immersive-app .map-person-popover{top:auto;bottom:148px;right:12px;width:calc(100% - 24px);max-height:min(30%,240px)}
+ .immersive-app .map-person-popover .artist-panel{padding:12px}
+}

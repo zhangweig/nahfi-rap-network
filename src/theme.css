@@ -65,6 +65,14 @@
 .bz-tag em{font-style:normal;color:#bdae9b;letter-spacing:.6px}
 .bz-tag i{font-style:normal;color:#131010;font-size:8.5px;border-left:1px solid #ffffff1f;padding-left:6px}
 
+/* 省际骨架：极弱虚线，压在省份框下面，只交代方位邻接，不与人物关系线抢注意力。 */
+.board-ties{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;z-index:0}
+.board-ties path{fill:none;stroke:#c9a873;stroke-width:1;stroke-dasharray:2 8;
+  stroke-opacity:.085;transition:stroke-opacity .22s ease,stroke-width .22s ease}
+.board-ties path.is-lit{stroke:#e8c48e;stroke-opacity:.34;stroke-width:1.2;stroke-dasharray:none}
+.board-ties path.is-dim{stroke-opacity:.02}
+.board.has-focus .board-ties{opacity:.45}
+
 /* edges */
 .board-edges{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
 .edge-live{animation:edgePulse 1.8s ease-in-out infinite;filter:drop-shadow(0 0 4px currentColor)}

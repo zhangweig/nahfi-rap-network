@@ -1,36 +1,93 @@
 import type {ArtistNode, RelationType} from '../data/types';
-import {ALL_PROVINCES, PROVINCE_NAMES, UNKNOWN_PROVINCE, provinceOf} from './province';
+import {ALL_PROVINCES, PROVINCE_NAMES, UNKNOWN_PROVINCE, provinceOf, provinceSpots} from './province';
 
 /** The board is a flat design space; the viewport scales it to fit. */
-export const BOARD = {width: 1260, height: 650};
+export const BOARD = {width: 1180, height: 660};
 
-/** Minimum canvas — real size grows with the number of people so no zone gets squeezed. */
-const RECT = {x: 56, y: 56, w: 1148, h: 586};
+/** 斑块之间至少留这么多空白，保证虚线轮廓永不粘连。 */
+const ZONE_GAP = 24;
+/** 空省份的最小占位半径。 */
+const EMPTY_R = 20;
+/** 斑块半径 ∝ √人数：面积随人数线性增长，形状由人数决定。 */
+const rOf = (count: number) => 26 + 11.2 * Math.sqrt(count);
 
-/** Every artist gets this much design space; a province box is the sum of its members. */
-const AREA_PER_PERSON = 2450;
-/** Header + breathing room for one box, regardless of headcount. */
-const AREA_PER_ZONE = 7200;
-/** Keep the canvas close to the original aspect ratio as it grows. */
-const CANVAS_RATIO = BOARD.width / BOARD.height;
+/**
+ * 不规则斑块：同一省份永远生成同一个形状（种子 = 省份名）。
+ * 轮廓是闭合的三次贝塞尔，半径由两条不同频率的正弦叠加，再归一化到 1，
+ * 这样最外点恰好落在半径 r 上 —— 碰撞检测与视觉边界完全一致。
+ */
+interface BlobShape {d: string; radial: number[]}
+const SHAPE_SAMPLES = 20;
+const shapeCache = new Map<string, BlobShape>();
+
+const blobShape = (key: string): BlobShape => {
+  const cached = shapeCache.get(key);
+  if (cached) return cached;
+  const rng = seededRng(`blob|${key}`);
+  const phase = rng() * Math.PI * 2;
+  const phase2 = rng() * Math.PI * 2;
+  // 两个不同频率的谐波叠加：低频给"大瓣"，高频给手绘毛边。
+  // 低频固定 3 波（2 波会变成鸡蛋），高频 5-6 波。
+  const amp1 = 0.13 + rng() * 0.11;
+  const amp2 = 0.05 + rng() * 0.07;
+  const k1 = 3;
+  const k2 = 5 + Math.floor(rng() * 2);
+  let radial = Array.from({length: SHAPE_SAMPLES}, (_, index) => {
+    const t = (index / SHAPE_SAMPLES) * Math.PI * 2;
+    return 1 - amp1 * (0.5 - 0.5 * Math.cos(k1 * t + phase)) - amp2 * (0.5 - 0.5 * Math.sin(k2 * t + phase2));
+  });
+  // 不再额外做平滑：Catmull-Rom 转贝塞尔本身就把 20 个采样点连成光滑曲线，
+  // 再平滑一轮会把 3 瓣的低频起伏削掉（实测振幅只剩 9%），轮廓就退化成圆了。
+  const peak = Math.max(...radial);
+  radial = radial.map(value => value / peak);
+  const radius = 100;
+  const points = radial.map((value, index) => {
+    const t = (index / SHAPE_SAMPLES) * Math.PI * 2;
+    return [100 + Math.cos(t) * value * radius, 100 + Math.sin(t) * value * radius];
+  });
+  let d = `M${points[0][0].toFixed(1)},${points[0][1].toFixed(1)}`;
+  for (let index = 0; index < SHAPE_SAMPLES; index += 1) {
+    const p0 = points[(index - 1 + SHAPE_SAMPLES) % SHAPE_SAMPLES];
+    const p1 = points[index];
+    const p2 = points[(index + 1) % SHAPE_SAMPLES];
+    const p3 = points[(index + 2) % SHAPE_SAMPLES];
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += `C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  const shape = {d: `${d}Z`, radial};
+  shapeCache.set(key, shape);
+  return shape;
+};
+
+/** 形状在角度 θ 上的半径系数（0..1），用于把人物撒在轮廓内。 */
+const radialAt = (shape: BlobShape, theta: number) => {
+  const total = shape.radial.length;
+  const turns = (((theta / (Math.PI * 2)) % 1) + 1) % 1;
+  const exact = turns * total;
+  const index = Math.floor(exact) % total;
+  const next = (index + 1) % total;
+  const k = exact - Math.floor(exact);
+  return shape.radial[index] * (1 - k) + shape.radial[next] * k;
+};
 
 export interface ZoneDef {
   province: string;
   code: string;
   color: string;
+  /** 斑块中心（世界坐标）。 */
   x: number;
   y: number;
-  w: number;
-  h: number;
-  /** Archive card wall with compact tiles. */
+  /** 斑块半径，面积 ∝ 人数。 */
+  r: number;
+  /** SVG 路径，坐标系 0 0 200 200，最外点正好 200 的内切圆。 */
+  shape: string;
+  /** 地域待考据：浅色虚线大岛。 */
   mini?: boolean;
-  collapsed?: boolean;
-  /** No artist located here yet — dim placeholder. */
+  /** 还没有定位到人，只留一个点。 */
   empty?: boolean;
-  /** Too small for the full name tag. */
-  tiny?: boolean;
-  /** Seeded corner radius so zones don't share one uniform shape. */
-  radius?: number;
 }
 
 export interface ZoneView {
@@ -45,17 +102,11 @@ export interface NodePlace {
   province: string;
   mini: boolean;
   color: string;
-  /** Name plate width cap so neighbours never collide. */
-  labelW: number;
-  /** Dense zones get a smaller label. */
+  /** 头像太小，名字牌只在放大/悬停时出现。 */
   dense: boolean;
-  /** Cell too narrow for a name plate unless focused. */
-  tight: boolean;
-  /** Name plate line budget. */
-  lines: 1 | 2;
 }
 
-/** Short codes + neon colors. Provinces with located artists get a distinct hue; the rest stay slate. */
+/** Short codes + warm colors. Provinces with located artists get a distinct hue; the rest stay slate. */
 const PROVINCE_CODE: Record<string, string> = {
   北京: 'BJ', 天津: 'TJ', 河北: 'HE', 山西: 'SX', 内蒙古: 'NM', 辽宁: 'LN', 吉林: 'JL', 黑龙江: 'HL',
   上海: 'SH', 江苏: 'JS', 浙江: 'ZJ', 安徽: 'AH', 福建: 'FJ', 江西: 'JX', 山东: 'SD', 河南: 'HA',
@@ -70,93 +121,6 @@ const PROVINCE_COLOR: Record<string, string> = {
 };
 const EMPTY_COLOR = '#6b6358';
 const ARCHIVE_COLOR = '#9a8f7d';
-
-interface Rect {x: number; y: number; w: number; h: number}
-
-interface Weighted<T> {item: T; area: number}
-
-/** Squarified treemap: area ∝ weight, aspect ratios kept as close to 1 as possible. */
-function squarify<T>(items: T[], weight: (item: T) => number, rect: Rect): [T, Rect][] {
-  const total = items.reduce((sum, item) => sum + weight(item), 0);
-  if (!items.length || total <= 0) return [];
-  const scale = (rect.w * rect.h) / total;
-  const rest: Weighted<T>[] = items
-    .map(item => ({item, area: weight(item) * scale}))
-    .sort((a, b) => b.area - a.area);
-  const out: [T, Rect][] = [];
-  let {x, y, w, h} = rect;
-
-  const worst = (areas: number[], side: number) => {
-    const sum = areas.reduce((a, b) => a + b, 0);
-    const thickness = sum / side;
-    let max = 0;
-    for (const area of areas) {
-      const len = area / thickness;
-      max = Math.max(max, thickness / len, len / thickness);
-    }
-    return max;
-  };
-
-  while (rest.length) {
-    const side = Math.min(w, h);
-    const row: Weighted<T>[] = [rest.shift()!];
-    while (rest.length) {
-      const current = worst(row.map(r => r.area), side);
-      const next = worst([...row.map(r => r.area), rest[0].area], side);
-      if (next > current) break;
-      row.push(rest.shift()!);
-    }
-    const rowArea = row.reduce((sum, r) => sum + r.area, 0);
-    const thickness = rowArea / side;
-    let offset = 0;
-    for (const r of row) {
-      const len = r.area / thickness;
-      out.push(w >= h
-        ? [r.item, {x, y: y + offset, w: thickness, h: len}]
-        : [r.item, {x: x + offset, y, w: len, h: thickness}]);
-      offset += len;
-    }
-    if (w >= h) {x += thickness; w -= thickness;} else {y += thickness; h -= thickness;}
-  }
-  return out;
-}
-
-const GAP = 4;
-
-/**
- * 地理方位布局：把每个省份框的中心锚定到 provinceSpots 的真实相对方位
- * （新疆最西、黑龙江最北、广东/海南在南），面积仍随人数变化。
- * 锚点坐标以 0,0 为中心且有负数，这里整体平移到正数画布空间。
- */
-/**
- * 固定地理方位格网：相邻关系保持稳定，展开头像时扩大对应行列。
- * 这是方位示意而非等比例地图；不模拟节点物理。
- */
-function geoLay(seeds: {province: string; count: number; weight: number; mini: boolean}[], collapsed: ReadonlySet<string>): [typeof seeds[number], Rect][] {
-  // Geographic tile cartogram: fixed neighbour order, variable row/column tracks.
-  // Expansion grows tracks instead of pushing a province to another geographic side.
-  const cells: Record<string,[number,number]> = {
-    新疆:[0,1],西藏:[1,5],青海:[1,3],甘肃:[2,3],宁夏:[3,2],内蒙古:[4,1],
-    黑龙江:[8,0],吉林:[8,1],辽宁:[7,2],北京:[6,2],天津:[7,3],河北:[6,3],
-    山西:[5,3],陕西:[4,4],山东:[7,4],河南:[5,4],江苏:[8,5],安徽:[7,5],
-    上海:[9,5],浙江:[9,6],四川:[2,5],重庆:[3,5],湖北:[5,5],湖南:[5,6],
-    江西:[7,6],福建:[8,7],台湾:[10,8],贵州:[3,6],云南:[2,7],广西:[4,7],
-    广东:[6,7],香港:[7,8],澳门:[6,8],海南:[5,9],[UNKNOWN_PROVINCE]:[11,5],
-  };
-  const boxes = seeds.map(seed => {
-    const compact = collapsed.has(seed.province) && seed.count > 3;
-    // 折叠态从 3 人提到 6 人（3 列 × 2 行）：默认就有人味，又不至于撑爆画布。
-    // 悬停时更多人物只在框内纵向延伸、由容器裁剪滚动，框尺寸始终不变 → 地图不跳动。
-    const shown = compact ? Math.min(6,seed.count) : seed.count;
-    const cols = compact ? 3 : Math.min(8,Math.max(1,Math.ceil(Math.sqrt(shown))));
-    const rows = Math.ceil(shown / cols);
-    return {seed,cell:cells[seed.province],w:compact ? 260 : Math.max(210,cols*76+32),h:compact ? (shown ? 62+rows*76+16 : 74) : shown ? 58+rows*92 : 74};
-  });
-  const widths = Array(12).fill(0), heights = Array(10).fill(0);
-  for (const box of boxes) { widths[box.cell[0]]=Math.max(widths[box.cell[0]],box.w); heights[box.cell[1]]=Math.max(heights[box.cell[1]],box.h); }
-  const track = (values:number[],index:number) => values.slice(0,index).reduce((sum,value)=>sum+value+32,40);
-  return boxes.map(box => [box.seed,{x:track(widths,box.cell[0])+(widths[box.cell[0]]-box.w)/2,y:track(heights,box.cell[1])+(heights[box.cell[1]]-box.h)/2,w:box.w,h:box.h}]);
-}
 
 /** Deterministic per-province RNG so the "hand placed" look survives every render. */
 function seededRng(key: string) {
@@ -179,220 +143,180 @@ export interface BoardLayout {
   world: {width: number; height: number};
 }
 
+interface ZoneSeed {
+  province: string;
+  count: number;
+  mini: boolean;
+  r: number;
+  x: number;
+  y: number;
+  ax: number;
+  ay: number;
+}
+
 /**
- * Every one of the 34 province-level regions gets a zone; its area is proportional to how
- * many artists are located there. Regions without anyone stay visible as dim placeholders.
- * The archive zone （地域待考据） gets a fixed weight so it stays usable without dwarfing the map.
+ * 斑块地图：每个省份是一块由人数决定大小的不规则斑块。
+ * 位置从一个"方位锚点"出发（省会经纬度的简化投影），再用圆-圆松弛把互相挤压的斑块
+ * 推开到刚好不相交 —— 于是地图既保留真实方位（新疆在西、黑龙江在北、广东在南），
+ * 又是紧凑的一大团，不会像台账表格那样彼此隔得很远。
+ * 省份块的位置与形状只和「人数 + 省份名」有关，选中人物不会让地图重排。
  */
-/**
- * @param reveal 当前悬停/钉住的省份：该省即使在折叠态也铺开全部人物，供框内滚动浏览。
- *   只影响节点坐标，不影响省份框尺寸与画布世界尺寸，所以切换时地图不会跳动。
- */
-export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false, collapsed: ReadonlySet<string> = new Set(), reveal: string | null = null): BoardLayout {
-  const visible = nodes.filter(node => filter === ALL_PROVINCES || provinceOf(node.city) === filter);
+export function boardLayout(nodes: ArtistNode[], filter: string, narrow = false, degree?: Map<string, number>): BoardLayout {
   const groups = new Map<string, ArtistNode[]>();
-  for (const node of visible) {
+  for (const node of nodes) {
     const province = provinceOf(node.city);
-    groups.set(province, [...(groups.get(province) || []), node]);
+    if (filter !== ALL_PROVINCES && province !== filter) continue;
+    const list = groups.get(province) || [];
+    list.push(node);
+    groups.set(province, list);
   }
 
-  interface ZoneSeed {
-    province: string;
-    weight: number;
-    count: number;
-    mini: boolean;
-  }
-  const seeds: ZoneSeed[] = [];
-  for (const province of PROVINCE_NAMES) {
+  const solo = filter !== ALL_PROVINCES;
+  const provinces = solo ? [filter] : [...PROVINCE_NAMES, UNKNOWN_PROVINCE];
+  const seeds: ZoneSeed[] = provinces.map(province => {
     const count = (groups.get(province) || []).length;
-    if (filter !== ALL_PROVINCES && province !== filter) continue;
-    if (filter === ALL_PROVINCES || count > 0 || true) {
-      // 框面积随人数线性增长；空省份只保留一个最小占位框。
-      seeds.push({
-        province, count, mini: false,
-        weight: count > 0 ? AREA_PER_ZONE + count * AREA_PER_PERSON : AREA_PER_ZONE * 0.16,
-      });
+    const spot = provinceSpots[province] || provinceSpots[UNKNOWN_PROVINCE];
+    // 单省视图：只有一块斑块，放大到舒服的阅读尺寸。
+    const r = count === 0 ? EMPTY_R : solo ? Math.min(320, Math.max(96, rOf(count) * 1.7)) : rOf(count);
+    // 锚点压缩：真实经纬投影里的空档太大，压一点才像一张紧凑的文化地图；
+    // 纵向压得更狠一些，让整张图是横构图，正好铺满宽屏。
+    const ax = solo ? 0 : spot.x * 0.94;
+    const ay = solo ? 0 : spot.y * 0.74;
+    return {province, count, mini: province === UNKNOWN_PROVINCE, r, x: ax, y: ay, ax, ay};
+  });
+
+  if (!solo) {
+    // 圆-圆松弛：把重叠的斑块推开，同时用弱弹簧拽回地理锚点（保住方位）。
+    for (let pass = 0; pass < 320; pass += 1) {
+      let moved = false;
+      for (let i = 0; i < seeds.length; i += 1) {
+        for (let j = i + 1; j < seeds.length; j += 1) {
+          const a = seeds[i];
+          const b = seeds[j];
+          let dx = b.x - a.x;
+          let dy = b.y - a.y;
+          const min = a.r + b.r + ZONE_GAP;
+          let dist = Math.hypot(dx, dy);
+          if (dist >= min) continue;
+          if (dist < 0.5) {
+            // 锚点几乎重合（如京津、港澳）：用一个固定偏移把它们掰开。
+            const nudge = 1 + (i * 7 + j * 13) % 5;
+            dx = Math.cos(nudge) * 6;
+            dy = Math.sin(nudge) * 6;
+            dist = Math.hypot(dx, dy);
+          }
+          const push = (min - dist) / 2;
+          const ux = dx / dist, uy = dy / dist;
+          a.x -= ux * push; a.y -= uy * push;
+          b.x += ux * push; b.y += uy * push;
+          moved = true;
+        }
+      }
+      for (const seed of seeds) {
+        seed.x += (seed.ax - seed.x) * 0.028;
+        seed.y += (seed.ay - seed.y) * 0.028;
+      }
+      if (!moved) break;
     }
-  }
-  const archive = groups.get(UNKNOWN_PROVINCE) || [];
-  if (archive.length && (filter === ALL_PROVINCES || filter === UNKNOWN_PROVINCE)) {
-    // 不设上限：待考据有 110 人，框就该装下 110 人。
-    seeds.push({
-      province: UNKNOWN_PROVINCE, count: archive.length, mini: true,
-      weight: AREA_PER_ZONE + archive.length * AREA_PER_PERSON,
-    });
   }
 
   const positions = new Map<string, NodePlace>();
   const zones: ZoneView[] = [];
 
-  if (narrow && filter !== ALL_PROVINCES) {
-    // Phones: a vertical stack sorted by headcount — full-width rows, four columns.
-    const width = 660;
-    let y = 64;
-    const ordered = [...seeds].sort((a, b) => b.count - a.count);
-    for (const seed of ordered) {
-      const people = groups.get(seed.province) || [];
-      const cols = seed.mini ? 4 : Math.min(4, Math.max(1, seed.count));
-      const rows = Math.ceil(people.length / cols);
-      const height = collapsed.has(seed.province) && seed.count > 3 && reveal !== seed.province ? 230 : seed.count === 0 ? 48 : 58 + rows * (seed.mini ? 108 : 122) + 10;
-      const def: ZoneDef = {
-        province: seed.province, code: seed.mini ? 'ARCHIVE' : PROVINCE_CODE[seed.province] || '?',
-        color: seed.mini ? ARCHIVE_COLOR : seed.count ? (PROVINCE_COLOR[seed.province] || EMPTY_COLOR) : EMPTY_COLOR,
-        x: 30, y, w: width - 60, h: height, mini: seed.mini, collapsed: collapsed.has(seed.province) && seed.count > 3, empty: seed.count === 0,
-      };
-      y += height + 14;
-      placeNodes(def, people, seed.count, cols, rows, positions, reveal === seed.province);
-      zones.push({def, count: seed.count});
-    }
-    return {zones, positions, world: {width, height: y + 20}};
-  }
-
-  const geo = filter === ALL_PROVINCES;
-  let laid: [typeof seeds[number], Rect][];
-
-  if (geo) {
-    // 全部省份：按真实地理方位摆放。框位置由 geoLay 定稿，不再做 treemap 的随机漂移。
-    laid = geoLay(seeds, collapsed);
-    // 归一化到正数画布（锚点带负偏移，碰撞后可能有框落到负坐标）。
-    const minX = Math.min(...laid.map(([, r]) => r.x));
-    const minY = Math.min(...laid.map(([, r]) => r.y));
-    const shiftX = GAP - minX, shiftY = GAP - minY;
-    laid = laid.map(([seed, r]) => [seed, {...r, x: r.x + shiftX, y: r.y + shiftY}]);
-  } else {
-    // 单省视图：保留原 treemap，让这一个省的卡片舒适地铺开。
-    const totalWeight = seeds.reduce((sum, seed) => sum + seed.weight, 0);
-    const worldW = Math.max(BOARD.width, Math.round(Math.sqrt(totalWeight * 1.6)));
-    const worldH = Math.max(BOARD.height, Math.round(Math.sqrt(totalWeight / 1.6)));
-    const rect = {x: GAP, y: GAP, w: worldW - GAP * 2, h: worldH - GAP * 2};
-    laid = squarify(seeds, seed => seed.weight, rect);
-  }
-
-  for (const [seed, zoneRect] of laid) {
-    const rng = seededRng(seed.province + seed.count);
-    let x = zoneRect.x, y = zoneRect.y, w = zoneRect.w, h = zoneRect.h;
-    if (!geo) {
-      // treemap 模式：每个框在自己的格子里轻微缩小漂移，打散网格感。
-      const pad = Math.min(GAP / 2, zoneRect.w * 0.08, zoneRect.h * 0.08);
-      const innerW = Math.max(0.5, zoneRect.w - pad * 2);
-      const innerH = Math.max(0.5, zoneRect.h - pad * 2);
-      w = innerW * (0.84 + rng() * 0.13);
-      h = innerH * (0.84 + rng() * 0.13);
-      x = zoneRect.x + pad + rng() * (innerW - w);
-      y = zoneRect.y + pad + rng() * (innerH - h);
-    }
-    const isCollapsed = collapsed.has(seed.province) && seed.count > 3 && reveal !== seed.province;
-    if (isCollapsed) { w = 260; h = 230; }
+  for (const seed of seeds) {
+    const people = groups.get(seed.province) || [];
     const def: ZoneDef = {
       province: seed.province,
       code: seed.mini ? 'ARCHIVE' : PROVINCE_CODE[seed.province] || '?',
       color: seed.mini ? ARCHIVE_COLOR : seed.count ? (PROVINCE_COLOR[seed.province] || EMPTY_COLOR) : EMPTY_COLOR,
-      x, y, w, h,
+      x: seed.x, y: seed.y, r: seed.r,
+      shape: blobShape(seed.province).d,
       mini: seed.mini,
-      collapsed: isCollapsed,
       empty: seed.count === 0,
-      tiny: w < 108 || h < 74,
-      radius: 6 + Math.round(rng() * 14),
     };
-    const people = groups.get(seed.province) || [];
-    const count = people.length;
-    const cols = def.collapsed ? 3 : geo ? Math.min(8, Math.max(1, Math.ceil(Math.sqrt(count)))) : count
-      ? Math.max(1, Math.min(seed.mini ? 6 : 5, Math.round(Math.sqrt(count * (w / h))) || 1))
-      : 1;
-    const rows = Math.ceil(count / cols);
-    placeNodes(def, people, count, cols, rows, positions, reveal === seed.province);
-    zones.push({def, count});
+    placeBlob(def, people, positions, degree);
+    zones.push({def, count: seed.count});
   }
 
-  // 世界尺寸：地理布局按框的实际边界 + 留白；treemap 保持原尺寸。
-  let worldW: number, worldH: number;
-  if (geo) {
-    worldW = Math.round(Math.max(BOARD.width, ...laid.map(([, r]) => r.x + r.w)) + GAP * 3);
-    worldH = Math.round(Math.max(BOARD.height, ...laid.map(([, r]) => r.y + r.h)) + GAP * 3);
-  } else {
-    const totalWeight = seeds.reduce((sum, seed) => sum + seed.weight, 0);
-    worldW = Math.max(BOARD.width, Math.round(Math.sqrt(totalWeight * 1.6)));
-    worldH = Math.max(BOARD.height, Math.round(Math.sqrt(totalWeight / 1.6)));
+  // 世界尺寸：包住所有斑块 + 给轮廓外的省份标签留一条边。
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const zone of zones) {
+    minX = Math.min(minX, zone.def.x - zone.def.r);
+    minY = Math.min(minY, zone.def.y - zone.def.r);
+    maxX = Math.max(maxX, zone.def.x + zone.def.r);
+    maxY = Math.max(maxY, zone.def.y + zone.def.r);
   }
-  return {zones, positions, world: {width: worldW, height: worldH}};
+  const pad = 46;
+  const shiftX = pad - minX;
+  const shiftY = pad + 16 - minY;
+  for (const zone of zones) { zone.def.x += shiftX; zone.def.y += shiftY; }
+  for (const place of positions.values()) { place.x += shiftX; place.y += shiftY; }
+
+  return {
+    zones, positions,
+    world: {
+      width: Math.round(Math.max(BOARD.width * 0.72, maxX - minX + pad * 2)),
+      height: Math.round(Math.max(BOARD.height * 0.62, maxY - minY + pad * 2 + 16)),
+    },
+  };
 }
 
-function placeNodes(
-  def: ZoneDef,
-  people: ArtistNode[],
-  count: number,
-  cols: number,
-  rows: number,
-  positions: Map<string, NodePlace>,
-  reveal = false,
-) {
+/**
+ * 框内人物：在斑块轮廓内做 best-candidate 采样（蓝噪声），
+ * 结果是「随机但互不重叠」的散布，而不是网格。
+ * 头像尺寸由可用间距决定，所以人多的省自然头像小、人少的省头像大。
+ */
+function placeBlob(def: ZoneDef, people: ArtistNode[], positions: Map<string, NodePlace>, degree?: Map<string, number>) {
+  const count = people.length;
   if (!count) return;
-  if (def.collapsed || reveal) {
-    // 紧凑网格：3 列 × 76px 行距，头像 48px。折叠态只放前 6 个（2 行），
-    // reveal（悬停）时把全部人物继续往下排——框尺寸不变，多出的行被容器裁剪，
-    // 由框内滚轮做 GPU transform 滚动，整张地图因此不会跳动。
-    const ordered = [...people].sort((a, b) => {
-      const groupA = a.kind === 'group' ? 0 : 1;
-      const groupB = b.kind === 'group' ? 0 : 1;
-      return groupA - groupB || b.name.length - a.name.length;
-    });
-    const limit = reveal ? count : Math.min(6, count);
-    ordered.slice(0, limit).forEach((node, index) => positions.set(node.id, {
-      x: def.x + 46 + (index % 3) * 82,
-      y: def.y + 82 + Math.floor(index / 3) * 76,
-      size: 48,
-      province: def.province, mini: !!def.mini, color: def.color,
-      labelW: 68, dense: false, tight: true, lines: 1,
-    }));
-    return;
-  }
+  const rng = seededRng(`scatter|${def.province}|${count}`);
+  const shape = blobShape(def.province);
   const ordered = [...people].sort((a, b) => {
     const groupA = a.kind === 'group' ? 0 : 1;
     const groupB = b.kind === 'group' ? 0 : 1;
-    return groupA - groupB || b.name.length - a.name.length;
+    return groupA - groupB || a.name.localeCompare(b.name, 'zh-CN');
   });
-  const padX = def.mini ? 12 : 12;
-  const headH = def.mini ? 40 : def.tiny ? 30 : 42;
-  const padY = def.mini ? 8 : 12;
-  const cellW = (def.w - padX * 2) / cols;
-  const cellH = (def.h - headH - padY * 2) / rows;
-  let size = Math.max(22, Math.min(64, cellW * 0.72, cellH - 34));
-  const dense = cellW < 74;
-  /** Narrow cells drop the plate entirely; it appears on hover / selection. */
-  const tight = cellW < 62;
-  // 小省份的格子很窄，名字牌必须跟着收窄，否则会溢出框外压到邻居。
-  // tight 格子默认只在 hover / 选中时显示名字，这里给一个不至于挤成竖排的安全下限。
-  const labelW = tight ? 30 : Math.max(44, Math.min(132, cellW * 0.86));
-  /** How many wrapped lines fit under the avatar without touching the next row. */
-  let lines: 1 | 2 = cellH - size - 8 >= 28 ? 2 : 1;
-  // Prefer a readable two-line plate over a bigger avatar.
-  if (lines === 1 && cellH - size * 0.76 - 8 >= 26) {
-    size = Math.round(size * 0.76);
-    lines = 2;
+
+  // 可用面积按轮廓内缩 0.78 估算；间距由人数决定。
+  // 0.76 的系数是刻意留白：头像之间要能透出底色，斑块才像"星图"而不是色块。
+  const usable = Math.PI * def.r * def.r * 0.55;
+  const separation = count > 1 ? Math.sqrt(usable / count) : def.r * 0.9;
+  const base = Math.max(11, Math.min(26, separation * 0.76, def.r * 0.56));
+
+  const points: {x: number; y: number}[] = [];
+  for (let index = 0; index < count; index += 1) {
+    let best = {x: 0, y: 0, gap: -1};
+    for (let attempt = 0; attempt < 22; attempt += 1) {
+      const theta = rng() * Math.PI * 2;
+      const reach = Math.sqrt(rng()) * radialAt(shape, theta) * 0.82 * def.r;
+      const x = Math.cos(theta) * reach;
+      const y = Math.sin(theta) * reach;
+      let gap = Infinity;
+      for (const point of points) {
+        const d = Math.hypot(point.x - x, point.y - y);
+        if (d < gap) gap = d;
+        if (gap <= best.gap) break;
+      }
+      // 取所有候选里"离别人最远"的那个，而不是第一个达标的：
+      // 提前收手会让结果偏向随机方向，斑块里就出现一块密一块空。
+      if (gap > best.gap) best = {x, y, gap};
+    }
+    points.push({x: best.x, y: best.y});
   }
-  const nodeRng = seededRng(def.province + count);
+
   ordered.forEach((node, index) => {
-    const row = Math.floor(index / cols);
-    const col = index % cols;
-    const inRow = Math.min(cols, count - row * cols);
-    // Slight organic scatter inside each cell — keeps plates readable, kills the spreadsheet feel.
-    const jx = (nodeRng() - 0.5) * Math.min(10, cellW * 0.08);
-    const jy = (nodeRng() - 0.5) * Math.min(8, cellH * 0.07);
-    // 牌子以头像为中心展开，边缘列向框内收，避免伸到相邻省份框里。
-    const halfPlate = tight ? 14 : Math.min(labelW / 2, 60);
-    const rawX = def.x + padX + cellW * (col + (cols - inRow) / 2 + 0.5) + jx;
-    const x = Math.min(Math.max(rawX, def.x + padX + halfPlate), def.x + def.w - padX - halfPlate);
+    const point = points[index];
+    // 关系多的人略大一圈：地图上自然长出几个"枢纽"，与参考图里的大圆点同构。
+    const weight = 1 + Math.min(0.4, (degree?.get(node.id) || 0) / 46);
+    const size = Math.round(Math.min(def.r * 0.8, base * weight) * 10) / 10;
     positions.set(node.id, {
-      x,
-      y: def.y + headH + padY + cellH * row + size / 2 + jy,
+      x: def.x + point.x,
+      y: def.y + point.y,
       size,
       province: def.province,
       mini: !!def.mini,
       color: def.color,
-      labelW,
-      dense,
-      tight,
-      lines,
+      dense: size < 13,
     });
   });
 }
@@ -401,7 +325,42 @@ export const relationMeta: Record<RelationType, {label: string; tag: string; col
   member: {label: '组合成员', tag: 'CREW', color: '#e4572e'},
   collaboration: {label: '歌曲合作', tag: 'FEAT', color: '#d9a05b'},
   production: {label: '幕后制作', tag: 'PROD', color: '#b8703a'},
-  affiliation: {label: '厂牌关联', tag: 'TIES', color: '#a85d4a'},
+  // 厂牌签约单独一支冷色：四条线型里只有它是暖色系之外的，扫一眼就能分出来。
+  affiliation: {label: '厂牌签约', tag: 'LABEL', color: '#6fb3a6'},
+};
+
+/** 每条关系的线型：实线 / 长虚 / 点线 / 波浪（厂牌）。 */
+export const edgeDash = (type: RelationType): string | undefined =>
+  type === 'member' ? undefined : type === 'collaboration' ? '6 5' : type === 'production' ? '2 4' : undefined;
+
+/**
+ * 厂牌波浪线：沿二次曲线等距采样，按法线做正弦位移。
+ * 波数取整，两端用 fade 收拢，保证线头仍精确落在两个人的头像上，
+ * 不会因为相位差在端点处跳开。用折线采样（约 5px 一段）而不是弧线逼近，
+ * 是因为 non-scaling-stroke 下波浪的密度要跟曲线弧长走，折线最好控。
+ */
+export const edgePathWave = (edge: BoardEdge, amplitude = 3.9, wavelength = 30) => {
+  const {ax, ay, cx, cy, bx, by} = edge;
+  const rough = Math.hypot(cx - ax, cy - ay) + Math.hypot(bx - cx, by - cy) || 1;
+  const steps = Math.max(18, Math.min(180, Math.round(rough / 5)));
+  // 波数取整：t=0 与 t=1 的相位都归零，端点才落在原始曲线上。
+  const waves = Math.max(1, Math.round(rough / wavelength));
+  let path = '';
+  for (let i = 0; i <= steps; i += 1) {
+    const t = i / steps;
+    const it = 1 - t;
+    const x = it * it * ax + 2 * it * t * cx + t * t * bx;
+    const y = it * it * ay + 2 * it * t * cy + t * t * by;
+    const tx = 2 * it * (cx - ax) + 2 * t * (bx - cx);
+    const ty = 2 * it * (cy - ay) + 2 * t * (by - cy);
+    const len = Math.hypot(tx, ty) || 1;
+    const fade = Math.min(1, Math.min(t, 1 - t) / 0.14);
+    const offset = Math.sin(t * Math.PI * 2 * waves) * amplitude * fade;
+    const px = x + (-ty / len) * offset;
+    const py = y + (tx / len) * offset;
+    path += `${i ? 'L' : 'M'}${px.toFixed(1)},${py.toFixed(1)}`;
+  }
+  return path;
 };
 
 export const relationYear = (relation: {track?: {year?: number}; observedYear?: number; startYear?: number}) =>

@@ -241,3 +241,210 @@ html,body,#root{min-height:100%;scrollbar-width:none}
  .immersive-app .map-person-popover{top:auto;bottom:148px;right:12px;width:calc(100% - 24px);max-height:min(30%,240px)}
  .immersive-app .map-person-popover .artist-panel{padding:12px}
 }
+
+/* 首页：低对比网格与地形线构成数字档案背景。 */
+.immersive-app .immersive-hero{position:relative;isolation:isolate;background:radial-gradient(ellipse 37% 36% at 50% 53%,#6d321a55 0%,#30170f2e 45%,transparent 85%),radial-gradient(ellipse at 50% 45%,#15110f 0%,#0b0b0b 72%,#08090a 100%)!important}
+.immersive-hero .hero-atmosphere{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;background-image:linear-gradient(#c6a17c0a 1px,transparent 1px),linear-gradient(90deg,#c6a17c0a 1px,transparent 1px),repeating-linear-gradient(0deg,#ffffff04 0 1px,transparent 1px 4px),radial-gradient(#d0ae8520 .65px,transparent .9px);background-size:84px 84px,84px 84px,100% 4px,7px 7px;mask-image:linear-gradient(to bottom,transparent,#000 8%,#000 90%,transparent)}
+.immersive-hero .hero-atmosphere::before{content:"";position:absolute;inset:0;background:repeating-radial-gradient(ellipse at 24% 90%,transparent 0 22px,#b58a6510 23px 24px,transparent 25px 36px);mask-image:linear-gradient(110deg,#000 0%,transparent 40%);opacity:.6}
+.immersive-hero .hero-atmosphere::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 14% 16%,#c79e7670 0 1px,transparent 1.5px),radial-gradient(circle at 83% 20%,#c79e7650 0 1px,transparent 1.5px),radial-gradient(circle at 92% 72%,#c79e7650 0 1px,transparent 1.5px);background-size:263px 231px,317px 277px,223px 301px;opacity:.35}
+.immersive-hero .hero-contours{position:absolute;inset:0;width:100%;height:100%;opacity:.45}
+.immersive-hero .contour-group{fill:none;stroke:#bd8d62;stroke-width:.7;opacity:.38;vector-effect:non-scaling-stroke}
+.immersive-hero .hero-heading{height:28px;flex:none;position:relative}
+.immersive-hero .thv-stage,.immersive-hero .hero-navigation,.immersive-hero .hero-hint{position:relative;z-index:1}
+.immersive-hero .thv-stage::before{opacity:.035}
+.immersive-hero .thv-stage::after{background:radial-gradient(ellipse 44% 42% at 50% 52%,#bd58251c,transparent 75%);opacity:.8}
+@media(max-width:620px){.immersive-hero .hero-atmosphere{background-size:56px 56px,56px 56px,100% 4px,7px 7px}.immersive-hero .hero-contours{opacity:.32}}
+
+
+/* 强镭射卡面：指针控制实体倾斜、彩虹光带与镜面高光。 */
+.immersive-hero .thv-stage .thc.is-front,.immersive-hero .thv-stage:hover .thc.is-front{transform:translate(-50%,-50%) translateZ(50px) rotateX(calc(var(--fy)*-10deg)) rotateY(calc(var(--fx)*12deg)) scale(1.1)}
+.immersive-hero .thc.is-front .thc-body{border-color:#ffaf78;box-shadow:0 32px 65px #000c,0 3px 0 #b67647,0 5px 0 #3a241a,inset 0 1px 0 #fff9,0 0 35px #ff7e3a55}
+.immersive-hero .thc-art-foil,.immersive-hero .thc.is-front .thc-art-foil{opacity:.3}
+.immersive-hero .thc.is-front .thc-foil{opacity:.8;mix-blend-mode:screen}
+.immersive-hero .thc.is-front .thc-glare{opacity:1}
+.immersive-hero .thc.is-front .thc-art-foil{background-position:calc(50% + var(--fx,0)*90%) calc(50% + var(--fy,0)*90%)}
+
+/* 单张放大卡 + 评分，卡面始终完整参与倾斜。 */
+.rapper-detail-dialog{position:fixed;width:min(460px,94vw);max-height:90dvh;padding:12px 12px 0;border:1px solid #c39169;border-radius:17px;background:radial-gradient(ellipse at 50% 18%,#4b271d,#100b0a 65%);box-shadow:0 30px 90px #000e,0 0 55px #e4572e38;overflow:auto}
+.rapper-detail-dialog::backdrop{background:#050307db;backdrop-filter:blur(5px)}
+.rd-close{position:sticky;float:right;top:0;z-index:20;width:32px;height:32px;margin:2px 2px -34px 0;padding:0;border:1px solid #ffffff55;border-radius:50%;background:#100b0bd9;color:white;font-size:23px;line-height:1;cursor:pointer}
+.rd-close:hover{background:#bd613c}
+.rapper-detail-dialog .rd-card{margin:5px 5px 16px;border:2px solid #e2b58f;border-radius:13px;background:linear-gradient(145deg,#6f4c39,#1b1412 48%,#402419);box-shadow:0 22px 42px #000b,0 3px 0 #a97a5b,0 5px 0 #3d291c,inset 0 1px 1px #fff9,0 0 32px #ec874833;transform-origin:center;transition:transform .13s ease-out,box-shadow .2s}
+.rapper-detail-dialog .rd-art{border:1px solid #d9b39377;aspect-ratio:5/4}
+.rapper-detail-dialog .rd-card .foil-card__shine{mix-blend-mode:color-dodge;opacity:var(--foil-o);filter:brightness(1.1) saturate(1.4)}
+.rapper-detail-dialog .rd-card .foil-card__glare{opacity:var(--foil-glare-o)}
+.rapper-detail-dialog .rd-card .foil-card__edge{opacity:1;box-shadow:inset 0 0 0 1px #fff8,inset 0 2px 0 #fff9,0 0 12px #ffc99555}
+.rapper-detail-dialog .rd-rating{padding-bottom:22px}
+.rapper-detail-dialog .rd-actions{justify-content:center}
+@media(max-width:520px){.rapper-detail-dialog{width:min(400px,94vw);padding:9px 9px 0}.rapper-detail-dialog .rd-art{aspect-ratio:16/11}}
+@media(prefers-reduced-motion:reduce){.rapper-detail-dialog .foil-card{transform:none!important;transition:none!important}.immersive-hero .thv-stage .thc.is-front{transform:translate(-50%,-50%) scale(1.1)!important}}
+/* 镭射集中在卡缘，人物区保留原图对比度。 */
+.rapper-detail-dialog .rd-card .foil-card__shine{mix-blend-mode:screen;opacity:.8;filter:saturate(1.25);-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 3%,transparent 16%,transparent 84%,#000 97%,#000 100%);mask-image:linear-gradient(90deg,#000 0%,#000 3%,transparent 16%,transparent 84%,#000 97%,#000 100%)}
+.rapper-detail-dialog .rd-card .foil-card__glare{opacity:calc(var(--foil-glare-o) * .24);background-image:radial-gradient(circle at var(--foil-px) var(--foil-py),#ffffff55,transparent 38%)}
+.rapper-detail-dialog .rd-art .foil-art{opacity:var(--foil-art-o);mix-blend-mode:screen;filter:none}
+.rapper-detail-dialog .rd-art-ascii{opacity:.035}
+.immersive-hero .thc.is-front .thc-art-foil{opacity:.08;mix-blend-mode:screen}
+.immersive-hero .thc.is-front .thc-foil{opacity:.75;mask-image:linear-gradient(90deg,#000,transparent 13%,transparent 87%,#000)}
+.immersive-hero .thc.is-front .thc-glare{opacity:.4}
+
+/* 黑银流光样卡：金属层、棱镜镭射边和独立人像层。 */
+.immersive-hero .thc-body,.rapper-detail-dialog .rd-card{background:linear-gradient(145deg,#777e84 0%,#1a1e23 6%,#050608 15%,#22272a 49%,#08090c 70%,#a6adb0 100%);border:1px solid #d4e3ed;border-radius:12px;box-shadow:0 24px 52px #000c,0 2px 0 #b3bac3,0 4px 0 #343d46,0 0 20px #a4d5f940,inset 0 0 0 3px #1c2026,inset 0 0 0 4px #cadde755}
+.immersive-hero .thc.is-front .thc-body{border-color:#dcebf7;box-shadow:0 28px 64px #000d,0 2px 0 #dce5eb,0 5px 0 #36414b,0 0 26px #a0dff961,inset 0 0 0 3px #1b2025,inset 0 0 0 4px #efffff99}
+.immersive-hero .thc-body::before,.rapper-detail-dialog .rd-card::before{content:"";position:absolute;inset:0;z-index:8;pointer-events:none;border-radius:inherit;padding:5px;background:linear-gradient(120deg,#f0fdff,#96a7ff,#ff91d9,#d8fffd,#f5cf83,#b3a9ff,#f6ffff);background-size:260% 260%;background-position:calc(50% + var(--fx,0)*40%) calc(50% + var(--fy,0)*40%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.94}
+.rapper-detail-dialog .rd-card::before{background-position:var(--foil-bg-x,50%) var(--foil-bg-y,50%);padding:7px}
+.immersive-hero .thc-head,.rapper-detail-dialog .rd-top{margin:7px 9px 0;padding:6px 6px;color:#d8e5ee;border-bottom:1px solid #b9d7e744;font-weight:800;letter-spacing:.12em}
+.immersive-hero .thc-no,.rapper-detail-dialog .rd-kind{color:#e9f6ff;font-style:italic;font-weight:900;letter-spacing:.08em}
+.immersive-hero .thc-no em,.rapper-detail-dialog .rd-kind small{font:500 8px/1 ui-monospace,monospace;color:#9baebd;font-style:normal}
+.immersive-hero .thc-kind,.rapper-detail-dialog .rd-cat{color:#b3c5d2}
+.immersive-hero .thc-art,.rapper-detail-dialog .rd-art{margin:5px 10px 0;border:1px solid #b6d7ec77;border-radius:3px;background:#10151b}
+.immersive-hero .thc-art img,.rapper-detail-dialog .rd-art img{filter:contrast(1.03) saturate(.96)}
+.immersive-hero .thc-plate{margin:6px 10px 0;padding:5px 8px;border-left:2px solid #9fd9f8;background:linear-gradient(100deg,#101820,#07090c)}
+.immersive-hero .thc-plate b,.rapper-detail-dialog .rd-name{color:#eef8ff;text-shadow:0 1px 4px #000,0 0 12px #b8dcff44}
+.immersive-hero .thc-plate i,.rapper-detail-dialog .rd-prov{color:#b7cdd9}
+.immersive-hero .thc-stats{border-top:1px solid #849ba633}.immersive-hero .thc-stats b,.rapper-detail-dialog .rd-stats b{color:#a7ddf5}
+.immersive-hero .thc-art-foil,.immersive-hero .thc.is-front .thc-art-foil,.rapper-detail-dialog .rd-art .foil-art{opacity:.035;mix-blend-mode:screen}
+.immersive-hero .thc-foil,.immersive-hero .thc.is-front .thc-foil{opacity:.9;mix-blend-mode:screen;mask-image:linear-gradient(90deg,#000,transparent 12%,transparent 88%,#000);background-image:repeating-linear-gradient(115deg,#a8eeff,#de9aff 8%,#ffb9df 15%,#ffe0a4 21%,#a2f3e4 29%,#a8eeff 37%);background-size:300% 300%}
+.immersive-hero .thc-glare{opacity:.22}
+.rapper-detail-dialog .rd-card{border-radius:13px;background-color:#090d11;transition:transform .13s ease-out;transform-origin:center}
+.rapper-detail-dialog .rd-top{flex:none}.rapper-detail-dialog .rd-kind{border:0;padding:0}.rapper-detail-dialog .rd-art{aspect-ratio:5/4}.rapper-detail-dialog .rd-body{background:linear-gradient(100deg,#141b20,#080a0d);margin:5px 10px 10px;padding:11px}.rapper-detail-dialog .rd-stats{border-color:#8abbd033}.rapper-detail-dialog .rd-stats>span{border-color:#8abbd033}
+.rapper-detail-dialog .rd-card .foil-card__edge{border-color:#ecffff;box-shadow:inset 0 0 0 2px #a5d5f588,inset 0 2px #fff,0 0 12px #96d9fa55}
+.rapper-detail-dialog .rd-card .foil-card__shine{opacity:1;mix-blend-mode:screen;filter:saturate(1.2);-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 4%,transparent 13%,transparent 87%,#000 96%,#000 100%);mask-image:linear-gradient(90deg,#000 0%,#000 4%,transparent 13%,transparent 87%,#000 96%,#000 100%)}
+.rapper-detail-dialog .rd-card .foil-card__glare{opacity:calc(var(--foil-glare-o)*.16)}
+.rapper-detail-dialog .rd-rating{background:transparent}
+
+/* 三种可切换的头像叠层：光谱位置跟随指针，卡面文字不受影响。 */
+.immersive-hero,.rd-card{--holo-a:#95eaff;--holo-b:#e9b7ff;--holo-c:#fff4bd;--holo-d:#80cffa}
+.immersive-hero[data-foil="amber"],.rd-card[data-foil="amber"]{--holo-a:#ff9b35;--holo-b:#ffd46f;--holo-c:#fff0b7;--holo-d:#ff6951}
+.immersive-hero[data-foil="violet"],.rd-card[data-foil="violet"]{--holo-a:#a67bff;--holo-b:#ee9aff;--holo-c:#a3eaff;--holo-d:#715dff}
+.immersive-hero .thc-art-foil,.immersive-hero .thc.is-front .thc-art-foil,.rapper-detail-dialog .rd-art .foil-art{z-index:3;opacity:.36;mix-blend-mode:screen;filter:none;background-image:repeating-linear-gradient(118deg,transparent 0%,color-mix(in srgb,var(--holo-a) 58%,transparent) 8%,transparent 14%,color-mix(in srgb,var(--holo-b) 65%,transparent) 21%,transparent 28%,color-mix(in srgb,var(--holo-c) 54%,transparent) 34%,transparent 42%,color-mix(in srgb,var(--holo-d) 65%,transparent) 50%,transparent 58%),repeating-linear-gradient(28deg,transparent 0 25px,#ffffff10 26px 27px,transparent 28px 53px);background-size:260% 260%,100% 100%;background-position:calc(50% + var(--fx,0)*75%) calc(50% + var(--fy,0)*75%),center;mask-image:none;-webkit-mask-image:none}
+.rapper-detail-dialog .rd-art .foil-art{background-position:var(--foil-bg-x,50%) var(--foil-bg-y,50%),center;opacity:.36}
+.immersive-hero .thc-art-foil::before,.rapper-detail-dialog .rd-art .foil-art::before{content:"";position:absolute;inset:0;background:linear-gradient(125deg,transparent 27%,#ffffff45 42%,transparent 52%);background-size:240% 240%;background-position:inherit;opacity:.55}
+.immersive-hero .thc-body::before,.rapper-detail-dialog .rd-card::before{background-image:linear-gradient(120deg,#efffff,var(--holo-a),var(--holo-b),var(--holo-c),var(--holo-d),#f7ffff)}
+.foil-switch{display:flex;justify-content:center;gap:5px;position:relative;z-index:3;flex-wrap:wrap;margin:14px auto 0}
+.foil-switch button{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid transparent;border-radius:20px;background:#ffffff08;color:#aaa19a;font-size:10px;cursor:pointer}
+.foil-switch button:hover,.foil-switch button.is-active{color:#f0e8dc;background:#ffffff12;border-color:#c4b7a84d}
+.foil-switch button:focus-visible{outline:2px solid #e6b78b;outline-offset:2px}
+.foil-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(120deg,#beeeff,#edb7ff,#fff4c7)}
+.foil-dot.amber{background:linear-gradient(120deg,#ff6e39,#ffdc67,#fff5c9)}.foil-dot.violet{background:linear-gradient(120deg,#7763ff,#f39bff,#9ce8ff)}
+.detail-foil-switch{margin:4px auto 12px}.rapper-detail-dialog .rd-rating{padding-top:0}
+@media(max-width:520px){.foil-switch{gap:3px}.foil-switch button{padding:6px 8px;font-size:10px}}
+
+/* 真实质感材质图与动态镭射分层：中央透明，人物仍使用原始照片。 */
+.immersive-hero .thc-body::after,.rapper-detail-dialog .rd-card::after{content:"";position:absolute;inset:0;z-index:9;pointer-events:none;border-radius:inherit;background:url('./assets/holo-chrome-frame.png') center/100% 100% no-repeat;opacity:.96;filter:brightness(.96);transform:translateZ(5px)}
+.immersive-hero[data-foil="amber"] .thc-body::after,.rapper-detail-dialog .rd-card[data-foil="amber"]::after{filter:sepia(.85) saturate(2.3) hue-rotate(340deg) brightness(1.12)}
+.immersive-hero[data-foil="violet"] .thc-body::after,.rapper-detail-dialog .rd-card[data-foil="violet"]::after{filter:sepia(.35) saturate(2) hue-rotate(210deg) brightness(1.08)}
+.immersive-hero .thc-body::before,.rapper-detail-dialog .rd-card::before{opacity:.35}
+.immersive-hero .thc-art,.rapper-detail-dialog .rd-art{margin-left:11%;margin-right:11%}
+.immersive-hero .thc-head,.rapper-detail-dialog .rd-top{margin-left:13%;margin-right:13%}
+.immersive-hero .thc-plate,.immersive-hero .thc-stats,.immersive-hero .thc-tail{margin-left:12%;margin-right:12%}
+.rapper-detail-dialog .rd-body{margin-left:12%;margin-right:12%}
+.immersive-hero .thc-art-foil,.immersive-hero .thc.is-front .thc-art-foil,.rapper-detail-dialog .rd-art .foil-art{opacity:.20;mix-blend-mode:screen}
+.rapper-detail-dialog .rd-top{padding-top:22px}
+.rapper-detail-dialog .rd-body{padding-bottom:42px}
+.immersive-hero .thc-head{padding-top:14px}
+.immersive-hero .thc-tail{padding-bottom:16px}
+
+/* 镭射高光沿框边移动，框图保持固定；信息始终显示在框层上方。 */
+.frame-flow{position:absolute;inset:2px;z-index:10;pointer-events:none;border-radius:inherit;padding:12px;background:linear-gradient(125deg,transparent 5%,var(--holo-a) 17%,#fff 23%,var(--holo-b) 29%,transparent 40%,transparent 55%,var(--holo-c) 68%,#fff 73%,var(--holo-d) 78%,transparent 91%);background-size:300% 300%;background-position:0% 0%;mix-blend-mode:screen;opacity:.82;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:frame-flow-drift 5s ease-in-out infinite alternate}
+@keyframes frame-flow-drift{0%{background-position:0% 0%}100%{background-position:100% 100%}}
+.immersive-hero .thc:not(.is-front) .frame-flow{animation:none;opacity:.4}
+.immersive-hero .thc-head,.immersive-hero .thc-plate,.immersive-hero .thc-stats,.immersive-hero .thc-tail,.rapper-detail-dialog .rd-top,.rapper-detail-dialog .rd-body{position:relative;z-index:11}
+.immersive-hero .thc-head{margin:12% 14% 0;padding:3px 2px}
+.immersive-hero .thc-art{margin-left:12%;margin-right:12%;min-height:0}
+.immersive-hero .thc-plate{margin:4px 14% 0;padding:3px 4px;background:#070b0fe8}
+.immersive-hero .thc-stats{margin:2px 14% 0;padding:3px 0;background:#070b0fe8}
+.immersive-hero .thc-tail{margin:0 14%;padding:3px 0 12%;background:#070b0fe8}
+.rapper-detail-dialog .rd-top{margin:0 14%;padding:13% 2px 4px}
+.rapper-detail-dialog .rd-art{margin:4px 12% 0}
+.rapper-detail-dialog .rd-body{margin:5px 14% 0;padding:7px 6px 13%;background:#080c10ed}
+.rapper-detail-dialog .rd-desc{max-height:50px}
+@media(max-width:520px){.frame-flow{padding:7px}.immersive-hero .thc-head{margin-top:12%}.immersive-hero .thc-tail{padding-bottom:10%}.rapper-detail-dialog .rd-body{padding-bottom:12%}}
+@media(prefers-reduced-motion:reduce){.frame-flow{animation:none!important}}
+
+/* 姓名铭牌：金属银字叠在完整镭射材质之上。 */
+.immersive-hero .thc-plate,.immersive-hero .thc-stats,.immersive-hero .thc-tail,.rapper-detail-dialog .rd-body{background:transparent}
+.immersive-hero .thc-plate,.rapper-detail-dialog .rd-body{isolation:isolate;z-index:15}
+.immersive-hero .thc-plate::before,.rapper-detail-dialog .rd-body::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#05080bd9 0%,#0a1118a3 48%,#05080bd9 100%);border-top:1px solid #d3f2ff70;border-bottom:1px solid #8fb7c536}
+.immersive-hero .thc-plate b,.rapper-detail-dialog .rd-name{position:relative;z-index:16;display:block;color:#f7fbff;font-family:"Microsoft YaHei UI","PingFang SC",system-ui,sans-serif;font-weight:900;letter-spacing:.045em;line-height:1.18;text-shadow:0 1px 0 #8ca6b5,0 2px 3px #000,0 0 12px #a6dcff77;overflow-wrap:anywhere}
+@supports (background-clip:text){.immersive-hero .thc-plate b,.rapper-detail-dialog .rd-name{background:linear-gradient(175deg,#fff 4%,#ecfaff 32%,#a6c9d8 48%,#fff 60%,#c4dce8 86%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}}
+.immersive-hero .thc-plate{margin:4px 14% 0;padding:5px 5px;border:0;max-width:none!important}
+.immersive-hero .thc-plate b{font-size:clamp(10px,9cqi,19px)}
+.immersive-hero .thc-plate i{color:#d2e3eb;text-shadow:0 1px 4px #000}
+.immersive-hero .thc-stats,.immersive-hero .thc-tail{position:relative;z-index:15;text-shadow:0 1px 4px #000,0 0 5px #000}
+.rapper-detail-dialog .rd-body{margin:5px 14% 0;padding:8px 7px 13%}
+.rapper-detail-dialog .rd-body::before{bottom:13%}
+.rapper-detail-dialog .rd-name{margin:0 0 6px;font-size:clamp(21px,5vw,28px)}
+.rapper-detail-dialog .rd-prov,.rapper-detail-dialog .rd-desc,.rapper-detail-dialog .rd-stats{position:relative;z-index:16;text-shadow:0 1px 4px #000}
+.rapper-detail-dialog .rd-desc{color:#d8cec3}
+@media(max-width:520px){.immersive-hero .thc-plate b{font-size:clamp(10px,8cqi,15px)}.rapper-detail-dialog .rd-body{padding-bottom:12%}.rapper-detail-dialog .rd-body::before{bottom:12%}}
+/* 姓名直接叠在卡面，不再显示黑色铭牌。 */
+.immersive-hero .thc-plate::before,.rapper-detail-dialog .rd-body::before{display:none}
+.immersive-hero .thc-plate,.rapper-detail-dialog .rd-body{background:transparent;border:0;box-shadow:none}
+.tier-rules{margin:0 0 8px;color:#a99b8b;font-size:11px;line-height:1.7}.tier-hero-label{text-align:center;position:relative;z-index:2;color:#b8a89a;font-size:11px;letter-spacing:.1em;margin:14px 0 0}
+
+.immersive-hero .thc[data-foil="silver"]{--holo-a:#95eaff;--holo-b:#e9b7ff;--holo-c:#fff4bd;--holo-d:#80cffa}
+.immersive-hero .thc[data-foil="amber"]{--holo-a:#ff9b35;--holo-b:#ffd46f;--holo-c:#fff0b7;--holo-d:#ff6951}
+.immersive-hero .thc[data-foil="violet"]{--holo-a:#a67bff;--holo-b:#ee9aff;--holo-c:#a3eaff;--holo-d:#715dff}
+.immersive-hero .thc[data-foil="amber"] .thc-body::after{filter:sepia(.85) saturate(2.3) hue-rotate(340deg) brightness(1.12)}
+.immersive-hero .thc[data-foil="violet"] .thc-body::after{filter:sepia(.35) saturate(2) hue-rotate(210deg) brightness(1.08)}
+.immersive-hero .thc[data-foil="silver"] .thc-body::after{filter:brightness(.96)}
+.immersive-hero .thc[data-tier="UR"] .thc-body::after,.rapper-detail-dialog .rd-card[data-tier="UR"]::after{filter:sepia(.45) saturate(2.5) hue-rotate(235deg) brightness(1.2)}
+/* 评分等级材质：R 银、SR 蓝、SSR 金、UR 紫金。 */
+.immersive-hero[data-foil="blue"],.rd-card[data-foil="blue"],.immersive-hero .thc[data-foil="blue"]{--holo-a:#56c9ff;--holo-b:#8aa8ff;--holo-c:#d7f8ff;--holo-d:#4b76ec}
+.immersive-hero .thc[data-foil="blue"] .thc-body::after,.rapper-detail-dialog .rd-card[data-foil="blue"]::after{filter:grayscale(.45) sepia(.4) hue-rotate(165deg) saturate(2.2) brightness(1.12)}
+.immersive-hero .thc[data-tier="SSR"] .thc-body::after,.rapper-detail-dialog .rd-card[data-tier="SSR"]::after{filter:sepia(.9) saturate(2.5) hue-rotate(338deg) brightness(1.12)}
+.immersive-hero .thc[data-tier="UR"] .frame-flow,.rapper-detail-dialog .rd-card[data-tier="UR"] .frame-flow{opacity:1;animation-duration:2.8s}
+.immersive-hero .thc[data-tier="SSR"] .frame-flow,.rapper-detail-dialog .rd-card[data-tier="SSR"] .frame-flow{animation-duration:4s}
+/* 柔化镭射图案外侧的硬质矩形边。 */
+.immersive-hero .thc-body,.immersive-hero .thc.is-front .thc-body,.rapper-detail-dialog .rd-card{border-color:#9caeb65c;box-shadow:0 22px 48px #000a,0 2px 4px #020306,0 0 14px #9cdaed24,inset 0 0 0 1px #c2e5ef24}
+.immersive-hero .thc-body::before,.rapper-detail-dialog .rd-card::before{opacity:.12;filter:blur(1px)}
+.rapper-detail-dialog .rd-card .foil-card__edge{border-color:#c9e6ec35;box-shadow:inset 0 0 2px #d4f4ff38,0 0 7px #8fd6ec26;opacity:.55}
+.frame-flow{inset:3px;padding:8px;opacity:.56;filter:blur(.6px)}
+/* 宽卡比例与柔和外缘。 */
+.immersive-hero .thv-stage{--w:clamp(185px,min(19.5vw,30dvh),315px)}
+.immersive-hero .thc-body,.immersive-hero .thc.is-front .thc-body,.rapper-detail-dialog .rd-card{border-radius:18px;border-color:transparent;box-shadow:0 24px 52px #000b,0 2px 5px #07090b,0 0 22px #b0d9e91c}
+.immersive-hero .thc-body::before,.rapper-detail-dialog .rd-card::before{opacity:.06;filter:blur(2px)}
+.immersive-hero .thc-body::after,.rapper-detail-dialog .rd-card::after{inset:3px;border-radius:15px;box-shadow:0 0 9px #d8f0f52b}
+.rapper-detail-dialog .rd-card .foil-card__edge{border-color:transparent;box-shadow:0 0 9px #c5eaff28;opacity:.35}
+.frame-flow{inset:4px;padding:7px;filter:blur(1.5px);opacity:.45}
+.rapper-detail-dialog{width:min(500px,94vw)}
+@media(max-width:620px){.immersive-hero .thv-stage{--w:clamp(140px,37vw,185px)}}
+/* 柔化靠近人像的内圈，保留外圈镭射结构。 */
+.immersive-hero .thc-art,.rapper-detail-dialog .rd-art{border:0!important;box-shadow:none!important}
+.immersive-hero .thc-art-corner{display:none}
+.immersive-hero .thc-body::after,.rapper-detail-dialog .rd-card::after{-webkit-mask-image:radial-gradient(ellipse 48% 48% at 50% 50%,transparent 48%,#000 76%);mask-image:radial-gradient(ellipse 48% 48% at 50% 50%,transparent 48%,#000 76%)}
+
+/* 序章背景：深色光场、微弱纹理与环形空间层。 */
+.immersive-app .immersive-hero{background:radial-gradient(ellipse 30% 32% at 50% 48%,#9c563128 0%,#39271e1b 50%,transparent 100%),radial-gradient(ellipse 50% 60% at 18% 30%,#2028324a,transparent 70%),radial-gradient(ellipse 45% 50% at 82% 70%,#33202d38,transparent 75%),linear-gradient(160deg,#101216 0%,#0a0c10 48%,#100d0e 100%)!important}
+.immersive-hero .hero-atmosphere{background-image:linear-gradient(#c4d4df08 1px,transparent 1px),linear-gradient(90deg,#c4d4df08 1px,transparent 1px),radial-gradient(#d5dfe517 .65px,transparent 1px),repeating-linear-gradient(0deg,#ffffff03 0 1px,transparent 1px 4px);background-size:112px 112px,112px 112px,5px 5px,100% 4px;mask-image:linear-gradient(to bottom,transparent,#000 7%,#000 94%,transparent)}
+.immersive-hero .hero-atmosphere::before{inset:3% 10% 7%;background:repeating-radial-gradient(ellipse at 50% 52%,transparent 0 105px,#c4a48b12 106px 107px,transparent 108px 160px);mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);opacity:.65}
+.immersive-hero .hero-atmosphere::after{background:radial-gradient(ellipse 32% 16% at 50% 57%,#d0875140,transparent 80%),radial-gradient(ellipse 30% 25% at 23% 42%,#7194aa17,transparent 72%),radial-gradient(ellipse 30% 25% at 77% 42%,#a8798c19,transparent 72%);opacity:.8}
+.immersive-hero .hero-contours{opacity:.24}
+.immersive-hero .contour-group{stroke:#aab1b2;stroke-width:.8;opacity:.28}
+.immersive-hero .thv-stage::before{width:calc(var(--w)*4.5);height:calc(var(--w)*4.5);top:53%;background:conic-gradient(from 115deg,transparent,#c89b6a0e,transparent 22%,transparent 50%,#a8ccdd0b,transparent 72%);mask-image:radial-gradient(circle,transparent 27%,#000 42%,transparent 70%);opacity:.8}
+.immersive-hero .thv-stage::after{background:radial-gradient(ellipse 36% 34% at 50% 53%,#efac6a18,transparent 75%);opacity:.75}
+@media(max-width:620px){.immersive-hero .hero-atmosphere{background-size:72px 72px,72px 72px,5px 5px,100% 4px}.immersive-hero .hero-contours{opacity:.16}.immersive-hero .hero-atmosphere::before{inset:0;opacity:.35}}
+
+/* 页眉浮于背景之上，保留可见的导航与焦点反馈。 */
+.immersive-app .site-header{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;position:relative;z-index:50}
+.immersive-app .site-header::before,.immersive-app .site-header::after{display:none!important}
+.immersive-app .site-header nav button{background:transparent!important;border:0!important;box-shadow:none!important;color:#c6bdb3;transition:color .2s,text-shadow .2s}
+.immersive-app .site-header nav button:hover,.immersive-app .site-header nav button:focus-visible{color:#fff0df!important;text-shadow:0 0 18px #eaa97788}
+.immersive-app .site-header nav button:focus-visible,.immersive-app .submit-trigger:focus-visible{outline:2px solid #e9a77e;outline-offset:4px}
+.immersive-app .site-header .submit-trigger{background:transparent!important;border:0!important;box-shadow:none!important;color:#e6a17b!important}
+.immersive-app .site-header .submit-trigger:hover,.immersive-app .site-header .submit-trigger.is-open{color:#ffd8bb!important;background:#ffffff0a!important}
+.immersive-app:has(.is-today) .site-header{position:absolute;top:0;left:0;right:0;width:100%}
+.immersive-app:has(.is-today) .immersive-hero{min-height:100dvh;padding-top:82px}
+@media(max-width:620px){.immersive-app:has(.is-today) .immersive-hero{min-height:100dvh;padding-top:108px}.immersive-app .site-header .submit-trigger{min-width:40px!important;min-height:40px!important}}
+
+/* 单卡边缘粒子：低数量、无交互、按等级着色。 */
+.card-particles{position:absolute;inset:5px;z-index:12;pointer-events:none;overflow:visible;--spark:#e1f6ff}
+[data-tier="SR"] .card-particles{--spark:#75bfff}[data-tier="SSR"] .card-particles{--spark:#ffc35c}[data-tier="UR"] .card-particles{--spark:#df9cff}
+.card-particles i{position:absolute;left:var(--x);top:var(--y);width:var(--size);height:var(--size);border-radius:50%;background:var(--spark);box-shadow:0 0 5px var(--spark),0 0 11px var(--spark);opacity:.2;transform:translate(-50%,-50%) scale(.6);animation:card-spark 3.8s ease-in-out var(--delay) infinite}
+@keyframes card-spark{0%,100%{opacity:.15;transform:translate(-50%,-50%) scale(.5)}45%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}70%{opacity:.4;transform:translate(-50%,-50%) scale(.8)}}
+.immersive-hero .thc:not(.is-front) .card-particles{display:none}
+@media(prefers-reduced-motion:reduce){.card-particles i{animation:none;opacity:.45}}
+/* 详情弹窗去除外层线框，保留卡牌本身的镭射边缘。 */
+.rapper-detail-dialog{border:0!important;outline:0;box-shadow:0 30px 90px #000c}
+/* 放大卡与评分直接浮在遮罩上，不显示弹窗底板。 */
+.rapper-detail-dialog{background:transparent!important;border:0!important;box-shadow:none!important;outline:0}

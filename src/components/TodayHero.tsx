@@ -5,6 +5,7 @@ import {avatarPath} from './PixelAvatar';
 import {HeroCard} from './HeroCard';
 import {RapperDetail} from './RapperDetail';
 import {allBeefs, loadLocalBeefs, beefNodeIds} from '../data/beefs';
+import {cardTier, tierFoil} from '../lib/card-tier';
 import {provinceLabel, provinceOf} from '../lib/province';
 
 /** Shuffle once per visit; keep candidate order stable throughout that visit. */
@@ -25,11 +26,14 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
   }, [nodes, shuffleSeed]);
   const [heroId, setHeroId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+
   const stageRef = useRef<HTMLDivElement>(null);
   const gesture = useRef<{x:number;y:number} | null>(null);
   const swiped = useRef(false);
   const index = Math.max(0, deck.findIndex(node => node.id === heroId));
   const hero = deck[index];
+  const tier = cardTier(hero ? ratings[hero.id] : undefined);
+  const foilStyle = tierFoil(tier);
   const {workCounts, relationCounts, serials} = useMemo(() => {
     const workCounts = new Map<string, number>();
     const relationCounts = new Map<string, number>();
@@ -91,8 +95,17 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
     stageRef.current?.style.setProperty('--fx', '0');
     stageRef.current?.style.setProperty('--fy', '0');
   };
-  return <section className="today-hero immersive-hero" aria-label="人物卡牌展厅">
-    <div className="hero-heading"><span>中文说唱 · 人物档案</span><h1>每一张，都是一段故事。</h1></div>
+  return <section className="today-hero immersive-hero" data-foil={foilStyle} aria-label="人物卡牌展厅">
+    <div className="hero-atmosphere" aria-hidden="true">
+      <svg className="hero-contours" viewBox="0 0 1440 900" preserveAspectRatio="none">
+        <defs><path id="contour-left" d="M-80 340 C 30 300 50 220 170 225 S 270 135 405 145 S 480 100 540 76" />
+          <path id="contour-bottom" d="M-100 730 C 20 710 50 640 122 645 S 214 748 306 714 S 411 715 500 798" /></defs>
+        <g className="contour-group"><use href="#contour-left"/><use href="#contour-left" transform="translate(0 9)"/><use href="#contour-left" transform="translate(0 18)"/><use href="#contour-left" transform="translate(0 27)"/><use href="#contour-left" transform="translate(0 36)"/>
+          <use href="#contour-left" transform="translate(1440 20) scale(-1 1)"/><use href="#contour-left" transform="translate(1440 32) scale(-1 1)"/><use href="#contour-left" transform="translate(1440 44) scale(-1 1)"/>
+          <use href="#contour-bottom"/><use href="#contour-bottom" transform="translate(0 10)"/><use href="#contour-bottom" transform="translate(0 20)"/><use href="#contour-bottom" transform="translate(0 30)"/><use href="#contour-bottom" transform="translate(1440 45) scale(-1 1)"/></g>
+      </svg>
+    </div>
+    <div className="hero-heading" aria-hidden="true" />
     <div className="thv-stage" ref={stageRef} tabIndex={0}
       aria-label="人物卡组，左右方向键切换，点击中央卡查看档案"
       onKeyDown={event => {
@@ -127,7 +140,7 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
           index={serials.get(node.id) || 0} total={nodes.length} slot={slot}
           stats={{workCount:workCounts.get(node.id) || 0, relationCount:relationCounts.get(node.id) || 0,
             average:ratings[node.id]?.average, count:ratings[node.id]?.count}}
-          inBeef={beefSet.has(node.id)} isFront={slot === 0}
+          inBeef={beefSet.has(node.id)} isFront={slot === 0} tier={cardTier(ratings[node.id])}
           onOpen={() => setDetailOpen(true)} onPromote={() => setHeroId(node.id)} />; })}
       </div>
       <div className="thv-floor" aria-hidden="true" /><div className="thv-plinth" aria-hidden="true" />
@@ -137,7 +150,7 @@ export function TodayHero({onLocate}:{onLocate:(id:string)=>void}) {
       <div className="hero-caption" aria-live="polite"><b>{hero.name}</b><span>{provinceLabel(provinceOf(hero.city))} · {index + 1} / {deck.length}</span><button onClick={() => setDetailOpen(true)}>展开人物档案</button></div>
       <button aria-label={`下一张：${at(1).name}`} disabled={deck.length < 2} onClick={() => step(1)}><span>{at(1).name}</span><ChevronRight size={22}/></button>
     </div> : <p className="hero-caption">暂无人物档案</p>}
-    <p className="hero-hint">滚轮 / 左右方向键切换 · 点击中央卡查看档案</p>
+    <p className="tier-hero-label">{tier} · {hero ? ratings[hero.id]?.count || 0 : 0} 人评分</p>
     {detailOpen && hero && <RapperDetail node={hero} stat={ratings[hero.id]}
       workCount={workCounts.get(hero.id) || 0} relationCount={relationCounts.get(hero.id) || 0}
       inBeef={beefSet.has(hero.id)} onClose={() => setDetailOpen(false)}

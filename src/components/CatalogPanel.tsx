@@ -1,6 +1,7 @@
 import {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {Search, Music2} from 'lucide-react';
 import {artistMatches} from '../lib/catalog';
+import {cardTier} from '../lib/card-tier';
 import {heatWeight} from '../lib/heat';
 import {useDatasetData, useDatasetStatus} from '../state/Dataset';
 import {ALL_PROVINCES,provinceLabel,provinceOf} from '../lib/province';
@@ -59,11 +60,11 @@ export function CatalogPanel({query,onQuery,onPick,province}:{query:string;onQue
   // 当前页卡片数据：useMemo 让 HoloCardStage 的 WebGL 场景只在换页/筛选时重建。
   // serial 取全局档案号，不是这里 slice 之后的展示序号。
   const cards:HoloCardData[]=useMemo(()=>artists.slice(offset,offset+pageSize).map(node=>({
-    node,serial:serialById.get(node.id)||0,
+    node,serial:serialById.get(node.id)||0, tier:cardTier(ratings[node.id]),
     workCount:worksByArtist.get(node.id)?.length||0,
     relationCount:relationCounts.get(node.id)||0,
     inBeef:beefIds.has(node.id),
-  })),[artists,offset,serialById,worksByArtist,relationCounts,beefIds]);
+  })),[artists,offset,serialById,worksByArtist,relationCounts,beefIds,ratings]);
 
   const detail = detailId ? nodeById.get(detailId) || null : null;
 
@@ -72,6 +73,7 @@ export function CatalogPanel({query,onQuery,onPick,province}:{query:string;onQue
       <label className="catalog-search"><Search size={16}/><input aria-label="搜索目录" placeholder="搜索艺名或别名" value={query} onChange={e=>{onQuery(e.target.value);setPage(1)}}/></label>
     </div>
     <div className="catalog-summary"><span>找到 <strong>{total}</strong> 位艺人 / 团体 · {province===ALL_PROVINCES?'全部省份':provinceLabel(province)}</span><span>点击球星卡查看档案并打分</span></div>
+    <p className="tier-rules">社区评分等级：至少 5 人评分 · R ＜3.5 · SR ≥3.5 · SSR ≥4.0 · UR ≥4.5（满分 5 分）。不足 5 人默认 R；等级随评分变化，仅表示社区评分。</p>
     {total===0
       ? <div className="catalog-empty"><Music2 size={32}/><h3>没有匹配的艺人</h3><p>试试艺人别名，或清除筛选条件。</p><button onClick={()=>{onQuery('');setPage(1)}}>清除目录筛选</button></div>
       : <Suspense fallback={<div className="catalog-loading">正在装载 3D 卡阵…</div>}><HoloCardStage cards={cards} onPick={setDetailId} /></Suspense>}

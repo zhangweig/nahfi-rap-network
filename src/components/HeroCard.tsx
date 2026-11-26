@@ -1,7 +1,9 @@
+import {CardParticles} from './CardParticles';
 import {useEffect, useMemo, useRef} from 'react';
 import {avatarPath} from './PixelAvatar';
 import {drawPortrait} from '../lib/portrait';
 import {provinceLabel, provinceOf} from '../lib/province';
+import {tierFoil, type CardTier} from '../lib/card-tier';
 import type {ArtistNode} from '../data/types';
 
 /**
@@ -21,9 +23,10 @@ export interface HeroCardStats {
 }
 
 export function HeroCard({
-  node, index, total, slot, stats, inBeef, isFront, onOpen, onPromote,
+  node, index, total, slot, stats, inBeef, isFront, onOpen, onPromote, tier,
 }:{
   node: ArtistNode;
+  tier: CardTier;
   index: number;
   total: number;
   /** 带符号的横向档位：-2…2，0 就是正中那张。 */
@@ -88,15 +91,15 @@ export function HeroCard({
       '--arc-scale': slot === 0 ? 1.1 : Math.max(.5, .85 - Math.abs(slot) * .035),
       '--arc-opacity': slot === 0 ? 1 : Math.max(0, 1 - Math.pow(Math.abs(slot) / 6, 1.3)),
     } as React.CSSProperties}
-    data-slot={slot}
+    data-slot={slot} data-foil={tierFoil(tier)} data-tier={tier}
   >
     <button className="thc-hit" onClick={isFront ? onOpen : onPromote}
       tabIndex={isFront ? 0 : -1}
       aria-label={isFront ? `翻开 ${node.name} 的档案` : `切换到 ${node.name}`}>
       <div className="thc-body">
         <div className="thc-head">
-          <span className="thc-no">NO.{serial}</span>
-          <span className="thc-kind">{node.kind === 'group' ? 'CREW' : 'RAPPER'}</span>
+          <span className="thc-no">FLOWLINE <em> / {serial}</em></span>
+          <span className="thc-kind">{tier}</span>
         </div>
 
         <div className="thc-art" ref={artRef}>
@@ -127,6 +130,8 @@ export function HeroCard({
           <em>{serial}/{String(total).padStart(3, '0')}</em>
         </div>
 
+        <span className="frame-flow" aria-hidden="true" />
+        <CardParticles />
         <span className="thc-foil" aria-hidden="true" />
         <span className="thc-glare" aria-hidden="true" />
       </div>

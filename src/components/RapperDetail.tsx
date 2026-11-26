@@ -1,8 +1,10 @@
+import {CardParticles} from './CardParticles';
 import {useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent} from 'react';
 import {Bookmark, MapPin, Star} from 'lucide-react';
 import type {ArtistNode} from '../data/types';
 import type {RatingStat} from '../state/Dataset';
 import {api} from '../state/Dataset';
+import {cardTier, tierFoil} from '../lib/card-tier';
 import {useFavorites, toggleFavorite} from '../state/favorites';
 import {avatarPath} from './PixelAvatar';
 import {provinceLabel, provinceOf} from '../lib/province';
@@ -43,6 +45,8 @@ export function RapperDetail({node, stat, workCount, relationCount, inBeef,
   const ref = useRef<HTMLDialogElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [hover, setHover] = useState(0);
+  const tier = cardTier(stat);
+  const currentFoil = tierFoil(tier);
   const [mine, setMine] = useState<number>(() => readMine()[node.id] || 0);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('');
@@ -75,7 +79,7 @@ export function RapperDetail({node, stat, workCount, relationCount, inBeef,
   /** 指针只驱动当前弹层的镭射相位与高光，离开后定格。 */
   const moveFoil = (e: ReactPointerEvent<HTMLDivElement>) => {
     const el = cardRef.current;
-    if (!el) return;
+    if (!el || e.pointerType !== 'mouse' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const r = el.getBoundingClientRect();
     const x = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
     const y = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
@@ -85,11 +89,11 @@ export function RapperDetail({node, stat, workCount, relationCount, inBeef,
     s.setProperty('--foil-bg-x', `${(37 + x * 26).toFixed(1)}%`);
     s.setProperty('--foil-bg-y', `${(33 + y * 34).toFixed(1)}%`);
     s.setProperty('--foil-bar-x', `${(50 + (0.5 - x) * 90).toFixed(1)}%`);
-    s.setProperty('--foil-o', '.42');
-    s.setProperty('--foil-glare-o', '.38');
-    s.setProperty('--foil-art-o', '.62');
-    s.setProperty('--foil-tilt-x', `${((0.5 - y) * 7).toFixed(2)}deg`);
-    s.setProperty('--foil-tilt-y', `${((x - 0.5) * 9).toFixed(2)}deg`);
+    s.setProperty('--foil-o', '.72');
+    s.setProperty('--foil-glare-o', '.55');
+    s.setProperty('--foil-art-o', '.10');
+    s.setProperty('--foil-tilt-x', `${((0.5 - y) * 22).toFixed(2)}deg`);
+    s.setProperty('--foil-tilt-y', `${((x - 0.5) * 26).toFixed(2)}deg`);
   };
   const resetFoil = () => {
     const s = cardRef.current?.style;
@@ -101,7 +105,7 @@ export function RapperDetail({node, stat, workCount, relationCount, inBeef,
     s.setProperty('--foil-bar-x', '50%');
     s.setProperty('--foil-o', '.22');
     s.setProperty('--foil-glare-o', '.18');
-    s.setProperty('--foil-art-o', '.32');
+    s.setProperty('--foil-art-o', '.05');
     s.setProperty('--foil-tilt-x', '0deg');
     s.setProperty('--foil-tilt-y', '0deg');
   };
@@ -120,10 +124,11 @@ export function RapperDetail({node, stat, workCount, relationCount, inBeef,
   return <dialog ref={ref} className="rapper-detail-dialog"
     onClick={onDialogClick}
     onCancel={e => { e.preventDefault(); onClose(); }}>
-    <div className="rd-card foil-card" ref={cardRef} onPointerMove={moveFoil} onPointerLeave={resetFoil}>
+    <button className="rd-close" onClick={onClose} aria-label="关闭人物档案">×</button>
+    <div className="rd-card foil-card" data-foil={currentFoil} data-tier={tier} ref={cardRef} onPointerMove={moveFoil} onPointerLeave={resetFoil}>
       <div className="rd-top">
-        <span className="rd-kind">{node.kind === 'group' ? 'CREW' : 'RAPPER'}</span>
-        <span className="rd-cat">{node.category}</span>
+        <span className="rd-kind">FLOWLINE <small> / {node.kind === 'group' ? 'CREW' : 'RAPPER'}</small></span>
+        <span className="rd-cat">{tier}</span>
       </div>
       <div className="rd-art">
         {path
@@ -143,6 +148,8 @@ export function RapperDetail({node, stat, workCount, relationCount, inBeef,
           <span><b>{stat?.count || 0}</b><small>人评分</small></span>
         </div>
       </div>
+      <span className="frame-flow" aria-hidden="true" />
+        <CardParticles />
       <span className="foil-card__layer foil-card__shine" aria-hidden="true" />
       <span className="foil-card__layer foil-card__glare" aria-hidden="true" />
       <span className="foil-card__layer foil-card__edge" aria-hidden="true" />
@@ -156,7 +163,7 @@ export function RapperDetail({node, stat, workCount, relationCount, inBeef,
           {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} className={i <= filled ? 'on' : ''} fill={i <= filled ? 'currentColor' : 'none'} />)}
         </span>
       </div>
-      <p className="rd-hint">网友评分平均值 · 无需审核，所有评分直接计入</p>
+      <p className="rd-hint">社区评分 · 至少 5 人参与后定级，等级会随评分变化</p>
       <div className="rd-rate-row" onMouseLeave={() => setHover(0)}>
         <span className="rd-mine-label">{mine ? '你的评分' : '给它打分'}</span>
         <span className="rd-stars-input" role="group" aria-label="给这位人物打分">

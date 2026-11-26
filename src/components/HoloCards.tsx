@@ -4,6 +4,8 @@ import type {ArtistNode} from '../data/types';
 import {avatarPath} from './PixelAvatar';
 import {drawPortrait} from '../lib/portrait';
 import {provinceLabel, provinceOf} from '../lib/province';
+import type {CardTier} from '../lib/card-tier';
+import chromeFrameUrl from '../assets/holo-chrome-frame.png';
 
 /**
  * 人物页专用：three.js 真 3D 球星卡舞台。
@@ -17,6 +19,7 @@ import {provinceLabel, provinceOf} from '../lib/province';
 
 export interface HoloCardData {
   node: ArtistNode;
+  tier: CardTier;
   /**
    * 全局档案号（1-based，等于该人物在 nodes 里的固定位置 + 1）。
    * 与展示顺序彻底解耦：卡面 NO.、镭射相位、占位人像 seed、纹理缓存 key
@@ -36,6 +39,7 @@ interface CardObject {
   face: THREE.CanvasTexture;
   avatar?: THREE.Texture;
   avatarMat: THREE.MeshBasicMaterial;
+  particles: THREE.Points;
   phase: number; // 每张卡独立的镭射相位：仅 hover 时推进，其余冻结
 }
 
@@ -173,15 +177,15 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
   canvas.width = TEX_W;
   canvas.height = TEX_H;
   const ctx = canvas.getContext('2d')!;
-  const {node, serial: serialNo, workCount, relationCount, inBeef} = card;
+  const {node, serial: serialNo, workCount, relationCount, inBeef, tier} = card;
   const serial = String(serialNo).padStart(3, '0');
   const kind = node.kind === 'group' ? 'CREW' : 'RAPPER';
   const province = provinceLabel(provinceOf(node.city));
 
   const bg = ctx.createLinearGradient(0, 0, TEX_W, TEX_H);
-  bg.addColorStop(0, '#2a2018');
-  bg.addColorStop(0.38, '#120e0b');
-  bg.addColorStop(1, '#090706');
+  bg.addColorStop(0, '#202831');
+  bg.addColorStop(0.38, '#0c1116');
+  bg.addColorStop(1, '#07090d');
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, TEX_W, TEX_H);
 
@@ -216,13 +220,14 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
   ctx.font = 'bold 28px ui-monospace, Consolas, monospace';
   ctx.textAlign = 'left';
   ctx.fillStyle = '#e4572e';
-  ctx.fillText(`NO.${serial}`, 38, 68);
+  ctx.fillText(`FLOWLINE / ${serial}`, 125, 118, 245);
   ctx.textAlign = 'right';
   ctx.fillStyle = '#b3a593';
-  ctx.fillText(kind, TEX_W - 38, 68);
+  ctx.fillStyle = tier === 'UR' ? '#ddb5ff' : tier === 'SSR' ? '#ffdc8c' : tier === 'SR' ? '#a5caff' : '#d1dce2';
+  ctx.fillText(tier, TEX_W - 125, 118, 120);
 
   // 头像区：暗底 + 程序化人像兜底（真人照片加载成功后由 avatar 层盖住）
-  const artX = 40, artY = 96, artW = TEX_W - 80, artH = 380;
+  const artX = 72, artY = 130, artW = TEX_W - 144, artH = 355;
   const art = ctx.createRadialGradient(TEX_W / 2, artY + 130, 20, TEX_W / 2, artY + 130, 380);
   art.addColorStop(0, '#2e221c');
   art.addColorStop(1, '#0a0807');
@@ -251,22 +256,15 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
   });
 
   // 姓名铭牌：托住文字，避免镭射把名字冲淡
-  ctx.fillStyle = 'rgba(5,4,3,.76)';
-  roundRectPath(ctx, 30, 526, TEX_W - 60, 92, 10);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(228,87,46,.72)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.fillStyle = '#e4572e';
-  ctx.fillRect(38, 540, 5, 64);
+  // 名字直接画在卡面，避开镭射框，保持可读。
 
   ctx.textAlign = 'left';
   ctx.fillStyle = '#f2ede4';
   ctx.font = 'bold 54px "Microsoft YaHei", sans-serif';
-  ctx.fillText(node.name, 52, 560, TEX_W - 100);
+  ctx.fillText(node.name, 120, 560, TEX_W - 240);
   ctx.fillStyle = '#c9a873';
   ctx.font = '26px ui-monospace, Consolas, monospace';
-  ctx.fillText(province, 52, 600);
+  ctx.fillText(province, 120, 600, TEX_W - 240);
 
   const statTop = 632;
   ctx.strokeStyle = '#3c2c22';
@@ -279,7 +277,7 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
     {n: kind, label: '类型', color: '#d9a05b'},
   ];
   cols.forEach((col, i) => {
-    const cx = 38 + (TEX_W - 76) / 6 + i * (TEX_W - 76) / 3;
+    const cx = 100 + (TEX_W - 200) / 6 + i * (TEX_W - 200) / 3;
     if (i > 0) {
       ctx.strokeStyle = '#3c2c2277';
       ctx.beginPath(); ctx.moveTo(38 + i * (TEX_W - 76) / 3, statTop + 14);
@@ -288,7 +286,7 @@ function makeFaceTexture(card: HoloCardData): THREE.CanvasTexture {
     ctx.textAlign = 'center';
     ctx.fillStyle = col.color;
     ctx.font = 'bold 42px ui-monospace, Consolas, monospace';
-    ctx.fillText(col.n, cx, statTop + 70, (TEX_W - 76) / 3 - 8);
+    ctx.fillText(col.n, cx, statTop + 70, (TEX_W - 200) / 3 - 8);
     ctx.fillStyle = '#a39584';
     ctx.font = '22px "Microsoft YaHei", sans-serif';
     ctx.fillText(col.label, cx, statTop + 108);
@@ -404,7 +402,7 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
   // 数据内容稳定签名：避免父组件每次渲染新建数组导致 WebGL 场景重建。
   // 用「档案号 + 展示位置」双键：排序/换页导致位置变化时仍重建场景（卡片要换坐标），
   // 但纹理缓存 key 不含位置，所以重建时能命中旧纹理，不会重绘 640×896 的卡面。
-  const cardsKey = cards.map(c => `${c.serial}@${c.node.id}:${c.workCount}:${c.relationCount}:${c.inBeef ? 1 : 0}`).join('|');
+  const cardsKey = cards.map(c => `${c.serial}@${c.node.id}:${c.workCount}:${c.relationCount}:${c.inBeef ? 1 : 0}:${c.tier}`).join('|');
 
   useEffect(() => {
     const grid = gridRef.current;
@@ -426,6 +424,16 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     const maxAniso = renderer.capabilities.getMaxAnisotropy();
     const texLoader = new THREE.TextureLoader();
+    // One shared transparent texture is reused by every 3D card and disposed with the stage.
+    let frameTexture: THREE.Texture | null = null;
+    const frameMaterials: THREE.MeshBasicMaterial[] = [];
+    texLoader.load(chromeFrameUrl, texture => {
+      if (disposed) { texture.dispose(); return; }
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = maxAniso;
+      frameTexture = texture;
+      for (const material of frameMaterials) { material.map = texture; material.opacity = 1; material.needsUpdate = true; }
+    });
 
     const objects = new Map<string, CardObject>();
     let hoveredId: string | null = null;
@@ -438,7 +446,7 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
       objects.forEach(o => {
         scene.remove(o.group);
         o.group.traverse(child => {
-          if (child instanceof THREE.Mesh) {
+          if (child instanceof THREE.Mesh || child instanceof THREE.Points) {
             child.geometry.dispose();
             const mats = Array.isArray(child.material) ? child.material : [child.material];
             // 材质本身要释放；但它引用的贴图来自模块缓存，绝不能 dispose，
@@ -449,6 +457,7 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
         // face / avatar 纹理留在全局缓存里供下次复用，这里不再 dispose。
       });
       objects.clear();
+      frameMaterials.length = 0;
     }
 
     /** 头像纹理：命中缓存直接复用；否则加载并写缓存。返回是否有缓存可同步上屏。 */
@@ -497,7 +506,7 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
         group.position.set(baseX, baseY, 0);
 
         // 卡面纹理：档案号做 key（不含展示位置），排序变化后仍能命中缓存。
-        const faceKey = `${data.serial}:${data.node.id}:${data.workCount}:${data.relationCount}:${data.inBeef ? 1 : 0}`;
+        const faceKey = `${data.serial}:${data.node.id}:${data.workCount}:${data.relationCount}:${data.inBeef ? 1 : 0}:${data.tier}`;
         let face = faceCache.get(faceKey);
         if (!face) {
           face = makeFaceTexture(data);
@@ -510,9 +519,9 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
         group.add(body);
 
         // 头像层：抬到卡面之上，随倾斜产生真实视差
-        const artW = bw * (TEX_W - 80) / TEX_W;
-        const artH = bh * 380 / TEX_H;
-        const artY = bh * (0.5 - (96 + 190) / TEX_H);
+        const artW = bw * (TEX_W - 144) / TEX_W;
+        const artH = bh * 355 / TEX_H;
+        const artY = bh * (0.5 - (130 + 355 / 2) / TEX_H);
         const avatarMat = new THREE.MeshBasicMaterial({transparent: true, opacity: 0});
         const avatarPlane = new THREE.Mesh(new THREE.PlaneGeometry(artW, artH), avatarMat);
         avatarPlane.position.set(0, artY, CARD_DEPTH / 2 + 1.2);
@@ -538,8 +547,28 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
         holoPlane.position.z = CARD_DEPTH / 2 + 1.6;
         group.add(holoPlane);
 
+        // The same artwork as the home card sits on a real 3D plane and follows rotation.
+        const tierColor = data.tier === 'UR' ? 0xe2b4ff : data.tier === 'SSR' ? 0xffc36d : data.tier === 'SR' ? 0xa6caff : 0xffffff;
+        const frameMat = new THREE.MeshBasicMaterial({map: frameTexture, color:tierColor, transparent: true, opacity: frameTexture ? 1 : 0, depthWrite: false});
+        frameMaterials.push(frameMat);
+        const framePlane = new THREE.Mesh(new THREE.PlaneGeometry(bw, bh), frameMat);
+        framePlane.position.z = CARD_DEPTH / 2 + 2.2;
+        framePlane.renderOrder = 3;
+        group.add(framePlane);
+
+        const particlePositions = new Float32Array(32 * 3);
+        const particleGeometry = new THREE.BufferGeometry();
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        const particleColor = data.tier === 'UR' ? 0xefb3ff : data.tier === 'SSR' ? 0xffc36d : data.tier === 'SR' ? 0x7fcaff : 0xddeeff;
+        const particleMat = new THREE.PointsMaterial({color:particleColor,size:3,transparent:true,opacity:.9,depthWrite:false,sizeAttenuation:false});
+        const particles = new THREE.Points(particleGeometry,particleMat);
+        particles.position.z = CARD_DEPTH / 2 + 4;
+        particles.visible = false;
+        particles.userData.width = bw;
+        particles.userData.height = bh;
+        group.add(particles);
         scene.add(group);
-        objects.set(id, {group, holo, baseX, baseY, face, avatarMat, phase: initPhase});
+        objects.set(id, {group, holo, baseX, baseY, face, avatarMat, particles, phase: initPhase});
       });
     }
 
@@ -552,6 +581,10 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
       hoveredId = btn.dataset.id || null;
     }
     function onPointerLeave() { hoveredId = null; }
+    function onFocus(e: FocusEvent) { const el = e.target as HTMLElement; if(el.matches('.holo-hit')) { hoveredId = el.dataset.id || null; pointer.x=.5; pointer.y=.5; } }
+    function onBlur() { hoveredId = null; }
+    grid.addEventListener('focusin',onFocus);
+    grid.addEventListener('focusout',onBlur);
     grid.addEventListener('pointermove', onPointerMove);
     grid.addEventListener('pointerleave', onPointerLeave);
 
@@ -559,6 +592,7 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
     ro.observe(grid);
     build();
 
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
     let raf = 0;
     let lastMs = 0;
     function animate(ms: number) {
@@ -586,6 +620,19 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
           p.x += (0.5 - p.x) * 0.15;
           p.y += (0.5 - p.y) * 0.15;
         }
+        const reduced = motionPreference.matches;
+        o.particles.visible = isHover && !reduced;
+        if (o.particles.visible) {
+          const attr = o.particles.geometry.getAttribute('position') as THREE.BufferAttribute;
+          const w = o.particles.userData.width as number, h = o.particles.userData.height as number;
+          for (let i=0;i<attr.count;i++) {
+            const t=((i/attr.count+ms*.000035)%1)*4, side=Math.floor(t), f=t-side;
+            const x=side===0 ? (f-.5)*w : side===1 ? w/2 : side===2 ? (.5-f)*w : -w/2;
+            const y=side===0 ? h/2 : side===1 ? (.5-f)*h : side===2 ? -h/2 : (f-.5)*h;
+            attr.setXYZ(i,x,y,0);
+          }
+          attr.needsUpdate=true;
+        }
         o.holo.uniforms.uHover.value += ((isHover ? 1 : 0) - o.holo.uniforms.uHover.value) * 0.12;
       });
       renderer!.render(scene, camera!);
@@ -598,7 +645,10 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
       ro.disconnect();
       grid!.removeEventListener('pointermove', onPointerMove);
       grid!.removeEventListener('pointerleave', onPointerLeave);
+      grid!.removeEventListener('focusin',onFocus);
+      grid!.removeEventListener('focusout',onBlur);
       disposeObjects();
+      frameTexture?.dispose();
       sideMat.dispose();
       renderer!.dispose();
     };
@@ -609,7 +659,7 @@ export function HoloCardStage({cards, onPick}:{cards:HoloCardData[];onPick:(id:s
   return <div className="holo-grid" ref={gridRef}>
     {cards.map(card => <button key={card.node.id} className="holo-hit" data-id={card.node.id}
       onClick={() => onPickRef.current(card.node.id)}
-      aria-label={`${card.node.name}，查看档案`} />)}
+      aria-label={`${card.node.name}，${card.tier}，查看档案`} />)}
     <canvas className="holo-canvas" ref={canvasRef} aria-hidden="true" />
   </div>;
 }
